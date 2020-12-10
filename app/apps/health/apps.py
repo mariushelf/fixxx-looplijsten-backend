@@ -8,6 +8,9 @@ class HealthConfig(AppConfig):
     def ready(self):
         from .health_checks import BAGServiceCheck, BWVDatabaseCheck, ZakenServiceCheck
 
+        # TODO: Add when acceptance is ready: CeleryExecuteTask
+
         plugin_dir.register(BAGServiceCheck)
         plugin_dir.register(BWVDatabaseCheck)
         plugin_dir.register(ZakenServiceCheck)
+        # plugin_dir.register(CeleryExecuteTask)

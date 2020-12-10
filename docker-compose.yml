@@ -19,6 +19,8 @@ services:
     env_file:
       - .env
   api:
+    hostname: api
+    image: api
     networks:
       - looplijsten_backend
       - top_and_zaak_backend_bridge
@@ -34,10 +36,35 @@ services:
     volumes:
       - ./app:/app
       - ./api/deploy:/deploy
-    command: bash -c "/app/deploy/entrypoint.development.sh"
+    command: bash -c "/app/wait-for.sh database:5432 && /app/wait-for.sh bwv_db:5432 && /app/deploy/entrypoint.development.sh"
     depends_on:
       - database
       - bwv_db
+
+  rabbitmq:
+    image: rabbitmq:3
+    networks:
+      - looplijsten_backend
+    ports:
+      - 5673:5672
+    env_file:
+      - .env
+
+  looplijsten_celery_worker:
+    image: api
+    container_name: looplijsten_celery_worker
+    hostname: looplijsten_celery_worker
+    command: bash -c "/app/wait-for.sh rabbitmq:5672 && /app/wait-for.sh api:8000 -- /app/celery.sh"
+    depends_on:
+      - api
+      - database
+      - bwv_db
+      - rabbitmq
+    env_file:
+      - .env
+    networks:
+      - looplijsten_backend
+    restart: on-failure
 
 networks:
   looplijsten_backend:

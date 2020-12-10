@@ -33,6 +33,8 @@ INSTALLED_APPS = (
     "health_check",
     "health_check.db",
     "health_check.contrib.migrations",
+    # "health_check.contrib.celery_ping",
+    "health_check.contrib.rabbitmq",
     # Your apps
     "apps.users",
     "apps.itinerary",
@@ -325,3 +327,17 @@ DECOS_JOIN_VAKANTIEVERHUUR_ID = "TBD"
 DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS = "90642DCCC2DB46469657C3D0DF0B1ED7"
 DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
 USE_DECOS_MOCK_DATA = True
+
+RABBIT_MQ_URL = (
+    os.environ.get("RABBIT_MQ_URL").replace("amqp://", "").replace("https://", "")
+)
+RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
+RABBIT_MQ_USERNAME = os.environ.get("RABBIT_MQ_USERNAME")
+RABBIT_MQ_PASSWORD = os.environ.get("RABBIT_MQ_PASSWORD")
+
+CELERY_BROKER_URL = (
+    f"amqp://{RABBIT_MQ_USERNAME}:{RABBIT_MQ_PASSWORD}@{RABBIT_MQ_URL}:{RABBIT_MQ_PORT}"
+)
+
+BROKER_URL = CELERY_BROKER_URL
+CELERY_TIMEZONE = "Europe/Amsterdam"
