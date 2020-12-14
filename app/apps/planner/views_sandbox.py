@@ -11,7 +11,6 @@ from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from utils.queries_bwv import get_bwv_columns, get_bwv_tables
-from utils.queries_zaken_api import get_cases
 
 from .models import TeamSettings
 
@@ -58,7 +57,6 @@ class AlgorithmView(LoginRequiredMixin, DetailView):
             teamSettings.settings.get("days", {}).get(weekday, {}).get(day_part, {})
         )
         key, _ = Constance.objects.get_or_create(key=settings.CONSTANCE_MAPS_KEY)
-        zaken_data = get_cases()
 
         return {
             "projects": teamSettings.project_choices.all().values_list(
@@ -85,7 +83,6 @@ class AlgorithmView(LoginRequiredMixin, DetailView):
             "postal_code_range_end": teamSettings.settings.get(
                 "postal_codes", postal_codes
             )[0].get("range_end"),
-            "zaken_data": zaken_data,
         }
 
     def get_context_data(self, **kwargs):

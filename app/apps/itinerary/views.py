@@ -9,6 +9,7 @@ from apps.itinerary.serializers import (
     ItineraryTeamMemberSerializer,
     NoteCrudSerializer,
 )
+from apps.itinerary.tasks import update_external_states
 from apps.planner.serializers import TeamSettingsSerializer
 from apps.users.models import User
 from django.db import transaction
@@ -23,7 +24,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 from settings.const import ITINERARY_NOT_ENOUGH_CASES
-from utils.queries_zaken_api import update_external_states
 
 
 class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMixin):

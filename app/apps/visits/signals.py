@@ -1,33 +1,21 @@
 import logging
 
 from apps.fraudprediction.models import FraudPrediction
+from apps.itinerary.tasks import push_visit
 from apps.visits.models import Visit, VisitMetaData
 from django.conf import settings
+from django.db import transaction
 from django.db.models import signals
 from django.dispatch import receiver
-from utils.queries_zaken_api import (
-    push_new_visit_to_zaken_action,
-    push_updated_visit_to_zaken_action,
-)
 
 logger = logging.getLogger(__name__)
 
 
 @receiver(signals.post_save, sender=Visit)
 def update_openzaken_system(sender, instance, created, **kwargs):
-    authors = []
-
-    if instance.itinerary_item:
-        for member in instance.itinerary_item.itinerary.team_members.all():
-            authors.append(member.user.email)
-
-    if created and settings.PUSH_ZAKEN:
-        push_new_visit_to_zaken_action(instance, authors)
-    elif settings.PUSH_ZAKEN:
-        push_updated_visit_to_zaken_action(
-            instance,
-            authors,
-        )
+    """ Updates or creates a visit in the the Zaken app using a Celery task"""
+    task = push_visit.s(visit_id=instance.id, created=created).delay
+    transaction.on_commit(task)
 
 
 @receiver(signals.post_save, sender=Visit)
