@@ -29,7 +29,6 @@ INSTALLED_APPS = (
     "drf_spectacular",  # for generating real OpenAPI 3.0 documentation
     "constance",
     "constance.backends.database",  # for dynamic configurations in admin
-    "mozilla_django_oidc",  # for authentication
     # Health checks. (Expand when more services become available)
     "health_check",
     "health_check.db",
@@ -216,26 +215,12 @@ CONSTANCE_CONFIG = {
 # Error logging through Sentry
 sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN"), integrations=[DjangoIntegration()])
 
-OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID")
-OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET")
-OIDC_USERNAME_ALGO = "apps.users.utils.generate_username"
+OIDC_RP_CLIENT_ID = os.environ.get("OIDC_RP_CLIENT_ID", None)
+OIDC_RP_CLIENT_SECRET = os.environ.get("OIDC_RP_CLIENT_SECRET", None)
 OIDC_USE_NONCE = False
 OIDC_AUTHORIZED_GROUPS = ("wonen_top",)
 OIDC_AUTHENTICATION_CALLBACK_URL = "oidc-authenticate"
 
-ACCEPTANCE_OIDC_REDIRECT_URL = "https://acc.top.amsterdam.nl/authentication/callback"
-PRODUCTION_OIDC_REDIRECT_URL = "https://top.amsterdam.nl/authentication/callback"
-
-OIDC_REDIRECT_URL = ACCEPTANCE_OIDC_REDIRECT_URL
-
-if ENVIRONMENT == "production":
-    OIDC_REDIRECT_URL = PRODUCTION_OIDC_REDIRECT_URL
-
-OIDC_RP_SIGN_ALGO = "RS256"
-
-OIDC_VERIFY_SSL = True
-
-# https://auth.grip-on-it.com/v2/rjsfm52t/oidc/idp/.well-known/openid-configuration
 OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv(
     "OIDC_OP_AUTHORIZATION_ENDPOINT",
     "https://iam.amsterdam.nl/auth/realms/datapunt-ad-acc/protocol/openid-connect/auth",
@@ -343,7 +328,12 @@ DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS = "90642DCCC2DB46469657C3D0DF0B1ED7"
 DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
 USE_DECOS_MOCK_DATA = True
 
+RABBIT_MQ_URL = os.environ.get("RABBIT_MQ_URL")
+RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
+RABBIT_MQ_USERNAME = os.environ.get("RABBIT_MQ_USERNAME")
+RABBIT_MQ_PASSWORD = os.environ.get("RABBIT_MQ_PASSWORD")
 
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_USERNAME}:{RABBIT_MQ_PASSWORD}@{RABBIT_MQ_URL}"
+
 BROKER_URL = CELERY_BROKER_URL
 CELERY_TIMEZONE = "Europe/Amsterdam"
