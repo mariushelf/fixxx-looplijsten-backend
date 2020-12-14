@@ -144,6 +144,7 @@ def push_visit(self, visit_id, created=False):
         response = requests.post(url, timeout=0.5, json=data, headers=get_headers())
         response.raise_for_status()
     except Exception as exception:
+        logger.error(str(exception))
         self.retry(exc=exception)
 
     logger.info(f"Finished pushing updated case {visit.case_id.case_id}")
