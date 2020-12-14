@@ -16,5 +16,8 @@ chmod -R 700 /fraud_prediction_cache
 # echo Create root user
 # python manage.py shell -c "from apps.users.models import User; User.objects.create_superuser('admin@admin.com', 'admin')"
 
+# Run celery worker
+celery -A settings worker  -l INFO -D
+
 # run uwsgi
 exec uwsgi --ini /app/deploy/config.ini # --py-auto-reload=1
