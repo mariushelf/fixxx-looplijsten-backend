@@ -88,7 +88,12 @@ def update_external_state(self, state_id, team_member_emails):
     data = {"user_emails": team_member_emails}
 
     try:
-        response = requests.post(url, timeout=0.5, json=data, headers=get_headers())
+        response = requests.post(
+            url,
+            timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
+            json=data,
+            headers=get_headers(),
+        )
         response.raise_for_status()
 
     except Exception as exception:
@@ -141,10 +146,14 @@ def push_visit(self, visit_id, created=False):
     }
 
     try:
-        response = requests.post(url, timeout=0.5, json=data, headers=get_headers())
+        response = requests.post(
+            url,
+            timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
+            json=data,
+            headers=get_headers(),
+        )
         response.raise_for_status()
     except Exception as exception:
-        logger.error(str(exception))
         self.retry(exc=exception)
 
     logger.info(f"Finished pushing updated case {visit.case_id.case_id}")
