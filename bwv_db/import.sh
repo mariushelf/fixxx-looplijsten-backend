@@ -10,7 +10,7 @@ if test $# -lt 1; then
 fi
 
 DUMP_DIR=$1
-DOCKER_NETWORK=fixxx-looplijsten-backend_looplijsten_backend
+DOCKER_NETWORK=looplijsten_backend
 DB_HOST=bwv_db
 DB_NAME=looplijsten_bwv
 DB_USER=looplijsten_bwv
