@@ -5,6 +5,7 @@ from apps.health.utils import assert_bwv_health
 from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
+from settings.celery import debug_task
 
 logger = logging.getLogger(__name__)
 
@@ -86,4 +87,7 @@ class BWVDatabaseCheck(BaseHealthCheckBackend):
             logger.debug("Connection established. BWV database is healthy.")
 
 
-# TODO: Expand with all the API services that are being used
+class CeleryExecuteTask(BaseHealthCheckBackend):
+    def check_status(self):
+        result = debug_task.apply_async(ignore_result=False)
+        assert result, "Debug task executes successfully"
