@@ -1,5 +1,4 @@
 app/datasets/*.csv
-*.env
 *.pyc
 *.backup
 .idea

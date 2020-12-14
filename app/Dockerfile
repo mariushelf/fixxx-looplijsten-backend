@@ -36,9 +36,10 @@ RUN pip install --upgrade pip
 RUN pip install uwsgi
 RUN pip install --no-cache-dir -r requirements.txt
 
-USER datapunt
-
 COPY . /app/
 COPY deploy /deploy/
+
+RUN chmod +x /app/wait-for.sh
+RUN chmod +x /app/celery.sh
 
 CMD ["/deploy/entrypoint.sh"]
