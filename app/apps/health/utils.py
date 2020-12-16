@@ -54,7 +54,7 @@ def assert_health_database_tables(database_name, tables):
         try:
             assert_health_table(database_name, table)
         except Exception as e:
-            errors += str(e)
+            errors.append(str(e))
 
     if len(errors):
         raise Exception("".join(errors))

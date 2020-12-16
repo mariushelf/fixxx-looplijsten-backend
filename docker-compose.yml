@@ -7,8 +7,12 @@ services:
     build: ./bwv_db
     ports:
       - "5410:5432"
-    env_file:
-      - .env.bwv
+    environment:
+      POSTGRES_DB: "looplijsten_bwv"
+      POSTGRES_USER: "looplijsten_bwv"
+      POSTGRES_PASSWORD: "insecure"
+    volumes:
+      - postgresql-bwv-data:/var/lib/postgresql/data
   database:
     networks:
       - looplijsten_backend
@@ -16,8 +20,12 @@ services:
     shm_size: "512m"
     ports:
       - "5409:5432"
-    env_file:
-      - .env
+    environment:
+      POSTGRES_DB: "looplijsten"
+      POSTGRES_USER: "looplijsten"
+      POSTGRES_PASSWORD: "insecure"
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
   api:
     hostname: api
     image: api
@@ -71,3 +79,7 @@ networks:
     external: true
   top_and_zaak_backend_bridge:
     external: true
+
+volumes:
+  postgresql-bwv-data:
+  postgresql-data:
