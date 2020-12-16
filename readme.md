@@ -20,6 +20,11 @@ docker-compose build --build-arg INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_T
 Replace the GITLAB_PERSONAL_ACCESS_TOKEN_HERE with your private token.
 This token can be acquired through the private Amsterdam gitlab woonfraude repository.
 
+## Creating networks
+Before running the project, you need to create the networks:
+```bash
+docker network create looplijsten_backend
+```
 ## Starting the development server:
 Start the dev server for local development:
 ```bash
@@ -33,8 +38,16 @@ To load local *bwv* dumps into the local *bwv* database:
 ```bash
 bwv_db/import.sh </path/to/local/dir/with/dumps>
 ```
-
 Make sure you are pointing to a directory, not the sql dump file itself.
+
+## Importing fixtures dump
+The Django project needs some configuration in order to run locally. It's possible to add these manually, but the quickest way is importing using fixtures from the acceptance environment. You can download these at: https://acc.api.top.amsterdam.nl/admin/planner/dumpdata/. You'll need to be logged in using an admin account first to access this url.
+
+Move the json into a fixture folder underneath one of the installed apps, and run the following command
+
+```bash
+docker-compose run --rm api python manage.py loaddata <name of fixture>
+```
 
 ## Creating a superuser:
 ```bash
