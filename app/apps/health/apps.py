@@ -10,12 +10,10 @@ class HealthConfig(AppConfig):
             BAGServiceCheck,
             BWVDatabaseCheck,
             CeleryExecuteTask,
-            ZakenServiceCheck,
+            # ZakenServiceCheck,
         )
-
-        # TODO: Add when acceptance is ready: CeleryExecuteTask
 
         plugin_dir.register(BAGServiceCheck)
         plugin_dir.register(BWVDatabaseCheck)
-        plugin_dir.register(ZakenServiceCheck)
+        # plugin_dir.register(ZakenServiceCheck)
         plugin_dir.register(CeleryExecuteTask)
