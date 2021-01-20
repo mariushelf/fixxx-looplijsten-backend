@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     "apps.fraudprediction",
     "apps.visits",
     "apps.health",
+    "apps.permits",
     # Enable admin templates inheritance
     "django.contrib.admin",
 )
@@ -197,6 +198,7 @@ SPECTACULAR_SETTINGS = {
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY = "BRK_AUTHENTICATION_TOKEN"
+CONSTANCE_PERMIT_DATA = "PERMIT_DATA"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY = "BRK_AUTHENTICATION_TOKEN_EXPIRY"
 CONSTANCE_MAPS_KEY = "MAPS_KEY"
 
@@ -204,6 +206,10 @@ CONSTANCE_CONFIG = {
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY: (
         "",
         "Authentication token for accessing BRK API",
+    ),
+    CONSTANCE_PERMIT_DATA: (
+        "",
+        "Permit data static dict[dict]",
     ),
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY: (
         "",
