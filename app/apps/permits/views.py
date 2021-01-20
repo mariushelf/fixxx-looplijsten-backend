@@ -43,8 +43,10 @@ class PermitViewSet(ViewSet):
         key = settings.CONSTANCE_PERMIT_DATA
         data, created = Constance.objects.get_or_create(key=key)
         try:
-            data = json.load(data.value)
-        except Exception:
+            data = json.loads(data.value)
+        except Exception as e:
+            print("permit data syntax error")
+            print(e)
             data = {}
         data = data.get(bag_id, DEFAULT_PERMIT)
         serializer = PermitCheckmarkSerializer(data=data)
