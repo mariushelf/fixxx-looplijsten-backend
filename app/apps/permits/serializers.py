@@ -7,8 +7,9 @@ class PermitCheckmarkSerializer(serializers.Serializer):
     has_b_and_b_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
     has_vacation_rental_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
     has_splitsing_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-    has_samenvoeging_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-    has_woonvorming_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
+    has_ontrekking_vorming_samenvoeging_permit = serializers.ChoiceField(
+        choices=PERMIT_DEFAULT_CHOICES
+    )
     has_omzettings_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
     has_ligplaats_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
 
