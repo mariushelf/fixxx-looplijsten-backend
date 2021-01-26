@@ -155,10 +155,7 @@ class DecosJoinRequest:
                                 "has_vacation_rental_permit"
                             ] = self._check_if_permit_is_valid(folder["fields"])
                     else:
-                        # assign variable so it is visible in Sentry
-                        unexpected_answer = folder["fields"]
-                        print(unexpected_answer)
-                        logger.error("DECOS JOIN responded with a unexpected answer")
+                        pass
 
         return response
 
@@ -207,13 +204,8 @@ class DecosJoinRequest:
                         if permit_serializer.is_valid():
                             permits.append(permit_serializer.data)
                         else:
-                            p_data = permit_serializer.data
-                            print(p_data)
-                            logger.error("permit_data is not valid")
+                            pass
 
                     else:
-                        raw_data = folder["fields"]
-                        ser_errors = serializer.errors
-                        print(raw_data, ser_errors)
-                        logger.error("serializer is not valid")
+                        pass
         return permits

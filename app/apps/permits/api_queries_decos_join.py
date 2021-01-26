@@ -25,12 +25,34 @@ class DecosJoinRequest:
     def _process_request_to_decos_join(self, url):
         try:
             headers = {
-                "Authorization": f"Basic {settings.DECOS_JOIN_AUTH_BASE64}",
                 "Accept": "application/itemdata",
                 "content-type": "application/json",
             }
+            request_params = {
+                "url": url,
+                "headers": headers,
+                "timeout": 30,
+            }
 
-            response = requests.get(url, headers=headers, timeout=30)
+            if settings.DECOS_JOIN_AUTH_BASE64:
+                logger.error("Request to Decos using token")
+                request_params["headers"].update(
+                    {
+                        "Authorization": f"Basic {settings.DECOS_JOIN_AUTH_BASE64}",
+                    }
+                )
+                response = requests.get(url, headers=headers, timeout=30)
+            else:
+                request_params.update(
+                    {
+                        "auth": (
+                            settings.DECOS_JOIN_USERNAME,
+                            settings.DECOS_JOIN_PASSWORD,
+                        )
+                    }
+                )
+
+            response = requests.get(**request_params)
             response.raise_for_status()
 
             return response.json()
@@ -128,6 +150,10 @@ class DecosJoinRequest:
         response = {
             "has_b_and_b_permit": "UNKNOWN",
             "has_vacation_rental_permit": "UNKNOWN",
+            "has_splitsing_permit": "UNKNOWN",
+            "has_ontrekking_vorming_samenvoeging_permit": "UNKNOWN",
+            "has_omzettings_permit": "UNKNOWN",
+            "has_ligplaats_permit": "UNKNOWN",
         }
         response_decos_obj = self.get_decos_object_with_bag_id(bag_id)
 
@@ -154,6 +180,25 @@ class DecosJoinRequest:
                         elif parent_key == settings.DECOS_JOIN_VAKANTIEVERHUUR_ID:
                             response[
                                 "has_vacation_rental_permit"
+                            ] = self._check_if_permit_is_valid(folder["fields"])
+                        elif parent_key == settings.DECOS_JOIN_OMZETTINGSVERGUNNING_ID:
+                            response[
+                                "has_omzettings_permit"
+                            ] = self._check_if_permit_is_valid(folder["fields"])
+                        elif parent_key == settings.DECOS_JOIN_SPLITSINGSVERGUNNING_ID:
+                            response[
+                                "has_splitsing_permit"
+                            ] = self._check_if_permit_is_valid(folder["fields"])
+                        elif (
+                            parent_key
+                            == settings.DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID
+                        ):
+                            response[
+                                "has_ontrekking_vorming_samenvoeging_permit"
+                            ] = self._check_if_permit_is_valid(folder["fields"])
+                        elif parent_key == settings.DECOS_JOIN_LIGPLAATSVERGUNNING_ID:
+                            response[
+                                "has_ligplaats_permit"
                             ] = self._check_if_permit_is_valid(folder["fields"])
                     else:
                         # assign variable so it is visible in Sentry

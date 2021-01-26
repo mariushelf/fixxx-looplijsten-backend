@@ -39,17 +39,9 @@ class PermitViewSet(ViewSet):
     @action(detail=False, url_name="permit checkmarks", url_path="checkmarks")
     def get_permit_checkmarks(self, request):
         bag_id = request.GET.get("bag_id")
-        # response = DecosJoinRequest().get_checkmarks_by_bag_id(bag_id)
-        key = settings.CONSTANCE_PERMIT_DATA
-        data, created = Constance.objects.get_or_create(key=key)
-        try:
-            data = json.loads(data.value)
-        except Exception as e:
-            print("permit data syntax error")
-            print(e)
-            data = {}
-        data = data.get(bag_id, DEFAULT_PERMIT)
-        serializer = PermitCheckmarkSerializer(data=data)
+        response = DecosJoinRequest().get_checkmarks_by_bag_id(bag_id)
+
+        serializer = PermitCheckmarkSerializer(data=response.data)
 
         if serializer.is_valid():
             return Response(serializer.data)
