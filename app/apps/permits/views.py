@@ -19,16 +19,6 @@ bag_id = OpenApiParameter(
     description="Verblijfsobjectidentificatie",
 )
 
-DEFAULT_PERMIT = {
-    "has_b_and_b_permit": "False",
-    "has_vacation_rental_permit": "False",
-    "has_splitsing_permit": "False",
-    "has_samenvoeging_permit": "False",
-    "has_woonvorming_permit": "False",
-    "has_omzettings_permit": "False",
-    "has_ligplaats_permit": "False",
-}
-
 
 class PermitViewSet(ViewSet):
     @extend_schema(
@@ -41,7 +31,7 @@ class PermitViewSet(ViewSet):
         bag_id = request.GET.get("bag_id")
         response = DecosJoinRequest().get_checkmarks_by_bag_id(bag_id)
 
-        serializer = PermitCheckmarkSerializer(data=response.data)
+        serializer = PermitCheckmarkSerializer(data=response)
 
         if serializer.is_valid():
             return Response(serializer.data)
