@@ -33,7 +33,6 @@ class DecosJoinRequest:
                 "content-type": "application/json",
             }
             request_params = {
-                "url": url,
                 "headers": headers,
                 "timeout": 30,
             }
@@ -45,19 +44,13 @@ class DecosJoinRequest:
                         "Authorization": f"Basic {settings.DECOS_JOIN_AUTH_BASE64}",
                     }
                 )
-                response = requests.get(url, headers=headers, timeout=30)
-            elif settings.DECOS_JOIN_USERNAME and settings.DECOS_JOIN_PASSWORD:
-                logger.info("Request to Decos using username/password")
-                request_params.update(
-                    {
-                        "auth": (
-                            settings.DECOS_JOIN_USERNAME,
-                            settings.DECOS_JOIN_PASSWORD,
-                        )
-                    }
-                )
 
-            response = requests.get(**request_params)
+            logger.info(url)
+            logger.info(request_params)
+
+            response = requests.get(url, **request_params)
+
+            logger.info(response)
 
             return response.json()
         except requests.exceptions.Timeout:
