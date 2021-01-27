@@ -2,9 +2,15 @@ import json
 import logging
 
 from apps.permits.api_queries_decos_join import DecosJoinRequest
+from apps.permits.forms import SearchForm
 from apps.permits.serializers import DecosPermitSerializer, PermitCheckmarkSerializer
 from constance.backends.database.models import Constance
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import FormView
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.decorators import action
@@ -65,3 +71,31 @@ class PermitViewSet(ViewSet):
         if response.ok:
             return Response(response)
         return False
+
+
+class DecosAPISearch(UserPassesTestMixin, FormView):
+    form_class = SearchForm
+    template_name = "decos_search.html"
+    success_url = "/admin/decos-api-search/"
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def post(self, request, *args, **kwargs):
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        if form.is_valid():
+            if form.cleaned_data.get("search_url"):
+                response = DecosJoinRequest().get(form.cleaned_data.get("search_url"))
+            elif form.cleaned_data.get("bag_id"):
+                response = DecosJoinRequest().get_decos_object_with_bag_id(
+                    form.cleaned_data.get("bag_id")
+                )
+            else:
+                response = DecosJoinRequest().get("")
+
+        context = self.get_context_data(**kwargs)
+        context["form"] = form
+        context["decos_data"] = response
+
+        return self.render_to_response(context)

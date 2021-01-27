@@ -1,0 +1,26 @@
+{% include 'head.html' %}
+
+<body class="p-sm-3">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Zoek">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+
+            {%include "items.html" with value=decos_data level=0 %}
+        </div>
+    </div>
+</div>
+{{ decos_data|json_script:"decos_data" }}
+<script>
+    decosData = JSON.parse($('#decos_data').html());
+</script>
+</body>
+</html>

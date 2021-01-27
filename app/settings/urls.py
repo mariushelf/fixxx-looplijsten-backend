@@ -2,6 +2,7 @@ from apps.cases.views import CaseSearchViewSet, CaseViewSet, PermitViewSet
 from apps.fraudprediction.views import FraudPredictionScoringViewSet
 from apps.health.views import health_bwv, health_default
 from apps.itinerary.views import ItineraryItemViewSet, ItineraryViewSet, NoteViewSet
+from apps.permits.views import DecosAPISearch
 from apps.permits.views import PermitViewSet as AllPermitsViewSet
 from apps.planner.views import (
     DaySettingsViewSet,
@@ -85,6 +86,7 @@ urlpatterns = [
         SpectacularSwaggerView.as_view(url_name="schema"),
         name="swagger-ui",
     ),
+    path("admin/decos-api-search/", DecosAPISearch.as_view(), name="decos_api_search"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # JSON handlers for errors

@@ -36,6 +36,8 @@ class DecosJoinRequest:
             return response.json()
         except requests.exceptions.Timeout:
             return False
+        except Exception:
+            return False
 
     def get_decos_object_with_address(self, address):
         url = (
