@@ -325,7 +325,9 @@ CITY_MAX_POSTAL_CODE = 1109
 # Secret key for accessing ZAKEN
 SECRET_KEY_TOP_ZAKEN = os.environ.get("SECRET_KEY_TOP_ZAKEN", None)
 # Connect to Decos Join
-DECOS_JOIN_API = "https://decosdvl.acc.amsterdam.nl:443/decosweb/aspx/api/v1/items/"
+DECOS_JOIN_API = os.getenv(
+    "DECOS_JOIN_API", "https://decosdvl.acc.amsterdam.nl/decosweb/aspx/api/v1/"
+)
 DECOS_JOIN_AUTH_BASE64 = os.getenv("DECOS_JOIN_AUTH_BASE64", None)
 DECOS_JOIN_USERNAME = os.getenv("DECOS_JOIN_USERNAME", None)
 DECOS_JOIN_PASSWORD = os.getenv("DECOS_JOIN_PASSWORD", None)
