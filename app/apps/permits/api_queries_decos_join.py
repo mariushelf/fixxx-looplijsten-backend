@@ -22,6 +22,10 @@ class DecosJoinRequest:
     Object to connect to decos join and retrieve permits
     """
 
+    def get(self, path):
+        url = "%s%s" % (settings.DECOS_JOIN_API, path)
+        return self._process_request_to_decos_join(url)
+
     def _process_request_to_decos_join(self, url):
         try:
             headers = {
@@ -35,14 +39,15 @@ class DecosJoinRequest:
             }
 
             if settings.DECOS_JOIN_AUTH_BASE64:
-                logger.error("Request to Decos using token")
+                logger.info("Request to Decos using token")
                 request_params["headers"].update(
                     {
                         "Authorization": f"Basic {settings.DECOS_JOIN_AUTH_BASE64}",
                     }
                 )
                 response = requests.get(url, headers=headers, timeout=30)
-            else:
+            elif settings.DECOS_JOIN_USERNAME and settings.DECOS_JOIN_PASSWORD:
+                logger.info("Request to Decos using username/password")
                 request_params.update(
                     {
                         "auth": (
@@ -53,11 +58,14 @@ class DecosJoinRequest:
                 )
 
             response = requests.get(**request_params)
-            response.raise_for_status()
 
             return response.json()
         except requests.exceptions.Timeout:
             logger.error("Request to Decos Join timed out")
+            return False
+        except Exception as e:
+            logger.error("Decos Join connection failed")
+            logger.error(str(e))
             return False
 
     def get_decos_object_with_address(self, address):

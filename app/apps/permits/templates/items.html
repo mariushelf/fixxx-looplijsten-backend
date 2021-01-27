@@ -1,0 +1,20 @@
+{% load list_tags %}
+{% with l=level|add:"1" %}
+
+{% if not value.items and not value|is_list %}
+    <strong>{{value}}</strong><br>
+{% elif value.items %}
+    {% for k, v in value.items %}
+    <span>{{ k }}</span>:
+    {% include "items.html" with value=v level=l %}
+    {% endfor %}
+{% elif value|is_list %}
+    <ul>
+    {% for i in value %}
+        <li>
+        {% include "items.html" with value=i level=l %}
+        </li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{% endwith %}
