@@ -78,6 +78,10 @@ class DecosAPISearch(UserPassesTestMixin, FormView):
     template_name = "decos_search.html"
     success_url = "/admin/decos-api-search/"
 
+    def get_context_data(self, **kwargs):
+        kwargs["base_url"] = settings.DECOS_JOIN_API
+        return super().get_context_data(**kwargs)
+
     def test_func(self):
         return self.request.user.is_superuser
 
