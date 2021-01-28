@@ -46,11 +46,11 @@ class DecosJoinRequest:
                 )
 
             logger.info(url)
-            logger.info(request_params)
 
             response = requests.get(url, **request_params)
 
-            logger.info(response)
+            logger.info(response.status_code)
+            logger.info(response.text)
 
             return response.json()
         except requests.exceptions.Timeout:
