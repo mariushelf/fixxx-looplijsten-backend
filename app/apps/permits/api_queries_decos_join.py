@@ -1,6 +1,9 @@
 import base64
+import json
 import logging
-from datetime import datetime
+import re
+from collections import defaultdict
+from datetime import date, datetime, time
 
 import requests
 from apps.permits.mocks import (
@@ -11,10 +14,73 @@ from apps.permits.serializers import (
     DecosJoinFolderFieldsResponseSerializer,
     DecosPermitSerializer,
 )
+from constance.backends.database.models import Constance
 from django.conf import settings
 from tenacity import after_log, retry, stop_after_attempt
 
 logger = logging.getLogger(__name__)
+
+
+def get_decos_join_constance_conf():
+    settings_key = settings.CONSTANCE_DECOS_JOIN_PERMIT_VALID_CONF
+    settings_conf, created = Constance.objects.get_or_create(key=settings_key)
+    print(settings_conf)
+    try:
+        return json.loads(settings_conf.value)
+    except Exception as e:
+        logger.error("Decos Join constance conf NO JSON")
+        logger.error(str(e))
+
+
+class DecosJoinConf:
+    FIELD_NAME = "field_name"
+    DECOS_JOIN_BOOK_KEY = "decos_join_book_key"
+    EXPRESSION_STRING = "expression_string"
+    INITIAL_DATA = "initial_data"
+    default_expression = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION
+    default_initial_data = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA
+    conf = {}
+    valid_permits = [
+        "has_b_and_b_permit",
+        "has_vacation_rental_permit",
+        "has_omzettings_permit",
+        "has_splitsing_permit",
+        "has_ontrekking_vorming_samenvoeging_permit",
+        "has_ligplaats_permit",
+    ]
+
+    def add_conf(self, conf):
+        new_conf = {}
+        try:
+            for p in conf:
+                if len(p) >= 2 and p[1] in self.valid_permits:
+                    new_conf.update(
+                        {
+                            p[0]: {
+                                self.DECOS_JOIN_BOOK_KEY: p[0],
+                                self.FIELD_NAME: p[1],
+                                self.EXPRESSION_STRING: p[2]
+                                if len(p) >= 3
+                                else self.default_expression,
+                                self.INITIAL_DATA: p[3]
+                                if len(p) >= 4
+                                else self.default_initial_data,
+                            }
+                        }
+                    )
+        except Exception as e:
+            logger.error("Decos Join config invalid format")
+            logger.error(str(e))
+        if new_conf:
+            self.conf = new_conf
+        print("---")
+        print(self.conf)
+
+    def get_conf_by_book_key(self, book_key):
+        return self.conf.get(book_key)
+
+    def get_book_keys(self):
+        return [k for k, v in self.conf.items()]
 
 
 class DecosJoinRequest:
@@ -93,6 +159,18 @@ class DecosJoinRequest:
         url = settings.DECOS_JOIN_API + f"items/{folder_id}/DOCUMENTS/"
         return self._process_request_to_decos_join(url)
 
+    def _datestring_to_date(self, field_value):
+        if type(field_value) == str and re.match(
+            r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", field_value
+        ):
+            return datetime.timestamp(
+                datetime.strptime(field_value.split("T")[0], "%Y-%m-%d")
+            )
+        return field_value
+
+    def _clean_fields_objects(self, fields):
+        return dict((k, self._datestring_to_date(v)) for k, v in fields.items())
+
     def _convert_datestring_to_date(self, date_string):
         if "T" in date_string:
             return datetime.strptime(date_string.split("T")[0], "%Y-%m-%d").date()
@@ -145,6 +223,33 @@ class DecosJoinRequest:
 
         return False
 
+    def _check_if_permit_is_valid_conf(self, permit, conf):
+        now = datetime.today()
+        permit_data = conf.get(DecosJoinConf.INITIAL_DATA, {})
+        permit_data.update(self._clean_fields_objects(permit))
+        permit_data.update(
+            {
+                "ts_now": datetime.timestamp(
+                    datetime(now.year, now.month, now.day, 0, 0, 0)
+                ),
+            }
+        )
+        base_str = conf.get(DecosJoinConf.EXPRESSION_STRING)
+        base_str = base_str if base_str else "bool()"
+        try:
+            compare_str = base_str.format(**permit_data)
+        except Exception as e:
+            compare_str = base_str
+            logger.error("Error Decos Join permit valid data mapping")
+            logger.error(str(e))
+        try:
+            valid = eval(compare_str)
+        except Exception as e:
+            logger.error("Error Decos Join permit valid expression evaluation")
+            logger.error(str(e))
+            return False
+        return valid
+
     def get_checkmarks_by_bag_id(self, bag_id):
         """ Get simple view of the important permits"""
         # TODO Make sure the response goes through a serializer so this doesn't break on KeyError
@@ -156,15 +261,16 @@ class DecosJoinRequest:
             "has_omzettings_permit": "UNKNOWN",
             "has_ligplaats_permit": "UNKNOWN",
         }
+        decos_join_conf_object = DecosJoinConf()
+        decos_join_conf_object.add_conf(settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF)
+        decos_join_conf_object.add_conf(get_decos_join_constance_conf())
+
         response_decos_obj = self.get_decos_object_with_bag_id(bag_id)
 
         if response_decos_obj:
             response_decos_folder = self._get_decos_folder(response_decos_obj)
 
             if response_decos_folder:
-                # Only on this moment we can say that
-                response["has_b_and_b_permit"] = "False"
-                response["has_vacation_rental_permit"] = "False"
 
                 for folder in response_decos_folder["content"]:
                     serializer = DecosJoinFolderFieldsResponseSerializer(
@@ -173,34 +279,18 @@ class DecosJoinRequest:
 
                     if serializer.is_valid():
                         parent_key = folder["fields"]["parentKey"]
+                        # print(folder)
+                        # print(parent_key in decos_join_conf_object.get_book_keys())
+                        if parent_key in decos_join_conf_object.get_book_keys():
+                            conf = decos_join_conf_object.get_conf_by_book_key(
+                                parent_key
+                            )
+                            response[
+                                conf.get(DecosJoinConf.FIELD_NAME)
+                            ] = self._check_if_permit_is_valid_conf(
+                                folder["fields"], conf
+                            )
 
-                        if parent_key == settings.DECOS_JOIN_BANDB_ID:
-                            response[
-                                "has_b_and_b_permit"
-                            ] = self._check_if_permit_is_valid(folder["fields"])
-                        elif parent_key == settings.DECOS_JOIN_VAKANTIEVERHUUR_ID:
-                            response[
-                                "has_vacation_rental_permit"
-                            ] = self._check_if_permit_is_valid(folder["fields"])
-                        elif parent_key == settings.DECOS_JOIN_OMZETTINGSVERGUNNING_ID:
-                            response[
-                                "has_omzettings_permit"
-                            ] = self._check_if_permit_is_valid(folder["fields"])
-                        elif parent_key == settings.DECOS_JOIN_SPLITSINGSVERGUNNING_ID:
-                            response[
-                                "has_splitsing_permit"
-                            ] = self._check_if_permit_is_valid(folder["fields"])
-                        elif (
-                            parent_key
-                            == settings.DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID
-                        ):
-                            response[
-                                "has_ontrekking_vorming_samenvoeging_permit"
-                            ] = self._check_if_permit_is_valid(folder["fields"])
-                        elif parent_key == settings.DECOS_JOIN_LIGPLAATSVERGUNNING_ID:
-                            response[
-                                "has_ligplaats_permit"
-                            ] = self._check_if_permit_is_valid(folder["fields"])
                     else:
                         # assign variable so it is visible in Sentry
                         unexpected_answer = folder["fields"]

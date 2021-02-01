@@ -198,7 +198,7 @@ SPECTACULAR_SETTINGS = {
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_KEY = "BRK_AUTHENTICATION_TOKEN"
-CONSTANCE_PERMIT_DATA = "PERMIT_DATA"
+CONSTANCE_DECOS_JOIN_PERMIT_VALID_CONF = "DECOS_JOIN_PERMIT_VALID_CONF"
 CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY = "BRK_AUTHENTICATION_TOKEN_EXPIRY"
 CONSTANCE_MAPS_KEY = "MAPS_KEY"
 
@@ -207,9 +207,9 @@ CONSTANCE_CONFIG = {
         "",
         "Authentication token for accessing BRK API",
     ),
-    CONSTANCE_PERMIT_DATA: (
+    CONSTANCE_DECOS_JOIN_PERMIT_VALID_CONF: (
         "",
-        "Permit data static dict[dict]",
+        "Decos Join permit valid conf",
     ),
     CONSTANCE_BRK_AUTHENTICATION_TOKEN_EXPIRY_KEY: (
         "",
@@ -341,11 +341,44 @@ DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID = (
     "EEB05166A55F47AC9393646AD7CA02DD"
 )
 DECOS_JOIN_LIGPLAATSVERGUNNING_ID = "27FB47C0444341828598F2AB546B618C"
+DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF = (
+    (
+        DECOS_JOIN_BANDB_ID,
+        "has_b_and_b_permit",
+    ),
+    (
+        DECOS_JOIN_VAKANTIEVERHUUR_ID,
+        "has_vacation_rental_permit",
+    ),
+    (
+        DECOS_JOIN_OMZETTINGSVERGUNNING_ID,
+        "has_omzettings_permit",
+    ),
+    (
+        DECOS_JOIN_SPLITSINGSVERGUNNING_ID,
+        "has_splitsing_permit",
+    ),
+    (
+        DECOS_JOIN_ONTREKKING_VORMING_SAMENVOEGING_VERGUNNINGEN_ID,
+        "has_ontrekking_vorming_samenvoeging_permit",
+    ),
+    (
+        DECOS_JOIN_LIGPLAATSVERGUNNING_ID,
+        "has_ligplaats_permit",
+    ),
+)
+DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION = "{date6} <= {ts_now} and {date7} >= {ts_now} and {date5} <= {ts_now} and '{dfunction}'.startswith('Verleend') or {date6} <= {ts_now} and {date5} <= {ts_now} and '{dfunction}'.startswith('Verleend')"
+DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA = {
+    "date5": 9999999999,
+    "date6": 9999999999,
+    "date7": 1,
+    "dfunction": "Niet verleend",
+}
 
 DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
 
 DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS = "90642DCCC2DB46469657C3D0DF0B1ED7"
-USE_DECOS_MOCK_DATA = False
+USE_DECOS_MOCK_DATA = True
 
 RABBIT_MQ_URL = os.environ.get("RABBIT_MQ_URL")
 RABBIT_MQ_PORT = os.environ.get("RABBIT_MQ_PORT")
