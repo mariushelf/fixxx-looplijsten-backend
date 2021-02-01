@@ -22,16 +22,24 @@ class DecosJoinRequest:
 
     def _process_request_to_decos_join(self, url):
         try:
-            username = settings.DECOS_JOIN_USERNAME
-            password = settings.DECOS_JOIN_PASSWORD
             headers = {
                 "Accept": "application/itemdata",
                 "content-type": "application/json",
             }
+            request_params = {
+                "headers": headers,
+                "timeout": 30,
+            }
 
-            response = requests.get(
-                url, headers=headers, timeout=8, auth=(username, password)
-            )
+            if settings.DECOS_JOIN_AUTH_BASE64:
+                logger.info("Request to Decos using token")
+                request_params["headers"].update(
+                    {
+                        "Authorization": f"Basic {settings.DECOS_JOIN_AUTH_BASE64}",
+                    }
+                )
+
+            response = requests.get(url, **request_params)
 
             return response.json()
         except requests.exceptions.Timeout:
