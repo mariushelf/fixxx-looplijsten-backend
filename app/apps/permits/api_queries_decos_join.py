@@ -297,8 +297,9 @@ class DecosJoinRequest:
                     else:
                         # assign variable so it is visible in Sentry
                         unexpected_answer = folder["fields"]
-                        print(unexpected_answer)
                         logger.error("DECOS JOIN serializer not valid")
+                        logger.info(unexpected_answer)
+                        logger.info(serializer.errors)
 
         return response
 
