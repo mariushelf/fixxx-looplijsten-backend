@@ -10,3 +10,10 @@ class SearchForm(forms.Form):
         label="Decos Join zoek op BAG ID",
         required=False,
     )
+    response_type = forms.ChoiceField(
+        label="BAG ID raw response of checkmarks reponse ",
+        choices=(
+            ("raw", "Raw"),
+            ("checkmarks", "Checkmarks"),
+        ),
+    )

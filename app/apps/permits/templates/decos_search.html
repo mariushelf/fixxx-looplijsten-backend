@@ -19,14 +19,9 @@
     </div>
     <div class="row">
         <div class="col-12">
-
-            {%include "items.html" with value=decos_data level=0 %}
+            <pre>{{ decos_data }}</pre>
         </div>
     </div>
 </div>
-{{ decos_data|json_script:"decos_data" }}
-<script>
-    decosData = JSON.parse($('#decos_data').html());
-</script>
 </body>
 </html>
