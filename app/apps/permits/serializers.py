@@ -89,7 +89,7 @@ class DecosJoinFolderFieldsResponseSerializer(serializers.Serializer):
     mailaddress = serializers.CharField(allow_null=True, allow_blank=True)
     mark = serializers.CharField(allow_null=True, allow_blank=True)
     num5 = serializers.IntegerField(allow_null=True)
-    num6 = serializers.IntegerField(allow_null=True)
+    num6 = serializers.IntegerField(allow_null=True, required=False)
     phone1 = serializers.CharField(allow_null=True, allow_blank=True)
     phone3 = serializers.CharField(allow_null=True, allow_blank=True)
     processed = serializers.BooleanField()

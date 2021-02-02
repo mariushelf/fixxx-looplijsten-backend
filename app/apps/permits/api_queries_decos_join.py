@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 def get_decos_join_constance_conf():
     settings_key = settings.CONSTANCE_DECOS_JOIN_PERMIT_VALID_CONF
     settings_conf, created = Constance.objects.get_or_create(key=settings_key)
-    print(settings_conf)
     try:
         return json.loads(settings_conf.value)
     except Exception as e:
@@ -73,8 +72,6 @@ class DecosJoinConf:
             logger.error(str(e))
         if new_conf:
             self.conf = new_conf
-        print("---")
-        print(self.conf)
 
     def get_conf_by_book_key(self, book_key):
         return self.conf.get(book_key)
@@ -269,7 +266,6 @@ class DecosJoinRequest:
 
         if response_decos_obj:
             response_decos_folder = self._get_decos_folder(response_decos_obj)
-
             if response_decos_folder:
 
                 for folder in response_decos_folder["content"]:
@@ -290,12 +286,19 @@ class DecosJoinRequest:
                             ] = self._check_if_permit_is_valid_conf(
                                 folder["fields"], conf
                             )
+                        else:
+                            logger.error("DECOS JOIN parent key not found in config")
+                            logger.info("book key: %s" % parent_key)
+                            logger.info(
+                                "Config keys: %s"
+                                % decos_join_conf_object.get_book_keys()
+                            )
 
                     else:
                         # assign variable so it is visible in Sentry
                         unexpected_answer = folder["fields"]
                         print(unexpected_answer)
-                        logger.error("DECOS JOIN responded with a unexpected answer")
+                        logger.error("DECOS JOIN serializer not valid")
 
         return response
 

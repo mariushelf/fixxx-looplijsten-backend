@@ -91,15 +91,26 @@ class DecosAPISearch(UserPassesTestMixin, FormView):
         if form.is_valid():
             if form.cleaned_data.get("search_url"):
                 response = DecosJoinRequest().get(form.cleaned_data.get("search_url"))
-            elif form.cleaned_data.get("bag_id"):
+            elif (
+                form.cleaned_data.get("bag_id")
+                and form.cleaned_data.get("response_type") == "raw"
+            ):
                 response = DecosJoinRequest().get_decos_object_with_bag_id(
                     form.cleaned_data.get("bag_id")
                 )
+            elif (
+                form.cleaned_data.get("bag_id")
+                and form.cleaned_data.get("response_type") == "checkmarks"
+            ):
+                response = DecosJoinRequest().get_checkmarks_by_bag_id(
+                    form.cleaned_data.get("bag_id")
+                )
+
             else:
                 response = DecosJoinRequest().get("")
 
         context = self.get_context_data(**kwargs)
         context["form"] = form
-        context["decos_data"] = response
+        context["decos_data"] = json.dumps(response, indent=4)
 
         return self.render_to_response(context)
