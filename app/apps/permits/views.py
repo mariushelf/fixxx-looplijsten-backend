@@ -81,6 +81,7 @@ class DecosAPISearch(UserPassesTestMixin, FormView):
     def post(self, request, *args, **kwargs):
         form_class = self.get_form_class()
         form = self.get_form(form_class)
+        dt = datetime.today()
         if form.is_valid():
             if form.cleaned_data.get("search_url"):
                 response = DecosJoinRequest().get(form.cleaned_data.get("search_url"))
@@ -95,8 +96,8 @@ class DecosAPISearch(UserPassesTestMixin, FormView):
                 form.cleaned_data.get("bag_id")
                 and form.cleaned_data.get("response_type") == "checkmarks"
             ):
-                response = DecosJoinRequest().get_checkmarks_by_bag_id(
-                    form.cleaned_data.get("bag_id")
+                response = DecosJoinRequest().get_permits_by_bag_id(
+                    form.cleaned_data.get("bag_id"), dt
                 )
 
             else:
