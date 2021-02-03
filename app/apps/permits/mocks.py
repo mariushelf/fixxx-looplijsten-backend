@@ -68,7 +68,7 @@ def get_decos_join_mock_folder_fields():
                     ),
                     "firstname": "Centrum",
                     "dfunction": "Verleend met",
-                    "parentKey": "D8D961993D7E478D9B644587822817B1",
+                    "parentKey": "78F23C45E0FD43B19FF98633FE11C7D3",
                     "sequence": 1,
                     "itemtype_key": "FOLDER",
                     "mailaddress": "Nieuwezijds Voorburgwal 147",

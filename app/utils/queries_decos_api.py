@@ -156,11 +156,14 @@ class DecosJoinRequest:
                     if serializer.is_valid():
                         parent_key = folder["fields"]["parentKey"]
 
-                        if parent_key == settings.DECOS_JOIN_BANDB_ID:
+                        if parent_key == settings.DECOS_JOIN_B_EN_B_VERGUNNING_ID:
                             response[
                                 "has_b_and_b_permit"
                             ] = self._check_if_permit_is_valid(folder["fields"])
-                        elif parent_key == settings.DECOS_JOIN_VAKANTIEVERHUUR_ID:
+                        elif (
+                            parent_key
+                            == settings.DECOS_JOIN_VAKANTIEVERHUURVERGUNNING_ID
+                        ):
                             response[
                                 "has_vacation_rental_permit"
                             ] = self._check_if_permit_is_valid(folder["fields"])
@@ -199,11 +202,14 @@ class DecosJoinRequest:
                                 folder["fields"]["date7"].split("T")[0], "%Y-%m-%d"
                             ).date()
 
-                        if parent_key == settings.DECOS_JOIN_BANDB_ID:
+                        if parent_key == settings.DECOS_JOIN_B_EN_B_VERGUNNING_ID:
                             ser_data[
                                 "permit_type"
                             ] = DecosPermitSerializer.PERMIT_B_AND_B
-                        elif parent_key == settings.DECOS_JOIN_VAKANTIEVERHUUR_ID:
+                        elif (
+                            parent_key
+                            == settings.DECOS_JOIN_VAKANTIEVERHUURVERGUNNING_ID
+                        ):
                             ser_data["permit_type"] = DecosPermitSerializer.PERMIT_VV
                         else:
                             ser_data[
