@@ -24,7 +24,7 @@ class PermitViewSetTest(APITestCase):
     """
 
     MOCK_BAG_ID = "0363010000809805"
-    PERMIT_URL_NAME = "all-permits-permit checkmarks"
+    PERMIT_URL_NAME = "all-permits-permit details"
 
     def _get_url(self):
         return "%s?bag_id=%s" % (
@@ -54,8 +54,8 @@ class PermitViewSetTest(APITestCase):
         # The response returns a 404
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    @patch("apps.permits.views.DecosJoinRequest.get_checkmarks_by_bag_id")
-    def test_authenticated_requests_succeeds(self, mock_get_checkmarks_by_bag_id):
+    @patch("apps.permits.views.DecosJoinRequest.get_permits_by_bag_id")
+    def test_authenticated_requests_succeeds(self, mock_get_permits_by_bag_id):
         """
         An authenticated request succeeds and contains all the necessary data
         """
@@ -68,7 +68,7 @@ class PermitViewSetTest(APITestCase):
             "has_omzettings_permit": "UNKNOWN",
             "has_ligplaats_permit": "UNKNOWN",
         }
-        mock_get_checkmarks_by_bag_id.return_value = MOCK_RESPONSE
+        mock_get_permits_by_bag_id.return_value = MOCK_RESPONSE
 
         url = self._get_url()
         client = get_authenticated_client()

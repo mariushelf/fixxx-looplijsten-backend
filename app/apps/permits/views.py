@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 from apps.permits.api_queries_decos_join import DecosJoinRequest
 from apps.permits.forms import SearchForm
@@ -30,32 +31,20 @@ bag_id = OpenApiParameter(
 class PermitViewSet(ViewSet):
     @extend_schema(
         parameters=[bag_id],
-        description="Get permit checkmarks based on bag id",
-        responses={200: PermitCheckmarkSerializer()},
-    )
-    @action(detail=False, url_name="permit checkmarks", url_path="checkmarks")
-    def get_permit_checkmarks(self, request):
-        bag_id = request.GET.get("bag_id")
-        if not bag_id:
-            raise Http404
-
-        response = DecosJoinRequest().get_checkmarks_by_bag_id(bag_id)
-
-        serializer = PermitCheckmarkSerializer(data=response)
-
-        if serializer.is_valid():
-            return Response(serializer.data)
-        return Response(serializer.initial_data)
-
-    @extend_schema(
-        parameters=[bag_id],
         description="Get permit details based on bag id",
         responses={200: DecosPermitSerializer(many=True)},
     )
     @action(detail=False, url_name="permit details", url_path="details")
-    def get_permit_details(self, request):
+    def get_permits_by_bag_id(self, request):
         bag_id = request.GET.get("bag_id")
-        response = DecosJoinRequest().get_permits_by_bag_id(bag_id)
+        dt = datetime.strptime(
+            request.GET.get("date", datetime.today().strftime("%Y-%m-%d")), "%Y-%m-%d"
+        )
+
+        if not bag_id:
+            raise Http404
+
+        response = DecosJoinRequest().get_permits_by_bag_id(bag_id, dt)
 
         serializer = DecosPermitSerializer(data=response, many=True)
 

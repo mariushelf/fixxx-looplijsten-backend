@@ -32,38 +32,35 @@ def get_decos_join_constance_conf():
 
 
 class DecosJoinConf:
-    FIELD_NAME = "field_name"
+    PERMIT_TYPE = "permit_type"
     DECOS_JOIN_BOOK_KEY = "decos_join_book_key"
     EXPRESSION_STRING = "expression_string"
     INITIAL_DATA = "initial_data"
+    FIELD_MAPPING = "field_mapping"
     default_expression = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION
     default_initial_data = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA
+    default_field_mapping = settings.DECOS_JOIN_DEFAULT_FIELD_MAPPING
     conf = {}
-    valid_permits = [
-        "has_b_and_b_permit",
-        "has_vacation_rental_permit",
-        "has_omzettings_permit",
-        "has_splitsing_permit",
-        "has_ontrekking_vorming_samenvoeging_permit",
-        "has_ligplaats_permit",
-    ]
 
     def add_conf(self, conf):
         new_conf = {}
         try:
             for p in conf:
-                if len(p) >= 2 and p[1] in self.valid_permits:
+                if len(p) >= 2:
                     new_conf.update(
                         {
                             p[0]: {
                                 self.DECOS_JOIN_BOOK_KEY: p[0],
-                                self.FIELD_NAME: p[1],
+                                self.PERMIT_TYPE: p[1],
                                 self.EXPRESSION_STRING: p[2]
                                 if len(p) >= 3
                                 else self.default_expression,
                                 self.INITIAL_DATA: p[3]
                                 if len(p) >= 4
                                 else self.default_initial_data,
+                                self.FIELD_MAPPING: p[4]
+                                if len(p) >= 5
+                                else self.default_field_mapping,
                             }
                         }
                     )
@@ -168,6 +165,13 @@ class DecosJoinRequest:
     def _clean_fields_objects(self, fields):
         return dict((k, self._datestring_to_date(v)) for k, v in fields.items())
 
+    def _map_fields_on_conf_fields(self, fields, conf):
+        return dict(
+            (conf.get(DecosJoinConf.FIELD_MAPPING).get(k), v)
+            for k, v in fields.items()
+            if k in list(conf.get(DecosJoinConf.FIELD_MAPPING, {}).keys())
+        )
+
     def _convert_datestring_to_date(self, date_string):
         if "T" in date_string:
             return datetime.strptime(date_string.split("T")[0], "%Y-%m-%d").date()
@@ -190,44 +194,13 @@ class DecosJoinRequest:
         else:
             return get_decos_join_mock_folder_fields()
 
-    def _check_if_permit_is_valid(self, permit):
-        premit_date_granted = self._convert_datestring_to_date(permit["date5"])
-        permit_status = permit["dfunction"]
-        permit_from_date = self._convert_datestring_to_date(permit["date6"])
-
-        if "date7" in permit:
-            permit_untill_date = self._convert_datestring_to_date(permit["date7"])
-
-            if (
-                permit_from_date
-                and premit_date_granted
-                and permit_from_date <= datetime.today().date()
-                and permit_untill_date >= datetime.today().date()
-                and premit_date_granted <= datetime.today().date()
-                and permit_status == "Verleend"
-            ):
-                return True
-        else:
-            if (
-                premit_date_granted
-                and premit_date_granted <= datetime.today().date()
-                and permit_from_date <= datetime.today().date()
-                and permit_status == "Verleend"
-            ):
-                return True
-
-        # Check if permit is valid today and has been granted
-
-        return False
-
-    def _check_if_permit_is_valid_conf(self, permit, conf):
-        now = datetime.today()
+    def _check_if_permit_is_valid_conf(self, permit, conf, dt):
         permit_data = conf.get(DecosJoinConf.INITIAL_DATA, {})
         permit_data.update(self._clean_fields_objects(permit))
         permit_data.update(
             {
                 "ts_now": datetime.timestamp(
-                    datetime(now.year, now.month, now.day, 0, 0, 0)
+                    datetime(dt.year, dt.month, dt.day, 0, 0, 0)
                 ),
             }
         )
@@ -239,25 +212,20 @@ class DecosJoinRequest:
             compare_str = base_str
             logger.error("Error Decos Join permit valid data mapping")
             logger.error(str(e))
+            return "UNKNOWN"
         try:
             valid = eval(compare_str)
         except Exception as e:
             logger.error("Error Decos Join permit valid expression evaluation")
             logger.error(str(e))
-            return False
+            return "UNKNOWN"
         return valid
 
-    def get_checkmarks_by_bag_id(self, bag_id):
+    def get_permits_by_bag_id(self, bag_id, dt):
         """ Get simple view of the important permits"""
         # TODO Make sure the response goes through a serializer so this doesn't break on KeyError
-        response = {
-            "has_b_and_b_permit": "UNKNOWN",
-            "has_vacation_rental_permit": "UNKNOWN",
-            "has_splitsing_permit": "UNKNOWN",
-            "has_ontrekking_vorming_samenvoeging_permit": "UNKNOWN",
-            "has_omzettings_permit": "UNKNOWN",
-            "has_ligplaats_permit": "UNKNOWN",
-        }
+        response = []
+
         decos_join_conf_object = DecosJoinConf()
         decos_join_conf_object.add_conf(settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF)
         decos_join_conf_object.add_conf(get_decos_join_constance_conf())
@@ -275,17 +243,35 @@ class DecosJoinRequest:
 
                     if serializer.is_valid():
                         parent_key = folder["fields"]["parentKey"]
-                        # print(folder)
-                        # print(parent_key in decos_join_conf_object.get_book_keys())
+
                         if parent_key in decos_join_conf_object.get_book_keys():
+                            data = {}
                             conf = decos_join_conf_object.get_conf_by_book_key(
                                 parent_key
                             )
-                            response[
-                                conf.get(DecosJoinConf.FIELD_NAME)
-                            ] = self._check_if_permit_is_valid_conf(
-                                folder["fields"], conf
+                            print(
+                                self._map_fields_on_conf_fields(folder["fields"], conf)
                             )
+                            data.update(
+                                {
+                                    "permit_granted": self._check_if_permit_is_valid_conf(
+                                        folder["fields"], conf, dt
+                                    ),
+                                    "permit_type": conf.get(DecosJoinConf.PERMIT_TYPE),
+                                    "raw_data": folder["fields"],
+                                    "details": self._map_fields_on_conf_fields(
+                                        folder["fields"], conf
+                                    ),
+                                    "date_from": datetime.strptime(
+                                        folder["fields"]["date6"].split("T")[0],
+                                        "%Y-%m-%d",
+                                    ).date(),
+                                }
+                            )
+                            permit_serializer = DecosPermitSerializer(data=data)
+                            if permit_serializer.is_valid():
+                                response.append(permit_serializer.data)
+                            print(permit_serializer.errors)
                         else:
                             logger.error("DECOS JOIN parent key not found in config")
                             logger.info("book key: %s" % parent_key)
@@ -302,59 +288,3 @@ class DecosJoinRequest:
                         logger.info(serializer.errors)
 
         return response
-
-    def get_permits_by_bag_id(self, bag_id):
-        response_decos_obj = self.get_decos_object_with_bag_id(bag_id)
-        permits = []
-
-        if response_decos_obj:
-            response_decos_folder = self._get_decos_folder(response_decos_obj)
-
-            if response_decos_folder:
-                for folder in response_decos_folder["content"]:
-                    serializer = DecosJoinFolderFieldsResponseSerializer(
-                        data=folder["fields"]
-                    )
-
-                    if serializer.is_valid():
-                        ser_data = {
-                            "permit_granted": self._check_if_permit_is_valid(
-                                folder["fields"]
-                            ),
-                            "processed": folder["fields"]["dfunction"],
-                            "date_from": datetime.strptime(
-                                folder["fields"]["date6"].split("T")[0], "%Y-%m-%d"
-                            ).date(),
-                        }
-                        parent_key = folder["fields"]["parentKey"]
-
-                        if "date7" in folder["fields"]:
-                            ser_data["date_to"] = datetime.strptime(
-                                folder["fields"]["date7"].split("T")[0], "%Y-%m-%d"
-                            ).date()
-
-                        if parent_key == settings.DECOS_JOIN_BANDB_ID:
-                            ser_data[
-                                "permit_type"
-                            ] = DecosPermitSerializer.PERMIT_B_AND_B
-                        elif parent_key == settings.DECOS_JOIN_VAKANTIEVERHUUR_ID:
-                            ser_data["permit_type"] = DecosPermitSerializer.PERMIT_VV
-                        else:
-                            ser_data[
-                                "permit_type"
-                            ] = DecosPermitSerializer.PERMIT_UNKNOWN
-
-                        permit_serializer = DecosPermitSerializer(data=ser_data)
-                        if permit_serializer.is_valid():
-                            permits.append(permit_serializer.data)
-                        else:
-                            p_data = permit_serializer.data
-                            print(p_data)
-                            logger.error("permit_data is not valid")
-
-                    else:
-                        raw_data = folder["fields"]
-                        ser_errors = serializer.errors
-                        print(raw_data, ser_errors)
-                        logger.error("serializer is not valid")
-        return permits
