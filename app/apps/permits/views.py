@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.http import Http404
 from django.utils.decorators import method_decorator
 from django.views.generic.edit import FormView
 from drf_spectacular.types import OpenApiTypes
@@ -35,6 +36,9 @@ class PermitViewSet(ViewSet):
     @action(detail=False, url_name="permit checkmarks", url_path="checkmarks")
     def get_permit_checkmarks(self, request):
         bag_id = request.GET.get("bag_id")
+        if not bag_id:
+            raise Http404
+
         response = DecosJoinRequest().get_checkmarks_by_bag_id(bag_id)
 
         serializer = PermitCheckmarkSerializer(data=response)
