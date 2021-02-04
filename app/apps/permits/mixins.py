@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from apps.permits.api_queries_decos_join import DecosJoinRequest
-from apps.permits.serializers import DecosPermitSerializer, PermitCheckmarkSerializer
+from apps.permits.serializers import DecosPermitSerializer
 from django.shortcuts import render
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema

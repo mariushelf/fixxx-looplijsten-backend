@@ -4,7 +4,7 @@ from datetime import datetime
 
 from apps.permits.api_queries_decos_join import DecosJoinRequest
 from apps.permits.forms import SearchForm
-from apps.permits.serializers import DecosPermitSerializer, PermitCheckmarkSerializer
+from apps.permits.serializers import DecosPermitSerializer
 from constance.backends.database.models import Constance
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
