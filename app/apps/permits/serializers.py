@@ -3,17 +3,6 @@ from rest_framework import serializers
 PERMIT_DEFAULT_CHOICES = ("True", "False", "UNKNOWN")
 
 
-class PermitCheckmarkSerializer(serializers.Serializer):
-    has_b_and_b_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-    has_vacation_rental_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-    has_splitsing_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-    has_ontrekking_vorming_samenvoeging_permit = serializers.ChoiceField(
-        choices=PERMIT_DEFAULT_CHOICES
-    )
-    has_omzettings_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-    has_ligplaats_permit = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
-
-
 # TODO: This is currently not used. Should it be removed?
 class DecosJoinObjectFieldsResponseSerializer(serializers.Serializer):
     """
@@ -74,7 +63,7 @@ class DecosJoinFolderFieldsResponseSerializer(serializers.Serializer):
     date2 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     date4 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     date5 = serializers.CharField(required=False)
-    date6 = serializers.CharField()
+    date6 = serializers.CharField(required=False)
     date7 = serializers.CharField(required=False)
     department = serializers.CharField(
         allow_null=True, allow_blank=True, required=False
@@ -133,7 +122,6 @@ class DecosJoinFolderFieldsResponseSerializer(serializers.Serializer):
 class DecosPermitSerializer(serializers.Serializer):
     permit_granted = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
     permit_type = serializers.CharField()
-    date_from = serializers.DateField(allow_null=True)
     decos_join_web_url = serializers.URLField(default="https://decosdvl.amsterdam.nl")
-    raw_data = DecosJoinFolderFieldsResponseSerializer(allow_null=True)
-    details = serializers.DictField(allow_null=True)
+    raw_data = DecosJoinFolderFieldsResponseSerializer(allow_null=True, required=False)
+    details = serializers.DictField(allow_null=True, required=False)

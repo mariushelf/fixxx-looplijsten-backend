@@ -40,28 +40,26 @@ class DecosJoinConf:
     default_expression = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION
     default_initial_data = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA
     default_field_mapping = settings.DECOS_JOIN_DEFAULT_FIELD_MAPPING
-    conf = {}
+    conf = []
 
     def add_conf(self, conf):
-        new_conf = {}
+        new_conf = []
         try:
             for p in conf:
                 if len(p) >= 2:
-                    new_conf.update(
+                    new_conf.append(
                         {
-                            p[0]: {
-                                self.DECOS_JOIN_BOOK_KEY: p[0],
-                                self.PERMIT_TYPE: p[1],
-                                self.EXPRESSION_STRING: p[2]
-                                if len(p) >= 3
-                                else self.default_expression,
-                                self.INITIAL_DATA: p[3]
-                                if len(p) >= 4
-                                else self.default_initial_data,
-                                self.FIELD_MAPPING: p[4]
-                                if len(p) >= 5
-                                else self.default_field_mapping,
-                            }
+                            self.DECOS_JOIN_BOOK_KEY: p[0],
+                            self.PERMIT_TYPE: p[1],
+                            self.EXPRESSION_STRING: p[2]
+                            if len(p) >= 3
+                            else self.default_expression,
+                            self.INITIAL_DATA: p[3]
+                            if len(p) >= 4
+                            else self.default_initial_data,
+                            self.FIELD_MAPPING: p[4]
+                            if len(p) >= 5
+                            else self.default_field_mapping,
                         }
                     )
         except Exception as e:
@@ -71,10 +69,16 @@ class DecosJoinConf:
             self.conf = new_conf
 
     def get_conf_by_book_key(self, book_key):
-        return self.conf.get(book_key)
+        for p in self.conf:
+            if p.get(self.DECOS_JOIN_BOOK_KEY) == book_key:
+                return p
 
     def get_book_keys(self):
-        return [k for k, v in self.conf.items()]
+        return [v.get(self.DECOS_JOIN_BOOK_KEY) for v in self.conf]
+
+    def __iter__(self):
+        for p in self.conf:
+            yield p
 
 
 class DecosJoinRequest:
@@ -223,12 +227,18 @@ class DecosJoinRequest:
 
     def get_permits_by_bag_id(self, bag_id, dt):
         """ Get simple view of the important permits"""
-        # TODO Make sure the response goes through a serializer so this doesn't break on KeyError
-        response = []
 
         decos_join_conf_object = DecosJoinConf()
         decos_join_conf_object.add_conf(settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF)
         decos_join_conf_object.add_conf(get_decos_join_constance_conf())
+
+        response = [
+            {
+                "permit_granted": "UNKNOWN",
+                "permit_type": v.get(DecosJoinConf.PERMIT_TYPE),
+            }
+            for v in decos_join_conf_object
+        ]
 
         response_decos_obj = self.get_decos_object_with_bag_id(bag_id)
 
@@ -249,9 +259,6 @@ class DecosJoinRequest:
                             conf = decos_join_conf_object.get_conf_by_book_key(
                                 parent_key
                             )
-                            print(
-                                self._map_fields_on_conf_fields(folder["fields"], conf)
-                            )
                             data.update(
                                 {
                                     "permit_granted": self._check_if_permit_is_valid_conf(
@@ -262,16 +269,15 @@ class DecosJoinRequest:
                                     "details": self._map_fields_on_conf_fields(
                                         folder["fields"], conf
                                     ),
-                                    "date_from": datetime.strptime(
-                                        folder["fields"]["date6"].split("T")[0],
-                                        "%Y-%m-%d",
-                                    ).date(),
                                 }
                             )
                             permit_serializer = DecosPermitSerializer(data=data)
                             if permit_serializer.is_valid():
-                                response.append(permit_serializer.data)
-                            print(permit_serializer.errors)
+                                for d in response:
+                                    if d.get("permit_type") == conf.get(
+                                        DecosJoinConf.PERMIT_TYPE
+                                    ):
+                                        d.update(permit_serializer.data)
                         else:
                             logger.error("DECOS JOIN parent key not found in config")
                             logger.info("book key: %s" % parent_key)
