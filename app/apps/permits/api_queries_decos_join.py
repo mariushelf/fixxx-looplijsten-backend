@@ -273,53 +273,40 @@ class DecosJoinRequest:
             if response_decos_folder:
 
                 for folder in response_decos_folder["content"]:
-                    serializer = DecosJoinFolderFieldsResponseSerializer(
-                        data=folder["fields"]
-                    )
 
-                    if serializer.is_valid():
-                        parent_key = folder["fields"]["parentKey"]
+                    parent_key = folder.get("fields", {}).get("parentKey")
 
-                        if parent_key in decos_join_conf_object.get_book_keys():
-                            data = {}
-                            conf = decos_join_conf_object.get_conf_by_book_key(
-                                parent_key
-                            )
-                            data.update(
-                                {
-                                    "permit_granted": decos_join_conf_object.expression_is_valid(
-                                        folder["fields"], conf, dt
-                                    ),
-                                    "permit_type": conf.get(DecosJoinConf.PERMIT_TYPE),
-                                    "raw_data": folder["fields"],
-                                    "details": decos_join_conf_object.map_data_on_conf_keys(
-                                        folder["fields"], conf
-                                    ),
-                                }
-                            )
-                            permit_serializer = DecosPermitSerializer(data=data)
-                            if permit_serializer.is_valid():
-                                for d in response:
-                                    if d.get("permit_type") == conf.get(
-                                        DecosJoinConf.PERMIT_TYPE
-                                    ):
-                                        d.update(permit_serializer.data)
-                        else:
-                            logger.error("DECOS JOIN parent key not found in config")
-                            logger.info("book key: %s" % parent_key)
-                            logger.info(
-                                "permit name: %s" % folder["fields"].get("text45")
-                            )
-                            logger.info(
-                                "permit result: %s" % folder["fields"].get("dfunction")
-                            )
-                            logger.info(
-                                "Config keys: %s"
-                                % decos_join_conf_object.get_book_keys()
-                            )
-
+                    if parent_key in decos_join_conf_object.get_book_keys():
+                        data = {}
+                        conf = decos_join_conf_object.get_conf_by_book_key(parent_key)
+                        data.update(
+                            {
+                                "permit_granted": decos_join_conf_object.expression_is_valid(
+                                    folder["fields"], conf, dt
+                                ),
+                                "permit_type": conf.get(DecosJoinConf.PERMIT_TYPE),
+                                "raw_data": folder["fields"],
+                                "details": decos_join_conf_object.map_data_on_conf_keys(
+                                    folder["fields"], conf
+                                ),
+                            }
+                        )
+                        permit_serializer = DecosPermitSerializer(data=data)
+                        if permit_serializer.is_valid():
+                            for d in response:
+                                if d.get("permit_type") == conf.get(
+                                    DecosJoinConf.PERMIT_TYPE
+                                ):
+                                    d.update(permit_serializer.data)
                     else:
-                        logger.error("DECOS JOIN serializer not valid")
-                        logger.info(serializer.errors)
+                        logger.error("DECOS JOIN parent key not found in config")
+                        logger.info("book key: %s" % parent_key)
+                        logger.info("permit name: %s" % folder["fields"].get("text45"))
+                        logger.info(
+                            "permit result: %s" % folder["fields"].get("dfunction")
+                        )
+                        logger.info(
+                            "Config keys: %s" % decos_join_conf_object.get_book_keys()
+                        )
 
         return response

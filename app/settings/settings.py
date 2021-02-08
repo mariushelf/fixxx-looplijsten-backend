@@ -371,14 +371,17 @@ DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION = "{date6} <= {ts_now} and {date7} >=
 DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA = {
     "date5": 9999999999,
     "date6": 9999999999,
-    "date7": 1,
-    "dfunction": "Niet verleend",
+    "date7": 9999999999,
+    "date13": 9999999999,
+    "dfunction": "",
 }
 DECOS_JOIN_DEFAULT_FIELD_MAPPING = {
-    "date6": "DATE_FROM",
-    "date7": "DATE_UNTIL",
-    "dfunction": "RESULT_VERBOSE",
+    "date6": "DATE_VALID_FROM",
+    "date7": "DATE_VALID_UNTIL",
+    "dfunction": "RESULT",
     "text45": "PERMIT_NAME",
+    "surname": "APPLICANT",
+    "text19": "HOLDER",
 }
 
 DECOS_JOIN_BOOK_UNKNOWN_BOOK = "B1FF791EA9FA44698D5ABBB1963B94EC"
