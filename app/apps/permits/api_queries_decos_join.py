@@ -31,7 +31,7 @@ def get_decos_join_constance_conf():
         logger.error(str(e))
 
 
-class DecosJoinConf(list):
+class DecosJoinConf:
     PERMIT_TYPE = "permit_type"
     DECOS_JOIN_BOOK_KEY = "decos_join_book_key"
     EXPRESSION_STRING = "expression_string"
@@ -41,6 +41,13 @@ class DecosJoinConf(list):
     default_initial_data = {}
     default_field_mapping = {}
     conf = []
+
+    def __len__(self):
+        return len(self.conf)
+
+    def __iter__(self):
+        for c in self.conf:
+            yield c
 
     def add_conf(self, conf):
         new_conf = []
@@ -66,10 +73,13 @@ class DecosJoinConf(list):
             logger.error("Decos Join config invalid format")
             logger.error(str(e))
         if new_conf:
+            self.conf = []
             for c in new_conf:
-                self.append(c)
+                self.conf.append(c)
 
     def map_data_on_conf_keys(self, data, conf):
+        if not conf:
+            return {}
         return dict(
             (conf.get(self.FIELD_MAPPING).get(k), v)
             for k, v in data.items()
@@ -86,10 +96,14 @@ class DecosJoinConf(list):
         return datestring
 
     def clean_data(self, data):
+        if not data:
+            return {}
         return dict((k, self.datestring_to_timestamp(v)) for k, v in data.items())
 
     def expression_is_valid(self, data_to_validate, conf, dt):
         data = {}
+        if not conf or not dt:
+            return False
         data.update(conf.get(self.INITIAL_DATA, {}))
         data.update(self.clean_data(data_to_validate))
         data.update(
