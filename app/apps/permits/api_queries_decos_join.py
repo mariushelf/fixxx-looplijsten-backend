@@ -31,15 +31,15 @@ def get_decos_join_constance_conf():
         logger.error(str(e))
 
 
-class DecosJoinConf:
+class DecosJoinConf(list):
     PERMIT_TYPE = "permit_type"
     DECOS_JOIN_BOOK_KEY = "decos_join_book_key"
     EXPRESSION_STRING = "expression_string"
     INITIAL_DATA = "initial_data"
     FIELD_MAPPING = "field_mapping"
-    default_expression = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION
-    default_initial_data = settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA
-    default_field_mapping = settings.DECOS_JOIN_DEFAULT_FIELD_MAPPING
+    default_expression = "bool()"
+    default_initial_data = {}
+    default_field_mapping = {}
     conf = []
 
     def add_conf(self, conf):
@@ -49,12 +49,12 @@ class DecosJoinConf:
                 if len(p) >= 2:
                     new_conf.append(
                         {
-                            self.DECOS_JOIN_BOOK_KEY: p[0],
-                            self.PERMIT_TYPE: p[1],
-                            self.EXPRESSION_STRING: p[2]
+                            self.DECOS_JOIN_BOOK_KEY: str(p[0]),
+                            self.PERMIT_TYPE: str(p[1]),
+                            self.EXPRESSION_STRING: str(p[2])
                             if len(p) >= 3
                             else self.default_expression,
-                            self.INITIAL_DATA: p[3]
+                            self.INITIAL_DATA: dict(p[3])
                             if len(p) >= 4
                             else self.default_initial_data,
                             self.FIELD_MAPPING: p[4]
@@ -66,19 +66,72 @@ class DecosJoinConf:
             logger.error("Decos Join config invalid format")
             logger.error(str(e))
         if new_conf:
-            self.conf = new_conf
+            for c in new_conf:
+                self.append(c)
+
+    def map_data_on_conf_keys(self, data, conf):
+        return dict(
+            (conf.get(self.FIELD_MAPPING).get(k), v)
+            for k, v in data.items()
+            if k in list(conf.get(self.FIELD_MAPPING, {}).keys())
+        )
+
+    def datestring_to_timestamp(self, datestring):
+        if type(datestring) == str and re.match(
+            r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", datestring
+        ):
+            return datetime.timestamp(
+                datetime.strptime(datestring.split("T")[0], "%Y-%m-%d")
+            )
+        return datestring
+
+    def clean_data(self, data):
+        return dict((k, self.datestring_to_timestamp(v)) for k, v in data.items())
+
+    def expression_is_valid(self, data_to_validate, conf, dt):
+        data = {}
+        data.update(conf.get(self.INITIAL_DATA, {}))
+        data.update(self.clean_data(data_to_validate))
+        data.update(
+            {
+                "ts_now": datetime.timestamp(
+                    datetime(dt.year, dt.month, dt.day, 0, 0, 0)
+                ),
+            }
+        )
+        base_str = conf.get(self.EXPRESSION_STRING)
+        base_str = base_str if base_str else "bool()"
+        try:
+            compare_str = base_str.format(**data)
+        except Exception as e:
+            compare_str = base_str
+            logger.error("Error valid data mapping")
+            logger.error(str(e))
+            return False
+        try:
+            valid = eval(compare_str)
+        except Exception as e:
+            logger.error("Error valid expression evaluation")
+            logger.error(str(e))
+            return False
+        return valid
+
+    def set_default_expression(self, expression_str):
+        self.default_expression = expression_str
+
+    def set_default_initial_data(self, initial_data_dict):
+        self.default_initial_data = initial_data_dict
+
+    def set_default_field_mapping(self, field_mapping_dict):
+        self.default_field_mapping = field_mapping_dict
 
     def get_conf_by_book_key(self, book_key):
-        for p in self.conf:
+        for p in self:
             if p.get(self.DECOS_JOIN_BOOK_KEY) == book_key:
                 return p
 
     def get_book_keys(self):
-        return [v.get(self.DECOS_JOIN_BOOK_KEY) for v in self.conf]
-
-    def __iter__(self):
-        for p in self.conf:
-            yield p
+        return [v.get(self.DECOS_JOIN_BOOK_KEY) for v in self]
 
 
 class DecosJoinRequest:
@@ -157,30 +210,6 @@ class DecosJoinRequest:
         url = settings.DECOS_JOIN_API + f"items/{folder_id}/DOCUMENTS/"
         return self._process_request_to_decos_join(url)
 
-    def _datestring_to_date(self, field_value):
-        if type(field_value) == str and re.match(
-            r"(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})", field_value
-        ):
-            return datetime.timestamp(
-                datetime.strptime(field_value.split("T")[0], "%Y-%m-%d")
-            )
-        return field_value
-
-    def _clean_fields_objects(self, fields):
-        return dict((k, self._datestring_to_date(v)) for k, v in fields.items())
-
-    def _map_fields_on_conf_fields(self, fields, conf):
-        return dict(
-            (conf.get(DecosJoinConf.FIELD_MAPPING).get(k), v)
-            for k, v in fields.items()
-            if k in list(conf.get(DecosJoinConf.FIELD_MAPPING, {}).keys())
-        )
-
-    def _convert_datestring_to_date(self, date_string):
-        if "T" in date_string:
-            return datetime.strptime(date_string.split("T")[0], "%Y-%m-%d").date()
-        return False
-
     def _get_decos_folder(self, decos_object):
         if not settings.USE_DECOS_MOCK_DATA:
             try:
@@ -198,37 +227,20 @@ class DecosJoinRequest:
         else:
             return get_decos_join_mock_folder_fields()
 
-    def _check_if_permit_is_valid_conf(self, permit, conf, dt):
-        permit_data = conf.get(DecosJoinConf.INITIAL_DATA, {})
-        permit_data.update(self._clean_fields_objects(permit))
-        permit_data.update(
-            {
-                "ts_now": datetime.timestamp(
-                    datetime(dt.year, dt.month, dt.day, 0, 0, 0)
-                ),
-            }
-        )
-        base_str = conf.get(DecosJoinConf.EXPRESSION_STRING)
-        base_str = base_str if base_str else "bool()"
-        try:
-            compare_str = base_str.format(**permit_data)
-        except Exception as e:
-            compare_str = base_str
-            logger.error("Error Decos Join permit valid data mapping")
-            logger.error(str(e))
-            return "UNKNOWN"
-        try:
-            valid = eval(compare_str)
-        except Exception as e:
-            logger.error("Error Decos Join permit valid expression evaluation")
-            logger.error(str(e))
-            return "UNKNOWN"
-        return valid
-
     def get_permits_by_bag_id(self, bag_id, dt):
         """ Get simple view of the important permits"""
 
         decos_join_conf_object = DecosJoinConf()
+        decos_join_conf_object.set_default_expression(
+            settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_EXPRESSION
+        )
+        decos_join_conf_object.set_default_initial_data(
+            settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_INITIAL_DATA
+        )
+        decos_join_conf_object.set_default_field_mapping(
+            settings.DECOS_JOIN_DEFAULT_FIELD_MAPPING
+        )
+
         decos_join_conf_object.add_conf(settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF)
         decos_join_conf_object.add_conf(get_decos_join_constance_conf())
 
@@ -261,12 +273,12 @@ class DecosJoinRequest:
                             )
                             data.update(
                                 {
-                                    "permit_granted": self._check_if_permit_is_valid_conf(
+                                    "permit_granted": decos_join_conf_object.expression_is_valid(
                                         folder["fields"], conf, dt
                                     ),
                                     "permit_type": conf.get(DecosJoinConf.PERMIT_TYPE),
                                     "raw_data": folder["fields"],
-                                    "details": self._map_fields_on_conf_fields(
+                                    "details": decos_join_conf_object.map_data_on_conf_keys(
                                         folder["fields"], conf
                                     ),
                                 }
@@ -282,15 +294,18 @@ class DecosJoinRequest:
                             logger.error("DECOS JOIN parent key not found in config")
                             logger.info("book key: %s" % parent_key)
                             logger.info(
+                                "permit name: %s" % folder["fields"].get("text45")
+                            )
+                            logger.info(
+                                "permit result: %s" % folder["fields"].get("dfunction")
+                            )
+                            logger.info(
                                 "Config keys: %s"
                                 % decos_join_conf_object.get_book_keys()
                             )
 
                     else:
-                        # assign variable so it is visible in Sentry
-                        unexpected_answer = folder["fields"]
                         logger.error("DECOS JOIN serializer not valid")
-                        logger.info(unexpected_answer)
                         logger.info(serializer.errors)
 
         return response

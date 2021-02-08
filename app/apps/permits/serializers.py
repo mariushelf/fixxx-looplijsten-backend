@@ -75,7 +75,7 @@ class DecosJoinFolderFieldsResponseSerializer(serializers.Serializer):
     email2 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     email3 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     firstname = serializers.CharField(allow_null=True, allow_blank=True, required=False)
-    dfunction = serializers.CharField(allow_null=True, allow_blank=True)
+    dfunction = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     parentKey = serializers.CharField(allow_null=True, allow_blank=True)
     sequence = serializers.IntegerField(allow_null=True, required=False)
     itemtype_key = serializers.CharField(
@@ -116,7 +116,9 @@ class DecosJoinFolderFieldsResponseSerializer(serializers.Serializer):
     date20 = serializers.CharField(allow_null=True, allow_blank=True, required=False)
     num20 = serializers.IntegerField(allow_null=True, required=False)
     num22 = serializers.IntegerField(allow_null=True, required=False)
-    itemrel_key = serializers.CharField(allow_null=True, allow_blank=True)
+    itemrel_key = serializers.CharField(
+        allow_null=True, allow_blank=True, required=False
+    )
 
 
 class DecosPermitSerializer(serializers.Serializer):
