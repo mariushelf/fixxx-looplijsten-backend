@@ -58,6 +58,20 @@ class DecosJoinConfTest(TestCase):
 
         self.assertEqual(len(conf_instance), len(self.MOCK_CONF))
 
+    def test_add_multiple_conf(self):
+        """
+        Can add multiple conf
+        """
+
+        conf_instance = DecosJoinConf()
+
+        self.assertEqual(len(conf_instance), 0)
+
+        conf_instance.add_conf(self.MOCK_CONF)
+        conf_instance.add_conf(self.MOCK_CONF)
+
+        self.assertEqual(len(conf_instance), len(self.MOCK_CONF))
+
     def test_get_book_keys(self):
         """
         Can add get book keys
@@ -157,6 +171,80 @@ class DecosJoinConfTest(TestCase):
                 "field_no_datestring": MOCK_NO_DATESTRING,
             },
         )
+
+    def test_expression_no_data(self):
+        """
+        Test fail when trying to validate data without data
+        """
+
+        MOCK_CONF_BOOK_KEY = "1234567"
+        MOCK_CONF_TYPE = "my_conf"
+        MOCK_CONF_EXPRESSION = "{date6} == {ts_now}"
+
+        MOCK_CONF = (
+            (
+                MOCK_CONF_BOOK_KEY,
+                MOCK_CONF_TYPE,
+                MOCK_CONF_EXPRESSION,
+            ),
+        )
+
+        conf_instance = DecosJoinConf()
+
+        conf_instance.add_conf(MOCK_CONF)
+
+        conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
+
+        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+
+        self.assertEqual(conf_instance.expression_is_valid(None, conf, dt), False)
+
+    def test_expression_no_datetime(self):
+        """
+        Test fail when trying to validate data without datetime
+        """
+
+        MOCK_CONF_BOOK_KEY = "1234567"
+        MOCK_CONF_TYPE = "my_conf"
+        MOCK_CONF_EXPRESSION = "{date6} == {ts_now}"
+
+        MOCK_CONF = (
+            (
+                MOCK_CONF_BOOK_KEY,
+                MOCK_CONF_TYPE,
+                MOCK_CONF_EXPRESSION,
+            ),
+        )
+
+        conf_instance = DecosJoinConf()
+
+        conf_instance.add_conf(MOCK_CONF)
+
+        conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
+
+        self.assertEqual(conf_instance.expression_is_valid(None, conf, None), False)
+
+    def test_expression_no_conf(self):
+        """
+        Test fail when trying to validate data without conf
+        """
+
+        MOCK_CONF_BOOK_KEY = "1234567"
+
+        MOCK_DATA = {
+            "date66": "2020-08-26T11:59:35",
+            "date7": "date7_value",
+            "dfunction": "dfunction_value",
+            "text4": "text4_value",
+        }
+
+        conf_instance = DecosJoinConf()
+
+        conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
+
+        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+
+        self.assertEqual(conf_instance.expression_is_valid(MOCK_DATA, conf, dt), False)
 
     def test_expression_missing_field_name(self):
         """
