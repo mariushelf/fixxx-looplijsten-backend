@@ -301,9 +301,12 @@ class DecosJoinRequest:
                     else:
                         logger.error("DECOS JOIN parent key not found in config")
                         logger.info("book key: %s" % parent_key)
-                        logger.info("permit name: %s" % folder["fields"].get("text45"))
                         logger.info(
-                            "permit result: %s" % folder["fields"].get("dfunction")
+                            "permit name: %s" % folder.get("fields", {}).get("text45")
+                        )
+                        logger.info(
+                            "permit result: %s"
+                            % folder.get("fields", {}).get("dfunction")
                         )
                         logger.info(
                             "Config keys: %s" % decos_join_conf_object.get_book_keys()

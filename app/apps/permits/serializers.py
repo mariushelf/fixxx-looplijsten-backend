@@ -125,5 +125,5 @@ class DecosPermitSerializer(serializers.Serializer):
     permit_granted = serializers.ChoiceField(choices=PERMIT_DEFAULT_CHOICES)
     permit_type = serializers.CharField()
     decos_join_web_url = serializers.URLField(default="https://decosdvl.amsterdam.nl")
-    raw_data = DecosJoinFolderFieldsResponseSerializer(allow_null=True, required=False)
+    raw_data = serializers.DictField(allow_null=True, required=False)
     details = serializers.DictField(allow_null=True, required=False)
