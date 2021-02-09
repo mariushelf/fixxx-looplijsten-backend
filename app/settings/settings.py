@@ -380,6 +380,7 @@ DECOS_JOIN_DEFAULT_FIELD_MAPPING = {
     "date7": "DATE_VALID_UNTIL",
     "dfunction": "RESULT",
     "text45": "PERMIT_NAME",
+    "text9": "PERMIT_TYPE",
     "surname": "APPLICANT",
     "text19": "HOLDER",
     "subject1": "SUBJECT",
