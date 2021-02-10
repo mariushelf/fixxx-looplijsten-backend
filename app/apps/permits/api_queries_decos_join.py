@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from collections import defaultdict
-from datetime import date, datetime, time
+from datetime import date, datetime, time, timedelta
 
 import requests
 from apps.permits.mocks import (
@@ -13,6 +13,7 @@ from apps.permits.mocks import (
 from apps.permits.serializers import (
     DecosJoinFolderFieldsResponseSerializer,
     DecosPermitSerializer,
+    DecosVakantieverhuurMeldingSerializer,
 )
 from constance.backends.database.models import Constance
 from django.conf import settings
@@ -31,16 +32,115 @@ def get_decos_join_constance_conf():
         logger.error(str(e))
 
 
+class VakantieverhuurMeldingen:
+    def __init__(self, *args, **kwargs):
+        self.melding_id = kwargs.get("melding_id")
+        self.afmelding_id = kwargs.get("afmelding_id")
+        self.days = []
+        self.days_removed = []
+
+    def add_raw_data(self, data):
+        if not self.melding_id or not self.afmelding_id:
+            return
+        data = [
+            dd.data
+            for dd in [
+                DecosVakantieverhuurMeldingSerializer(
+                    data=dict(
+                        **f["fields"],
+                        **{
+                            "is_afmelding": f.get("fields", {}).get("parentKey")
+                            == self.afmelding_id
+                        },
+                    )
+                )
+                for f in data
+                if f.get("fields", {}).get("parentKey")
+                in [
+                    self.melding_id,
+                    self.afmelding_id,
+                ]
+            ]
+            if dd.is_valid()
+        ]
+        self.add_data(data)
+
+    def add_data(self, data):
+        day = timedelta(days=1)
+        serializer = DecosVakantieverhuurMeldingSerializer(data=data, many=True)
+        if serializer.is_valid():
+            data = sorted(serializer.data, key=lambda k: k["sequence"])
+            for d_set in data:
+                d = {
+                    "melding_date": datetime.strptime(
+                        d_set["date1"].split("T")[0], "%Y-%m-%d"
+                    ),
+                    "start_date": datetime.strptime(
+                        d_set["date6"].split("T")[0], "%Y-%m-%d"
+                    )
+                    + day,
+                    "end_date": datetime.strptime(
+                        d_set["date7"].split("T")[0], "%Y-%m-%d"
+                    )
+                    - day,
+                    "is_afmelding": d_set["is_afmelding"],
+                }
+                self.add_melding(**d)
+            return True
+        return False
+
+    def add_melding(self, melding_date, start_date, end_date, is_afmelding):
+        day = timedelta(days=1)
+        melding_set = [[], melding_date, is_afmelding]
+        while start_date <= end_date:
+            melding_set[0].append(start_date)
+            start_date = start_date + day
+        if melding_set[0]:
+            self.days.append(melding_set)
+
+    def get_set_by_year(self, year, today):
+        o = {}
+        today = datetime.strptime(today.strftime("%Y-%m-%d"), "%Y-%m-%d")
+        o.update(self._rented(year, today))
+        o.update({"meldingen": self.days})
+        return o
+
+    def _days_flat(self, days):
+        return [d for d_set in days for d in d_set[0]]
+
+    def _rented(self, year, today):
+        valid_days = []
+        for d_set in self.days:
+            for d in d_set[0]:
+                if d.year == year and not d_set[2]:
+                    if d not in valid_days:
+                        valid_days.append(d)
+                elif d.year == year and d_set[2]:
+                    if d in valid_days:
+                        valid_days.remove(d)
+
+        is_rented_today = bool(today in valid_days)
+        rented_days = [d for d in valid_days if d <= today]
+        planned_days = [d for d in valid_days if d > today]
+        return {
+            "rented_days_count": len(rented_days),
+            "planned_days_count": len(planned_days),
+            "is_rented_today": is_rented_today,
+        }
+
+
 class DecosJoinConf:
     PERMIT_TYPE = "permit_type"
     DECOS_JOIN_BOOK_KEY = "decos_join_book_key"
     EXPRESSION_STRING = "expression_string"
     INITIAL_DATA = "initial_data"
     FIELD_MAPPING = "field_mapping"
-    default_expression = "bool()"
-    default_initial_data = {}
-    default_field_mapping = {}
-    conf = []
+
+    def __init__(self):
+        self.conf = []
+        self.default_expression = "bool()"
+        self.default_initial_data = {}
+        self.default_field_mapping = {}
 
     def __len__(self):
         return len(self.conf)
@@ -266,16 +366,26 @@ class DecosJoinRequest:
             for v in decos_join_conf_object
         ]
 
+        vakantieverhuur_meldigen = VakantieverhuurMeldingen(
+            **{
+                "melding_id": settings.DECOS_JOIN_VAKANTIEVERHUUR_MELDINGEN_ID,
+                "afmelding_id": settings.DECOS_JOIN_VAKANTIEVERHUUR_AFMELDINGEN_ID,
+            }
+        )
+
         response_decos_obj = self.get_decos_object_with_bag_id(bag_id)
 
         if response_decos_obj:
             response_decos_folder = self._get_decos_folder(response_decos_obj)
             if response_decos_folder:
 
+                # vakantieverhuur meldingen
+                vakantieverhuur_meldigen.add_raw_data(response_decos_folder["content"])
+
+                # permits
                 for folder in response_decos_folder["content"]:
 
                     parent_key = folder.get("fields", {}).get("parentKey")
-
                     if parent_key in decos_join_conf_object.get_book_keys():
                         data = {}
                         conf = decos_join_conf_object.get_conf_by_book_key(parent_key)
@@ -311,5 +421,54 @@ class DecosJoinRequest:
                         logger.info(
                             "Config keys: %s" % decos_join_conf_object.get_book_keys()
                         )
+        try:
+            vakantieverhuur_meldigen_result = vakantieverhuur_meldigen.get_set_by_year(
+                datetime.today().year, datetime.today()
+            )
+            vakantieverhuur_meldigen_dict = {}
+            vakantieverhuur_meldigen_dict.update(
+                {
+                    "Vandaag verhuurd": "Ja"
+                    if vakantieverhuur_meldigen_result["is_rented_today"]
+                    else "Nee",
+                    "Aantal dagen verhuurd in %s"
+                    % datetime.today().year: vakantieverhuur_meldigen_result[
+                        "rented_days_count"
+                    ],
+                    "Aantal dagen geplanned in %s"
+                    % datetime.today().year: vakantieverhuur_meldigen_result[
+                        "planned_days_count"
+                    ],
+                    "Meldingen": "",
+                }
+            )
+
+            vakantieverhuur_meldigen_dict["Meldingen"] = ", ".join(
+                [
+                    "%s %s: van %s tot %s"
+                    % (
+                        "-" if d_set[2] else "+",
+                        d_set[1].strftime("%-d %b. %Y").lower(),
+                        d_set[0][0].strftime("%d %m %Y").lower(),
+                        d_set[0][-1].strftime("%d %m %Y").lower(),
+                    )
+                    for d_set in vakantieverhuur_meldigen_result["meldingen"]
+                ]
+            )
+            vakantieverhuur_index = next(
+                (
+                    index
+                    for (index, d) in enumerate(response)
+                    if d["permit_type"] == "Vakantieverhuur"
+                ),
+                None,
+            )
+            if vakantieverhuur_index:
+                response[vakantieverhuur_index][
+                    "raw_data"
+                ] = vakantieverhuur_meldigen_dict
+        except Exception as e:
+            logger.error("DECOS JOIN vakantie verhuur error")
+            logger.error(str(e))
 
         return response
