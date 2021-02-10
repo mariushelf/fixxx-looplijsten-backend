@@ -127,3 +127,11 @@ class DecosPermitSerializer(serializers.Serializer):
     decos_join_web_url = serializers.URLField(default="https://decosdvl.amsterdam.nl")
     raw_data = serializers.DictField(allow_null=True, required=False)
     details = serializers.DictField(allow_null=True, required=False)
+
+
+class DecosVakantieverhuurMeldingSerializer(serializers.Serializer):
+    date1 = serializers.DateTimeField(format="iso-8601")
+    date6 = serializers.DateTimeField(format="iso-8601")
+    date7 = serializers.DateTimeField(format="iso-8601")
+    sequence = serializers.FloatField()
+    is_afmelding = serializers.BooleanField()
