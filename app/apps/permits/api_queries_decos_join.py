@@ -102,7 +102,19 @@ class VakantieverhuurMeldingen:
         o = {}
         today = datetime.strptime(today.strftime("%Y-%m-%d"), "%Y-%m-%d")
         o.update(self._rented(year, today))
-        o.update({"meldingen": self.days})
+        o.update(
+            {
+                "meldingen": [
+                    {
+                        "is_afmelding": d_set[2],
+                        "melding_date": d_set[1],
+                        "start_date": d_set[0][0],
+                        "end_date": d_set[0][-1],
+                    }
+                    for d_set in self.days
+                ]
+            }
+        )
         return o
 
     def _days_flat(self, days):
@@ -341,8 +353,10 @@ class DecosJoinRequest:
         else:
             return get_decos_join_mock_folder_fields()
 
-    def get_permits_by_bag_id(self, bag_id, dt):
+    def get_decos_entry_by_bag_id(self, bag_id, dt):
         """ Get simple view of the important permits"""
+
+        response = {}
 
         decos_join_conf_object = DecosJoinConf()
         decos_join_conf_object.set_default_expression(
@@ -358,7 +372,7 @@ class DecosJoinRequest:
         decos_join_conf_object.add_conf(settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF)
         decos_join_conf_object.add_conf(get_decos_join_constance_conf())
 
-        response = [
+        permits = [
             {
                 "permit_granted": "UNKNOWN",
                 "permit_type": v.get(DecosJoinConf.PERMIT_TYPE),
@@ -403,7 +417,7 @@ class DecosJoinRequest:
                         )
                         permit_serializer = DecosPermitSerializer(data=data)
                         if permit_serializer.is_valid():
-                            for d in response:
+                            for d in permits:
                                 if d.get("permit_type") == conf.get(
                                     DecosJoinConf.PERMIT_TYPE
                                 ):
@@ -421,54 +435,14 @@ class DecosJoinRequest:
                         logger.info(
                             "Config keys: %s" % decos_join_conf_object.get_book_keys()
                         )
-        try:
-            vakantieverhuur_meldigen_result = vakantieverhuur_meldigen.get_set_by_year(
-                datetime.today().year, datetime.today()
-            )
-            vakantieverhuur_meldigen_dict = {}
-            vakantieverhuur_meldigen_dict.update(
-                {
-                    "Vandaag verhuurd": "Ja"
-                    if vakantieverhuur_meldigen_result["is_rented_today"]
-                    else "Nee",
-                    "Aantal dagen verhuurd in %s"
-                    % datetime.today().year: vakantieverhuur_meldigen_result[
-                        "rented_days_count"
-                    ],
-                    "Aantal dagen geplanned in %s"
-                    % datetime.today().year: vakantieverhuur_meldigen_result[
-                        "planned_days_count"
-                    ],
-                    "Meldingen": "",
-                }
-            )
 
-            vakantieverhuur_meldigen_dict["Meldingen"] = ", ".join(
-                [
-                    "%s %s: van %s tot %s"
-                    % (
-                        "-" if d_set[2] else "+",
-                        d_set[1].strftime("%-d %b. %Y").lower(),
-                        d_set[0][0].strftime("%d %m %Y").lower(),
-                        d_set[0][-1].strftime("%d %m %Y").lower(),
-                    )
-                    for d_set in vakantieverhuur_meldigen_result["meldingen"]
-                ]
-            )
-            vakantieverhuur_index = next(
-                (
-                    index
-                    for (index, d) in enumerate(response)
-                    if d["permit_type"] == "Vakantieverhuur"
+        response.update(
+            {
+                "permits": permits,
+                "vakantieverhuur_meldingen": vakantieverhuur_meldigen.get_set_by_year(
+                    datetime.today().year, datetime.today()
                 ),
-                None,
-            )
-            if vakantieverhuur_index:
-                response[vakantieverhuur_index][
-                    "raw_data"
-                ] = vakantieverhuur_meldigen_dict
-        except Exception as e:
-            logger.error("DECOS JOIN vakantie verhuur error")
-            logger.error(str(e))
+            }
+        )
 
         return response
