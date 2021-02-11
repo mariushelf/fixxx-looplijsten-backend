@@ -4,7 +4,7 @@ from datetime import datetime
 
 from apps.permits.api_queries_decos_join import DecosJoinRequest
 from apps.permits.forms import SearchForm
-from apps.permits.serializers import DecosPermitSerializer
+from apps.permits.serializers import DecosSerializer
 from constance.backends.database.models import Constance
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
@@ -28,14 +28,14 @@ bag_id = OpenApiParameter(
 )
 
 
-class PermitViewSet(ViewSet):
+class DecosViewSet(ViewSet):
     @extend_schema(
         parameters=[bag_id],
-        description="Get permit details based on bag id",
-        responses={200: DecosPermitSerializer(many=True)},
+        description="Get decos data based on bag id",
+        responses={200: DecosSerializer()},
     )
-    @action(detail=False, url_name="permit details", url_path="details")
-    def get_permits_by_bag_id(self, request):
+    @action(detail=False, url_name="details", url_path="details")
+    def get_decos_entry_by_bag_id(self, request):
         bag_id = request.GET.get("bag_id")
         dt = datetime.strptime(
             request.GET.get("date", datetime.today().strftime("%Y-%m-%d")), "%Y-%m-%d"
@@ -44,11 +44,11 @@ class PermitViewSet(ViewSet):
         if not bag_id:
             raise Http404
 
-        response = DecosJoinRequest().get_permits_by_bag_id(bag_id, dt)
+        response = DecosJoinRequest().get_decos_entry_by_bag_id(bag_id, dt)
 
-        serializer = DecosPermitSerializer(data=response, many=True)
+        serializer = DecosSerializer(data=response)
 
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             return Response(serializer.data)
         return Response(serializer.initial_data)
 
@@ -96,7 +96,7 @@ class DecosAPISearch(UserPassesTestMixin, FormView):
                 form.cleaned_data.get("bag_id")
                 and form.cleaned_data.get("response_type") == "checkmarks"
             ):
-                response = DecosJoinRequest().get_permits_by_bag_id(
+                response = DecosJoinRequest().get_decos_entry_by_bag_id(
                     form.cleaned_data.get("bag_id"), dt
                 )
 

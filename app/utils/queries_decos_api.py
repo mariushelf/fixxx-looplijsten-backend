@@ -172,7 +172,7 @@ class DecosJoinRequest:
 
         return response
 
-    def get_permits_by_bag_id(self, bag_id):
+    def get_decos_entry_by_bag_id(self, bag_id):
         response_decos_obj = self.get_decos_object_with_bag_id(bag_id)
         permits = []
 

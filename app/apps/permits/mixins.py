@@ -19,7 +19,7 @@ class PermitDetailsMixin:
     def permit_details(self, request, bag_id, dt=None):
         if not dt:
             dt = datetime.today()
-        response = DecosJoinRequest().get_permits_by_bag_id(bag_id, dt)
+        response = DecosJoinRequest().get_decos_entry_by_bag_id(bag_id, dt)
         serializer = DecosPermitSerializer(data=response, many=True)
 
         if serializer.is_valid():
