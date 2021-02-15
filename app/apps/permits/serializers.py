@@ -140,8 +140,8 @@ class DecosVakantieverhuurMeldingSerializer(serializers.Serializer):
 class VakantieverhuurMeldingSerializer(serializers.Serializer):
     is_afmelding = serializers.BooleanField()
     melding_date = serializers.DateTimeField()
-    start_date = serializers.DateTimeField()
-    end_date = serializers.DateTimeField()
+    first_day = serializers.DateTimeField()
+    last_day = serializers.DateTimeField()
 
 
 class VakantieverhuurRentalInformationSerializer(serializers.Serializer):

@@ -100,6 +100,7 @@ class VakantieverhuurMeldingen:
 
     def get_set_by_year(self, year, today):
         o = {}
+        self.days.reverse()
         today = datetime.strptime(today.strftime("%Y-%m-%d"), "%Y-%m-%d")
         o.update(self._rented(year, today))
         o.update(
@@ -108,10 +109,11 @@ class VakantieverhuurMeldingen:
                     {
                         "is_afmelding": d_set[2],
                         "melding_date": d_set[1],
-                        "start_date": d_set[0][0],
-                        "end_date": d_set[0][-1],
+                        "first_day": d_set[0][0],
+                        "last_day": d_set[0][-1],
                     }
                     for d_set in self.days
+                    if d_set[0][0].year == year or d_set[0][-1].year == year
                 ]
             }
         )
