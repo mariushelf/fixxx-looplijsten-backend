@@ -1,7 +1,9 @@
+import json
 from datetime import datetime
 from unittest.mock import Mock, patch
 
 from apps.permits.api_queries_decos_join import DecosJoinConf, VakantieverhuurMeldingen
+from apps.permits.serializers import VakantieverhuurRentalInformationSerializer
 from django.test import TestCase
 
 
@@ -408,8 +410,16 @@ class VakantieverhuurMeldingenTest(TestCase):
 
         succeeded = vakantieverhuur_meldingen.add_data(MOCK_DATA)
 
+        serializer = VakantieverhuurRentalInformationSerializer(
+            data=vakantieverhuur_meldingen.get_set_by_year(
+                2020, datetime.strptime("2020-07-28", "%Y-%m-%d")
+            )
+        )
+        expected_result = '{"rented_days_count": 2, "planned_days_count": 0, "is_rented_today": true, "meldingen": [{"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
+
         self.assertEqual(succeeded, True)
-        self.assertEqual(vakantieverhuur_meldingen.add_data(MOCK_DATA), True)
+        self.assertEqual(serializer.is_valid(), True)
+        self.assertEqual(json.dumps(serializer.data), expected_result)
 
     def test_add_valid_data_2(self):
         """
@@ -450,8 +460,16 @@ class VakantieverhuurMeldingenTest(TestCase):
 
         succeeded = vakantieverhuur_meldingen.add_data(MOCK_DATA)
 
+        serializer = VakantieverhuurRentalInformationSerializer(
+            data=vakantieverhuur_meldingen.get_set_by_year(
+                2020, datetime.strptime("2020-07-28", "%Y-%m-%d")
+            )
+        )
+        expected_result = '{"rented_days_count": 3, "planned_days_count": 1, "is_rented_today": true, "meldingen": [{"is_afmelding": false, "melding_date": "2019-12-29T00:00:00+0000", "first_day": "2019-12-30T00:00:00+0000", "last_day": "2020-01-01T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-27T00:00:00+0000", "first_day": "2020-07-28T00:00:00+0000", "last_day": "2020-07-29T00:00:00+0000"}, {"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
+
         self.assertEqual(succeeded, True)
-        self.assertEqual(vakantieverhuur_meldingen.add_data(MOCK_DATA), True)
+        self.assertEqual(serializer.is_valid(), True)
+        self.assertEqual(json.dumps(serializer.data), expected_result)
 
 
 class DecosJoinRequestTest(TestCase):
