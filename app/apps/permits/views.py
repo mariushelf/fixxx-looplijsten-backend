@@ -99,6 +99,11 @@ class DecosAPISearch(UserPassesTestMixin, FormView):
                 response = DecosJoinRequest().get_decos_entry_by_bag_id(
                     form.cleaned_data.get("bag_id"), dt
                 )
+                serializer = DecosSerializer(data=response)
+                if serializer.is_valid():
+                    response = serializer.data
+                else:
+                    response = {"serializer_error": "ERROR"}
 
             else:
                 response = DecosJoinRequest().get("")
