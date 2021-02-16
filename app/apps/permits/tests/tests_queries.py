@@ -1,10 +1,16 @@
+import datetime
 import json
-from datetime import datetime
 from unittest.mock import Mock, patch
 
-from apps.permits.api_queries_decos_join import DecosJoinConf, VakantieverhuurMeldingen
+from apps.permits.api_queries_decos_join import (
+    DecosJoinConf,
+    DecosJoinRequest,
+    VakantieverhuurMeldingen,
+)
 from apps.permits.serializers import VakantieverhuurRentalInformationSerializer
-from django.test import TestCase
+from django.conf import settings
+from django.test import TestCase, override_settings
+from freezegun import freeze_time
 
 
 class DecosJoinConfTest(TestCase):
@@ -198,7 +204,7 @@ class DecosJoinConfTest(TestCase):
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
 
-        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+        dt = datetime.datetime.strptime("2020-08-26", "%Y-%m-%d")
 
         self.assertEqual(conf_instance.expression_is_valid(None, conf, dt), False)
 
@@ -245,7 +251,7 @@ class DecosJoinConfTest(TestCase):
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
 
-        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+        dt = datetime.datetime.strptime("2020-08-26", "%Y-%m-%d")
 
         self.assertEqual(conf_instance.expression_is_valid(MOCK_DATA, conf, dt), False)
 
@@ -279,7 +285,7 @@ class DecosJoinConfTest(TestCase):
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
 
-        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+        dt = datetime.datetime.strptime("2020-08-26", "%Y-%m-%d")
 
         self.assertEqual(conf_instance.expression_is_valid(MOCK_DATA, conf, dt), False)
 
@@ -314,7 +320,7 @@ class DecosJoinConfTest(TestCase):
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
 
-        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+        dt = datetime.datetime.strptime("2020-08-26", "%Y-%m-%d")
 
         self.assertEqual(conf_instance.expression_is_valid(MOCK_DATA, conf, dt), True)
 
@@ -347,7 +353,7 @@ class DecosJoinConfTest(TestCase):
         conf_instance.add_conf(MOCK_CONF)
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
-        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+        dt = datetime.datetime.strptime("2020-08-26", "%Y-%m-%d")
 
         self.assertEqual(conf_instance.expression_is_valid(MOCK_DATA, conf, dt), True)
 
@@ -379,7 +385,7 @@ class DecosJoinConfTest(TestCase):
         conf_instance.add_conf(MOCK_CONF)
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
-        dt = datetime.strptime("2020-08-26", "%Y-%m-%d")
+        dt = datetime.datetime.strptime("2020-08-26", "%Y-%m-%d")
 
         self.assertEqual(conf_instance.expression_is_valid(MOCK_DATA, conf, dt), False)
 
@@ -410,16 +416,37 @@ class VakantieverhuurMeldingenTest(TestCase):
 
         succeeded = vakantieverhuur_meldingen.add_data(MOCK_DATA)
 
-        serializer = VakantieverhuurRentalInformationSerializer(
-            data=vakantieverhuur_meldingen.get_set_by_year(
-                2020, datetime.strptime("2020-07-28", "%Y-%m-%d")
-            )
+        data = vakantieverhuur_meldingen.get_set_by_year(
+            2020, datetime.datetime.strptime("2020-07-28", "%Y-%m-%d")
         )
-        expected_result = '{"rented_days_count": 2, "planned_days_count": 0, "is_rented_today": true, "meldingen": [{"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
+        serializer = VakantieverhuurRentalInformationSerializer(data=data)
+
+        expected_result = {
+            "rented_days_count": 2,
+            "planned_days_count": 0,
+            "is_rented_today": True,
+            "meldingen": [
+                {
+                    "is_afmelding": True,
+                    "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
+                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                },
+                {
+                    "is_afmelding": False,
+                    "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
+                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                },
+            ],
+        }
+
+        expected_result_serializer = '{"rented_days_count": 2, "planned_days_count": 0, "is_rented_today": true, "meldingen": [{"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
 
         self.assertEqual(succeeded, True)
+        self.assertEqual(data, expected_result)
         self.assertEqual(serializer.is_valid(), True)
-        self.assertEqual(json.dumps(serializer.data), expected_result)
+        self.assertEqual(json.dumps(serializer.data), expected_result_serializer)
 
     def test_add_valid_data_2(self):
         """
@@ -460,22 +487,181 @@ class VakantieverhuurMeldingenTest(TestCase):
 
         succeeded = vakantieverhuur_meldingen.add_data(MOCK_DATA)
 
-        serializer = VakantieverhuurRentalInformationSerializer(
-            data=vakantieverhuur_meldingen.get_set_by_year(
-                2020, datetime.strptime("2020-07-28", "%Y-%m-%d")
-            )
+        data = vakantieverhuur_meldingen.get_set_by_year(
+            2020, datetime.datetime.strptime("2020-07-28", "%Y-%m-%d")
         )
-        expected_result = '{"rented_days_count": 3, "planned_days_count": 1, "is_rented_today": true, "meldingen": [{"is_afmelding": false, "melding_date": "2019-12-29T00:00:00+0000", "first_day": "2019-12-30T00:00:00+0000", "last_day": "2020-01-01T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-27T00:00:00+0000", "first_day": "2020-07-28T00:00:00+0000", "last_day": "2020-07-29T00:00:00+0000"}, {"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
+
+        serializer = VakantieverhuurRentalInformationSerializer(data=data)
+        expected_result_serializer = '{"rented_days_count": 3, "planned_days_count": 1, "is_rented_today": true, "meldingen": [{"is_afmelding": false, "melding_date": "2019-12-29T00:00:00+0000", "first_day": "2019-12-30T00:00:00+0000", "last_day": "2020-01-01T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-27T00:00:00+0000", "first_day": "2020-07-28T00:00:00+0000", "last_day": "2020-07-29T00:00:00+0000"}, {"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
+        expected_result = {
+            "rented_days_count": 3,
+            "planned_days_count": 1,
+            "is_rented_today": True,
+            "meldingen": [
+                {
+                    "is_afmelding": False,
+                    "melding_date": datetime.datetime(2019, 12, 29, 0, 0),
+                    "first_day": datetime.datetime(2019, 12, 30, 0, 0),
+                    "last_day": datetime.datetime(2020, 1, 1, 0, 0),
+                },
+                {
+                    "is_afmelding": False,
+                    "melding_date": datetime.datetime(2020, 7, 27, 0, 0),
+                    "first_day": datetime.datetime(2020, 7, 28, 0, 0),
+                    "last_day": datetime.datetime(2020, 7, 29, 0, 0),
+                },
+                {
+                    "is_afmelding": True,
+                    "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
+                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                },
+                {
+                    "is_afmelding": False,
+                    "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
+                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                },
+            ],
+        }
 
         self.assertEqual(succeeded, True)
+        self.assertEqual(data, expected_result)
         self.assertEqual(serializer.is_valid(), True)
-        self.assertEqual(json.dumps(serializer.data), expected_result)
+        self.assertEqual(json.dumps(serializer.data), expected_result_serializer)
 
 
 class DecosJoinRequestTest(TestCase):
 
     MOCK_DECOS_JOIN_VAKANTIEVERHUUR_MELDINGEN_ID = "E6325A942DF440B386D8DFFEC013F795"
     MOCK_DECOS_JOIN_VAKANTIEVERHUUR_AFMELDINGEN_ID = "F86015A1A927451082A9E2F2023EF8F7"
+
+    @override_settings(DECOS_JOIN_AUTH_BASE64="12345678")
+    @patch("requests.get")
+    def test_process_request_to_decos_join(self, mock_requests_get):
+        """
+        Is request url as expected
+        """
+
+        MOCK_URL = "https://test/"
+
+        expected_header = {
+            "Accept": "application/itemdata",
+            "content-type": "application/json",
+            "Authorization": "Basic 12345678",
+        }
+        expected_params = {
+            "headers": expected_header,
+            "timeout": 30,
+        }
+
+        decos_request = DecosJoinRequest()
+
+        decos_request._process_request_to_decos_join(MOCK_URL)
+
+        mock_requests_get.assert_called()
+
+        mock_requests_get.assert_called_with(
+            MOCK_URL,
+            **expected_params,
+        )
+
+    @patch(
+        "apps.permits.api_queries_decos_join.DecosJoinRequest._process_request_to_decos_join"
+    )
+    def test_get_decos_object_with_address(self, mock_process_request_to_decos_join):
+        """
+        Is request url as expected
+        """
+
+        MOCK_ADDRESS = "Duckstraat 42"
+
+        decos_request = DecosJoinRequest()
+
+        decos_request.get_decos_object_with_address(MOCK_ADDRESS)
+
+        mock_process_request_to_decos_join.assert_called()
+
+        mock_process_request_to_decos_join.assert_called_with(
+            settings.DECOS_JOIN_API
+            + "items/"
+            + settings.DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS
+            + "/COBJECTS?filter=SUBJECT1 eq 'Duckstraat 42'"
+        )
+
+    @patch(
+        "apps.permits.api_queries_decos_join.DecosJoinRequest._process_request_to_decos_join"
+    )
+    def test_get_decos_object_with_bag_id(self, mock_process_request_to_decos_join):
+        """
+        Is request url as expected
+        """
+
+        MOCK_BAG_ID = "42"
+
+        decos_request = DecosJoinRequest()
+
+        decos_request.get_decos_object_with_bag_id(MOCK_BAG_ID)
+
+        mock_process_request_to_decos_join.assert_called()
+
+        mock_process_request_to_decos_join.assert_called_with(
+            settings.DECOS_JOIN_API
+            + "items/"
+            + settings.DECOS_JOIN_BOOK_KNOWN_BAG_OBJECTS
+            + "/COBJECTS?filter=PHONE3 eq '42'"
+        )
+
+    @patch(
+        "apps.permits.api_queries_decos_join.DecosJoinRequest._process_request_to_decos_join"
+    )
+    def test_get_folders_with_object_id(self, mock_process_request_to_decos_join):
+        """
+        Is request url as expected
+        """
+
+        MOCK_OBJECT_ID = "42"
+
+        decos_request = DecosJoinRequest()
+
+        decos_request.get_folders_with_object_id(MOCK_OBJECT_ID)
+
+        mock_process_request_to_decos_join.assert_called()
+
+        mock_process_request_to_decos_join.assert_called_with(
+            settings.DECOS_JOIN_API + "items/42/FOLDERS/"
+        )
+
+    def test_get_decos_folder_fail(self):
+        """
+        Test failed when trying to get folder without proper decos object
+        """
+
+        MOCK_DECOS_OBJECT = {}
+
+        decos_request = DecosJoinRequest()
+
+        folder_result = decos_request._get_decos_folder(MOCK_DECOS_OBJECT)
+
+        self.assertEqual(folder_result, False)
+
+    @patch(
+        "apps.permits.api_queries_decos_join.DecosJoinRequest.get_folders_with_object_id"
+    )
+    def test_get_decos_folder_succeeded(self, mock_get_folders_with_object_id):
+        """
+        Test succeeded when trying to get folder with proper decos object
+        """
+
+        MOCK_RESULT = {"count": 42}
+        MOCK_DECOS_OBJECT = {"content": [{"key": "1234"}]}
+        mock_get_folders_with_object_id.return_value = MOCK_RESULT
+
+        decos_request = DecosJoinRequest()
+
+        folder_result = decos_request._get_decos_folder(MOCK_DECOS_OBJECT)
+
+        self.assertEqual(folder_result, MOCK_RESULT)
 
     @patch(
         "apps.permits.api_queries_decos_join.settings.DECOS_JOIN_DEFAULT_PERMIT_VALID_CONF"
