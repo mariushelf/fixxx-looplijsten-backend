@@ -25,3 +25,35 @@ def get_bwv_columns(table_name):
 
     args = {"table_name": table_name}
     return do_query(query, args)
+
+
+def get_bwv_personen():
+    """
+    Returns all bwv_personen records
+    """
+    query = """
+            SELECT *
+            FROM
+              bwv_personen
+            """
+
+    args = {}
+    query_results = do_query(query, args)
+
+    return query_results
+
+
+def get_bwv_personen_hist():
+    """
+    Returns all bwv_personen_hist records
+    """
+    query = """
+            SELECT *
+            FROM
+              bwv_personen_hist
+            """
+
+    args = {}
+    query_results = do_query(query, args)
+
+    return query_results

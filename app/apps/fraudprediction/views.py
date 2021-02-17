@@ -6,6 +6,8 @@ from multiprocessing import Process
 
 from apps.fraudprediction.fraud_predict import FraudPredict
 from apps.fraudprediction.permissions import FraudPredictionApiKeyAuth
+from apps.fraudprediction.tasks import fraudpredict
+from django import db
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet
@@ -34,9 +36,9 @@ class FraudPredictionScoringViewSet(ViewSet):
     def create(self, request):
         if hasattr(os, "getppid"):
             LOGGER.info("Process kicking off scoring: {}".format(os.getpid()))
+        db.connections.close_all()
 
-        p = Process(target=self.background_process)
-        p.start()
+        fraudpredict.delay(fraudprediction_type="vakantieverhuur")
 
         json = {
             "message": "Scoring Started {}".format(str(datetime.now())),
