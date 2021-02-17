@@ -10,6 +10,7 @@ from apps.fraudprediction.models import FraudPrediction
 from django.conf import settings
 from django.db import connections
 from settings.const import STARTING_FROM_DATE
+from utils.queries_bwv import get_bwv_personen, get_bwv_personen_hist
 from utils.queries_planner import get_cases_from_bwv
 
 LOGGER = logging.getLogger(__name__)
@@ -37,6 +38,13 @@ class FraudPredict:
         cache_dir = settings.FRAUD_PREDICTION_CACHE_DIR
         self.clear_cache_dir(cache_dir)
         LOGGER.info("Cleared cache")
+
+        bwv_personen = get_bwv_personen()
+        bwv_personen_hist = get_bwv_personen_hist()
+        LOGGER.info("bwv_personen count")
+        LOGGER.info(len(bwv_personen))
+        LOGGER.info("bwv_personen_hist count")
+        LOGGER.info(len(bwv_personen_hist))
 
         # Scoring library is optional for local development. This makes sure it's available.
         try:
