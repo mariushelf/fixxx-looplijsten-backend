@@ -1,2 +1,2 @@
 35 5 * * * set -a; . /root/env.env; set +a;  /usr/local/bin/looplijsten_bwv_sync.sh
-20 20 * * * set -a; . /root/env.env; set +a;  /usr/local/bin/looplijsten_bwv_sync.sh
+20 22 * * * set -a; . /root/env.env; set +a;  /usr/local/bin/looplijsten_bwv_sync.sh
