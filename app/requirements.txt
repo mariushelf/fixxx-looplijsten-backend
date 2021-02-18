@@ -26,7 +26,7 @@ django-health-check
 
 # Authentication
 git+https://github.com/petercuret/keycloak_oidc.git@master
-djangorestframework-simplejwt==4.4.0
+djangorestframework-simplejwt==4.6.0
 
 # Algorithm toolbox
 geopy==2.0.0
