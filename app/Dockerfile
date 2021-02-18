@@ -21,7 +21,7 @@ COPY requirements.txt /app/
 
 RUN mkdir /tmp/integrale_aanpak_ondermijning
 
-ARG INTEGRALE_AANPAK_ONDERMIJNING_VERSION=v1.1.0
+ARG INTEGRALE_AANPAK_ONDERMIJNING_VERSION=v1.2.0
 # Clone the private cto-fraude-aanpak library using a deploy token
 RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS" = "x" ] ; then echo INTEGRALE_AANPAK_ONDERMIJNING_CREDS not provided ; else git clone -b ${INTEGRALE_AANPAK_ONDERMIJNING_VERSION} --single-branch https://${INTEGRALE_AANPAK_ONDERMIJNING_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/integrale_aanpak_ondermijning /tmp/integrale_aanpak_ondermijning ; fi
 
@@ -29,12 +29,14 @@ RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS" = "x" ] ; then echo INTEGRALE_A
 RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then echo INTEGRALE_AANPAK_ONDERMIJNING_CREDS not provided ; else git clone -b ${INTEGRALE_AANPAK_ONDERMIJNING_VERSION} --single-branch https://oauth2:${INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN}@git.data.amsterdam.nl/cto-fraude-aanpak/integrale_aanpak_ondermijning /tmp/integrale_aanpak_ondermijning ; fi
 
 # Install the private cto-fraude-aanpak library
-RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then echo Skipping cto-fraude-aanpak install ;  else pip install --no-cache-dir /tmp/integrale_aanpak_ondermijning ; fi
 
 RUN apt-get update && apt-get install -y
 RUN pip install --upgrade pip
 RUN pip install uwsgi
-RUN pip install --no-cache-dir -r requirements.txt
+RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then pip install --no-cache-dir -r requirements.txt ;  else pip install --no-cache-dir -r requirements.txt /tmp/integrale_aanpak_ondermijning ; fi
+# RUN pip install --no-cache-dir -r requirements.txt
+
+RUN pip install -I shap==0.38.1
 
 COPY . /app/
 COPY deploy /deploy/

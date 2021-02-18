@@ -15,23 +15,23 @@ from utils.queries_planner import get_cases_from_bwv
 
 LOGGER = logging.getLogger(__name__)
 
-DATABASE_CONFIG_KEYS = [
-    "adres",
-    "bwv_adres_periodes",
-    "bbga",
-    "hotline",
-    "personen",
-    "personen_hist",
-    "stadia",
-    "zaken",
-]
+DATABASE_CONFIG = {
+    "adres": {"table_name": "import_adres"},
+    "bwv_adres_periodes": {},
+    "bbga": {},
+    "hotline": {},
+    "personen": {},
+    "personen_hist": {},
+    "stadia": {"table_name": "import_stadia"},
+    "zaken": {"table_name": "import_wvs"},
+}
 SCORE_STARTING_FROM_DATE = STARTING_FROM_DATE
 
 
 class FraudPredict:
     def start(self):
         LOGGER.info("Started scoring Logger")
-        dbconfig = self.get_all_database_configs(DATABASE_CONFIG_KEYS)
+        dbconfig = self.get_all_database_configs(DATABASE_CONFIG)
         LOGGER.info("Get all db configs")
         case_ids = self.get_case_ids_to_score()
         LOGGER.info("get case ids to score")
@@ -80,17 +80,18 @@ class FraudPredict:
 
         LOGGER.info("Finished scoring..")
 
-    def get_all_database_configs(self, keys=[]):
+    def get_all_database_configs(self, conf={}):
         config = {}
-        for key in keys:
+        for key, value in conf.items():
             config[key] = self.get_database_config()
+            config[key].update(value)
         return config
 
     def get_database_config(self):
         config = settings.DATABASES[settings.BWV_DATABASE_NAME]
         config = {
             "host": config.get("HOST"),
-            "db": config.get("NAME"),
+            "dbname": config.get("NAME"),
             "user": config.get("USER"),
             "password": config.get("PASSWORD"),
         }
