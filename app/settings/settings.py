@@ -33,7 +33,7 @@ INSTALLED_APPS = (
     "health_check",
     "health_check.db",
     "health_check.contrib.migrations",
-    "health_check.contrib.celery_ping",
+    # "health_check.contrib.celery_ping",
     "health_check.contrib.rabbitmq",
     # Your apps
     "apps.users",
