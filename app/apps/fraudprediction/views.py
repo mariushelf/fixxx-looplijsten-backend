@@ -38,7 +38,8 @@ class FraudPredictionScoringViewSet(ViewSet):
             LOGGER.info("Process kicking off scoring: {}".format(os.getpid()))
         db.connections.close_all()
 
-        fraudpredict.delay(fraudprediction_type="vakantieverhuur")
+        p = Process(target=self.background_process)
+        p.start()
 
         json = {
             "message": "Scoring Started {}".format(str(datetime.now())),
