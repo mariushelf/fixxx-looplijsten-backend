@@ -39,13 +39,6 @@ class FraudPredict:
         self.clear_cache_dir(cache_dir)
         LOGGER.info("Cleared cache")
 
-        bwv_personen = get_bwv_personen()
-        bwv_personen_hist = get_bwv_personen_hist()
-        LOGGER.info("bwv_personen count")
-        LOGGER.info(len(bwv_personen))
-        LOGGER.info("bwv_personen_hist count")
-        LOGGER.info(len(bwv_personen_hist))
-
         # Scoring library is optional for local development. This makes sure it's available.
         try:
             LOGGER.info("Importing scoring library")
