@@ -6,8 +6,14 @@ class HealthConfig(AppConfig):
     name = "apps.health"
 
     def ready(self):
-        from .health_checks import BAGServiceCheck, BWVDatabaseCheck, CeleryExecuteTask
+        from .health_checks import (
+            BAGServiceCheck,
+            BWVDatabaseCheck,
+            CeleryExecuteTask,
+            DecosJoinCheck,
+        )
 
         plugin_dir.register(BAGServiceCheck)
         plugin_dir.register(BWVDatabaseCheck)
         plugin_dir.register(CeleryExecuteTask)
+        plugin_dir.register(DecosJoinCheck)
