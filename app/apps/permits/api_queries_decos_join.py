@@ -267,7 +267,7 @@ class DecosJoinRequest:
     Object to connect to decos join and retrieve permits
     """
 
-    def get(self, path):
+    def get(self, path=""):
         url = "%s%s" % (settings.DECOS_JOIN_API, path)
         return self._process_request_to_decos_join(url)
 

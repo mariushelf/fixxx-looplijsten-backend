@@ -2,6 +2,7 @@ import logging
 
 import requests
 from apps.health.utils import assert_bwv_health
+from apps.permits.api_queries_decos_join import DecosJoinRequest
 from django.conf import settings
 from health_check.backends import BaseHealthCheckBackend
 from health_check.exceptions import ServiceUnavailable
@@ -91,3 +92,25 @@ class CeleryExecuteTask(BaseHealthCheckBackend):
     def check_status(self):
         result = debug_task.apply_async(ignore_result=False)
         assert result, "Debug task executes successfully"
+
+
+class DecosJoinCheck(BaseHealthCheckBackend):
+    """
+    Endpoint for checking the Decos Join API Endpoint
+    """
+
+    critical_service = True
+    api_url = settings.DECOS_JOIN_API
+    verbose_name = "Decos Join API Endpoint"
+
+    def check_status(self):
+        logger.debug("Checking status of Decos Join API url...")
+        response = DecosJoinRequest().get()
+        if not response:
+            self.add_error(
+                ServiceUnavailable(
+                    "Unable to connect to Decos Join: Connection was refused."
+                )
+            )
+        else:
+            logger.debug("Decos Join API connection established.")
