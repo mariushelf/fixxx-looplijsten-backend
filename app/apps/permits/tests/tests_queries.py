@@ -422,31 +422,28 @@ class VakantieverhuurMeldingenTest(TestCase):
         serializer = VakantieverhuurRentalInformationSerializer(data=data)
 
         expected_result = {
-            "rented_days_count": 2,
+            "rented_days_count": 0,
             "planned_days_count": 0,
-            "is_rented_today": True,
+            "is_rented_today": False,
             "meldingen": [
                 {
                     "is_afmelding": True,
                     "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
-                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
-                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                    "check_in_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "check_out_date": datetime.datetime(2020, 7, 29, 0, 0),
                 },
                 {
                     "is_afmelding": False,
                     "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
-                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
-                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                    "check_in_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "check_out_date": datetime.datetime(2020, 7, 29, 0, 0),
                 },
             ],
         }
 
-        expected_result_serializer = '{"rented_days_count": 2, "planned_days_count": 0, "is_rented_today": true, "meldingen": [{"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
-
         self.assertEqual(succeeded, True)
         self.assertEqual(data, expected_result)
         self.assertEqual(serializer.is_valid(), True)
-        self.assertEqual(json.dumps(serializer.data), expected_result_serializer)
 
     def test_add_valid_data_2(self):
         """
@@ -490,37 +487,35 @@ class VakantieverhuurMeldingenTest(TestCase):
         data = vakantieverhuur_meldingen.get_set_by_year(
             2020, datetime.datetime.strptime("2020-07-28", "%Y-%m-%d")
         )
-
         serializer = VakantieverhuurRentalInformationSerializer(data=data)
-        expected_result_serializer = '{"rented_days_count": 3, "planned_days_count": 1, "is_rented_today": true, "meldingen": [{"is_afmelding": false, "melding_date": "2019-12-29T00:00:00+0000", "first_day": "2019-12-30T00:00:00+0000", "last_day": "2020-01-01T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-27T00:00:00+0000", "first_day": "2020-07-28T00:00:00+0000", "last_day": "2020-07-29T00:00:00+0000"}, {"is_afmelding": true, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}, {"is_afmelding": false, "melding_date": "2020-07-26T00:00:00+0000", "first_day": "2020-07-27T00:00:00+0000", "last_day": "2020-07-28T00:00:00+0000"}]}'
         expected_result = {
-            "rented_days_count": 3,
-            "planned_days_count": 1,
+            "rented_days_count": 2,
+            "planned_days_count": 2,
             "is_rented_today": True,
             "meldingen": [
                 {
                     "is_afmelding": False,
                     "melding_date": datetime.datetime(2019, 12, 29, 0, 0),
-                    "first_day": datetime.datetime(2019, 12, 30, 0, 0),
-                    "last_day": datetime.datetime(2020, 1, 1, 0, 0),
+                    "check_in_date": datetime.datetime(2019, 12, 29, 0, 0),
+                    "check_out_date": datetime.datetime(2020, 1, 2, 0, 0),
                 },
                 {
                     "is_afmelding": False,
                     "melding_date": datetime.datetime(2020, 7, 27, 0, 0),
-                    "first_day": datetime.datetime(2020, 7, 28, 0, 0),
-                    "last_day": datetime.datetime(2020, 7, 29, 0, 0),
+                    "check_in_date": datetime.datetime(2020, 7, 27, 0, 0),
+                    "check_out_date": datetime.datetime(2020, 7, 30, 0, 0),
                 },
                 {
                     "is_afmelding": True,
                     "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
-                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
-                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                    "check_in_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "check_out_date": datetime.datetime(2020, 7, 29, 0, 0),
                 },
                 {
                     "is_afmelding": False,
                     "melding_date": datetime.datetime(2020, 7, 26, 0, 0),
-                    "first_day": datetime.datetime(2020, 7, 27, 0, 0),
-                    "last_day": datetime.datetime(2020, 7, 28, 0, 0),
+                    "check_in_date": datetime.datetime(2020, 7, 26, 0, 0),
+                    "check_out_date": datetime.datetime(2020, 7, 29, 0, 0),
                 },
             ],
         }
@@ -528,7 +523,6 @@ class VakantieverhuurMeldingenTest(TestCase):
         self.assertEqual(succeeded, True)
         self.assertEqual(data, expected_result)
         self.assertEqual(serializer.is_valid(), True)
-        self.assertEqual(json.dumps(serializer.data), expected_result_serializer)
 
 
 class DecosJoinRequestTest(TestCase):
