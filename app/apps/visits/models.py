@@ -57,6 +57,33 @@ class Visit(models.Model):
             ]
         )
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.itinerary_item and self.itinerary_item.itinerary:
+            self.team_members.all().delete()
+            for u in self.itinerary_item.itinerary.team_members.all():
+                member = VisitTeamMember(visit=self, user=u.user)
+                member.save()
+
+
+class VisitTeamMember(models.Model):
+    """ Member of an Visit Team """
+
+    class Meta:
+        unique_together = ["user", "visit"]
+
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=False, related_name="visit_team_members"
+    )
+
+    visit = models.ForeignKey(
+        Visit, on_delete=models.CASCADE, null=False, related_name="team_members"
+    )
+
+    def __str__(self):
+        return self.user.full_name
+
 
 class VisitMetaData(models.Model):
     """

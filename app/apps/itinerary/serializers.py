@@ -14,8 +14,8 @@ from apps.itinerary.models import (
     PostalCodeSettings,
 )
 from apps.planner.models import DaySettings
-from apps.planner.serializers import DaySettingsSerializer, TeamSettingsSerializer
-from apps.users.serializers import UserIdSerializer, UserSerializer
+from apps.planner.serializers import DaySettingsSerializer
+from apps.users.serializers import UserSerializer
 from apps.visits.serializers import VisitSerializer
 from rest_framework import serializers
 
@@ -102,7 +102,7 @@ class ItineraryItemCreateSerializer(serializers.ModelSerializer):
 
 
 class ItineraryTeamMemberSerializer(serializers.ModelSerializer):
-    user = UserIdSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = ItineraryTeamMember
