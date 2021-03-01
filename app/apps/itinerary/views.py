@@ -10,7 +10,6 @@ from apps.itinerary.serializers import (
     NoteCrudSerializer,
 )
 from apps.itinerary.tasks import update_external_states
-from apps.planner.serializers import TeamSettingsSerializer
 from apps.users.models import User
 from django.db import transaction
 from django.http import Http404, JsonResponse

@@ -1,4 +1,11 @@
-from apps.visits.models import Observation, Situation, SuggestNextVisit, Visit
+from apps.users.serializers import UserSerializer
+from apps.visits.models import (
+    Observation,
+    Situation,
+    SuggestNextVisit,
+    Visit,
+    VisitTeamMember,
+)
 from rest_framework import serializers
 
 
@@ -29,7 +36,20 @@ class ObservationSerializer(serializers.ModelSerializer):
         ]
 
 
+class VisitTeamMemberSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = VisitTeamMember
+        fields = (
+            "id",
+            "user",
+        )
+
+
 class VisitSerializer(serializers.ModelSerializer):
+    team_members = VisitTeamMemberSerializer(many=True, read_only=True)
+
     class Meta:
         model = Visit
         fields = "__all__"
