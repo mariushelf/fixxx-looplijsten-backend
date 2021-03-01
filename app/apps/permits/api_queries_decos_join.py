@@ -66,7 +66,6 @@ class VakantieverhuurMeldingen:
         self.add_data(data)
 
     def add_data(self, data):
-        day = timedelta(days=1)
         serializer = DecosVakantieverhuurMeldingSerializer(data=data, many=True)
         if serializer.is_valid():
             data = sorted(serializer.data, key=lambda k: k["sequence"])
@@ -75,48 +74,44 @@ class VakantieverhuurMeldingen:
                     "melding_date": datetime.strptime(
                         d_set["date1"].split("T")[0], "%Y-%m-%d"
                     ),
-                    "start_date": datetime.strptime(
+                    "check_in_date": datetime.strptime(
                         d_set["date6"].split("T")[0], "%Y-%m-%d"
-                    )
-                    + day,
-                    "end_date": datetime.strptime(
+                    ),
+                    "check_out_date": datetime.strptime(
                         d_set["date7"].split("T")[0], "%Y-%m-%d"
-                    )
-                    - day,
+                    ),
                     "is_afmelding": d_set["is_afmelding"],
                 }
                 self.add_melding(**d)
             return True
         return False
 
-    def add_melding(self, melding_date, start_date, end_date, is_afmelding):
+    def add_melding(self, melding_date, check_in_date, check_out_date, is_afmelding):
         day = timedelta(days=1)
         melding_set = [[], melding_date, is_afmelding]
-        while start_date <= end_date:
-            melding_set[0].append(start_date)
-            start_date = start_date + day
+        while check_in_date < check_out_date:
+            melding_set[0].append(check_in_date)
+            check_in_date = check_in_date + day
         if melding_set[0]:
             self.days.append(melding_set)
 
     def get_set_by_year(self, year, today):
         o = {}
-        self.days.reverse()
+        day = timedelta(days=1)
         today = datetime.strptime(today.strftime("%Y-%m-%d"), "%Y-%m-%d")
-        o.update(self._rented(year, today))
-        o.update(
+        meldingen = [
             {
-                "meldingen": [
-                    {
-                        "is_afmelding": d_set[2],
-                        "melding_date": d_set[1],
-                        "first_day": d_set[0][0],
-                        "last_day": d_set[0][-1],
-                    }
-                    for d_set in self.days
-                    if d_set[0][0].year == year or d_set[0][-1].year == year
-                ]
+                "is_afmelding": d_set[2],
+                "melding_date": d_set[1],
+                "check_in_date": d_set[0][0],
+                "check_out_date": d_set[0][-1] + day,
             }
-        )
+            for d_set in self.days
+            if d_set[0][0].year == year or (d_set[0][-1] + day).year == year
+        ]
+        meldingen.reverse()
+        o.update(self._rented(year, today))
+        o.update({"meldingen": meldingen})
         return o
 
     def _days_flat(self, days):
@@ -134,8 +129,8 @@ class VakantieverhuurMeldingen:
                         valid_days.remove(d)
 
         is_rented_today = bool(today in valid_days)
-        rented_days = [d for d in valid_days if d <= today]
-        planned_days = [d for d in valid_days if d > today]
+        rented_days = [d for d in valid_days if d < today]
+        planned_days = [d for d in valid_days if d >= today]
         return {
             "rented_days_count": len(rented_days),
             "planned_days_count": len(planned_days),
