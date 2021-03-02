@@ -3,6 +3,7 @@ import logging
 import requests
 from apps.itinerary.models import ItineraryItem
 from apps.visits.models import Visit
+from apps.visits.serializers import ToZakenVisitSerializer
 from celery import shared_task
 from django.conf import settings
 from utils.queries import get_case, get_import_stadia
@@ -144,6 +145,12 @@ def push_visit(self, visit_id, created=False):
         "suggest_next_visit_description": visit.suggest_next_visit_description,
         "notes": visit.description,
     }
+
+    serializer = ToZakenVisitSerializer(data=data)
+    if serializer.is_valid():
+        logger.info("Visit to zaken format VALID")
+    else:
+        logger.info("Visit to zaken format INVALID")
 
     try:
         response = requests.post(
