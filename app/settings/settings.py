@@ -315,6 +315,12 @@ FRAUD_PREDICTION_CACHE_DIR = os.path.normpath(
 )
 # Secret key for accessing fraud prediction scoring endpoint
 FRAUD_PREDICTION_SECRET_KEY = os.environ.get("FRAUD_PREDICTION_SECRET_KEY")
+FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR = "vakantieverhuur"
+FRAUD_PREDICTION_MODEL_ONDERHUUR = "onderhuur"
+FRAUD_PREDICTION_MODELS = [
+    FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
+    FRAUD_PREDICTION_MODEL_ONDERHUUR,
+]
 
 # City central geolocation and postal code range
 CITY_CENTRAL_LOCATION_LAT = 52.379189
