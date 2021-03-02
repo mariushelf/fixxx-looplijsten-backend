@@ -149,7 +149,7 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
             "observation_choices",
             "situation_choices",
             "suggest_next_visit_choices",
-            "fraud_predict",
+            "fraud_prediction_model",
             "marked_stadia",
             "show_issuemelding",
             "show_vakantieverhuur",
