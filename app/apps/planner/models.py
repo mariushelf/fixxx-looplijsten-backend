@@ -1,5 +1,6 @@
 from apps.cases.models import Project, Stadium, StadiumLabel
 from apps.visits.models import Observation, Situation, SuggestNextVisit
+from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -8,6 +9,8 @@ from settings.const import POSTAL_CODE_RANGES, WEEK_DAYS_CHOICES
 from .const import SCORING_WEIGHTS
 
 WEIGHTS_VALIDATORS = [MinValueValidator(0), MaxValueValidator(1)]
+
+FRAUD_PREDICTION_MODEL_CHOICES = [[m, m] for m in settings.FRAUD_PREDICTION_MODELS]
 
 
 def team_settings_settings_default():
@@ -53,8 +56,11 @@ class TeamSettings(models.Model):
         blank=True,
         related_name="team_settings_list",
     )
-    fraud_predict = models.BooleanField(
-        default=True,
+    fraud_prediction_model = models.CharField(
+        choices=FRAUD_PREDICTION_MODEL_CHOICES,
+        max_length=50,
+        blank=True,
+        null=True,
     )
     marked_stadia = models.ManyToManyField(
         to=StadiumLabel,

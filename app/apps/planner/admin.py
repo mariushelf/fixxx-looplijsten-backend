@@ -30,7 +30,7 @@ class TeamSettingsAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
     fieldsets = (
-        (None, {"fields": ("name", "fraud_predict", "show_issuemelding")}),
+        (None, {"fields": ("name", "fraud_prediction_model", "show_issuemelding")}),
         (
             "Projects & stadia options",
             {

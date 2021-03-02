@@ -1,5 +1,6 @@
 # TODO: Add tests
 import glob
+import importlib
 import logging
 import math
 import os
@@ -29,6 +30,10 @@ SCORE_STARTING_FROM_DATE = STARTING_FROM_DATE
 
 
 class FraudPredict:
+    def __init__(self, model_name, score_module_path):
+        self.model_name = model_name
+        self.score_module_path = score_module_path
+
     def start(self):
         LOGGER.info("Started scoring Logger")
         dbconfig = self.get_all_database_configs(DATABASE_CONFIG)
@@ -40,15 +45,16 @@ class FraudPredict:
         LOGGER.info("Cleared cache")
 
         # Scoring library is optional for local development. This makes sure it's available.
+
         try:
             LOGGER.info("Importing scoring library")
-            from woonfraude_model import score
+            score_module = importlib.import_module(self.score_module_path)
         except ModuleNotFoundError as e:
             LOGGER.error("Could not import library. Scoring failed. {}".format(e))
             return
 
         try:
-            scorer = score.Scorer(cache_dir=cache_dir, dbconfig=dbconfig)
+            scorer = score_module.Scorer(cache_dir=cache_dir, dbconfig=dbconfig)
             LOGGER.info("init scoring logger")
             results = scorer.score(
                 zaak_ids=case_ids, zaken_con=connections[settings.BWV_DATABASE_NAME]
@@ -94,7 +100,7 @@ class FraudPredict:
         return list(
             dict.fromkeys(
                 Stadium.objects.filter(
-                    team_settings_list__fraud_predict=True
+                    team_settings_list__fraud_prediction_model=self.model_name
                 ).values_list("name", flat=True)
             )
         )
@@ -103,7 +109,7 @@ class FraudPredict:
         return list(
             dict.fromkeys(
                 Project.objects.filter(
-                    team_settings_list__fraud_predict=True
+                    team_settings_list__fraud_prediction_model=self.model_name
                 ).values_list("name", flat=True)
             )
         )

@@ -8,6 +8,7 @@ from apps.fraudprediction.fraud_predict import FraudPredict
 from apps.fraudprediction.permissions import FraudPredictionApiKeyAuth
 from apps.fraudprediction.tasks import fraudpredict
 from django import db
+from django.conf import settings
 from django.http import JsonResponse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ViewSet
@@ -28,7 +29,10 @@ class FraudPredictionScoringViewSet(ViewSet):
         if hasattr(os, "getppid"):
             LOGGER.info("Scoring process: {}".format(os.getpid()))
 
-        fraud_predict = FraudPredict()
+        fraud_predict = FraudPredict(
+            model_name=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
+            score_module_path="woonfraude_model.score",
+        )
         fraud_predict.start()
 
         LOGGER.info("Finished scoring background process")
