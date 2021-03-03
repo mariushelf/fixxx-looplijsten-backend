@@ -80,6 +80,7 @@ class TeamSettings(models.Model):
 
     class Meta:
         verbose_name_plural = "Team settings"
+        ordering = ["name"]
 
     @property
     def situation_choices(self):
