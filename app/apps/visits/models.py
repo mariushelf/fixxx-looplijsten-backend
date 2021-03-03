@@ -93,7 +93,7 @@ class VisitMetaData(models.Model):
     The data should be relevant as (legal) documentation.
     """
 
-    visit = models.ForeignKey(
+    visit = models.OneToOneField(
         to=Visit, on_delete=models.CASCADE, related_name="meta_data", unique=True
     )
 
