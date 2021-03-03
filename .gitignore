@@ -4,3 +4,4 @@ app/datasets/*.csv
 .idea
 .vscode/*
 dumps
+.env.local
