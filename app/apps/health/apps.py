@@ -14,6 +14,6 @@ class HealthConfig(AppConfig):
         )
 
         plugin_dir.register(BAGServiceCheck)
-        plugin_dir.register(BWVDatabaseCheck)
+        # plugin_dir.register(BWVDatabaseCheck)
         plugin_dir.register(CeleryExecuteTask)
         plugin_dir.register(DecosJoinCheck)
