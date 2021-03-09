@@ -12,14 +12,17 @@ READ_TIMEOUT = 60
 
 
 @shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def fraudpredict(self, fraudprediction_type):
+def fraudpredict(self):
     """
     Calculate fraudpredictions per type
     """
 
     try:
         logger.info("Started fraudpredict task")
-        fraud_predict = FraudPredict()
+        fraud_predict = FraudPredict(
+            model_name=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
+            score_module_path="woonfraude_model.score",
+        )
         fraud_predict.start()
         logger.info("Ended fraudpredict task")
 
