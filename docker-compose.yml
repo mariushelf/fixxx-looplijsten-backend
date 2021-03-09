@@ -74,6 +74,23 @@ services:
       - looplijsten_backend
     restart: on-failure
 
+  looplijsten_celery_beat:
+    image: api
+    container_name: looplijsten_celery_beat
+    hostname: looplijsten_celery_beat
+    command: bash -c "/app/wait-for.sh rabbitmq:5672 && /app/wait-for.sh api:8000 -- /app/celery-beat.sh"
+    depends_on:
+      - api
+      - database
+      - bwv_db
+      - rabbitmq
+      - looplijsten_celery_worker
+    env_file:
+      - .env
+    networks:
+      - looplijsten_backend
+    restart: on-failure
+
 networks:
   looplijsten_backend:
     external: true
