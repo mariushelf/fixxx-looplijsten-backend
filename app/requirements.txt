@@ -23,6 +23,8 @@ requests==2.24.0
 django-filter==2.4.0
 tenacity
 django-health-check
+django-celery-beat
+django-timezone-field==4.0
 
 # Authentication
 git+https://github.com/petercuret/keycloak_oidc.git@master

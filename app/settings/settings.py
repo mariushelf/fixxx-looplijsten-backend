@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     "drf_spectacular",  # for generating real OpenAPI 3.0 documentation
     "constance",
     "constance.backends.database",  # for dynamic configurations in admin
+    "django_celery_beat",
     # Health checks. (Expand when more services become available)
     "health_check",
     "health_check.db",
