@@ -178,6 +178,7 @@ REST_FRAMEWORK = {
         "keycloak_oidc.drf.permissions.IsInAuthorizedRealm",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": ("apps.users.auth.AuthenticationClass",),
+    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
 }
 
 # Mail
@@ -412,3 +413,9 @@ CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_USERNAME}:{RABBIT_MQ_PASSWORD}@{RABBIT_M
 
 BROKER_URL = CELERY_BROKER_URL
 CELERY_TIMEZONE = "Europe/Amsterdam"
+
+SPECTACULAR_DEFAULTS = {
+    "POSTPROCESSING_HOOKS": [
+        "drf_spectacular.hooks.postprocess_schema_enums",
+    ]
+}

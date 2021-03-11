@@ -150,6 +150,14 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         )
 
 
+class ItineraryViewSetV2(ItineraryViewSet):
+    """
+    CRUD v2 for itineraries and teams
+    """
+
+    pass
+
+
 class ItineraryItemViewSet(
     ViewSet, GenericAPIView, CreateModelMixin, UpdateModelMixin, DestroyModelMixin
 ):

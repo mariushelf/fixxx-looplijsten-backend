@@ -1,7 +1,15 @@
 from apps.cases.views import CaseSearchViewSet, CaseViewSet, PermitViewSet
+from apps.fraudprediction import router as fraudprediction_router
 from apps.fraudprediction.views import FraudPredictionScoringViewSet
 from apps.health.views import health_bwv, health_default
-from apps.itinerary.views import ItineraryItemViewSet, ItineraryViewSet, NoteViewSet
+from apps.itinerary import router as itinerary_router
+from apps.itinerary import router_v2 as itinerary_router_v2
+from apps.itinerary.views import (
+    ItineraryItemViewSet,
+    ItineraryViewSet,
+    ItineraryViewSetV2,
+    NoteViewSet,
+)
 from apps.permits.views import DecosAPISearch, DecosViewSet
 from apps.planner.views import (
     DaySettingsViewSet,
@@ -19,38 +27,72 @@ from django.urls import include, path
 from django.views.generic.base import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
+from rest_framework.schemas import get_schema_view
+
+schema_view = get_schema_view(title="Example API")
 
 admin.site.site_header = "Wonen looplijsten"
 admin.site.site_title = "Wonen looplijsten"
 admin.site.index_title = "Wonen looplijsten"
 
-api_router = DefaultRouter()
-api_router.register(r"itineraries", ItineraryViewSet, basename="itinerary")
-api_router.register(r"itinerary-items", ItineraryItemViewSet, basename="itinerary-item")
-api_router.register(r"cases", CaseViewSet, basename="case")
-api_router.register(r"search", CaseSearchViewSet, basename="search")
-api_router.register(r"notes", NoteViewSet, basename="notes")
-api_router.register(r"permits", PermitViewSet, basename="permits")
-api_router.register(r"decos", DecosViewSet, basename="decos")
-api_router.register(r"users", UserListView, basename="users")
-api_router.register(r"visits", VisitViewSet, basename="visits")
-api_router.register(r"observations", ObservationViewSet, basename="observations")
-api_router.register(
-    r"suggest-next-visit", SuggestNextVisitViewSet, basename="suggest-next-visit"
-)
+# v1 router
+# api_router = DefaultRouter()
+# api_router.register(r"itineraries", ItineraryViewSet, basename="itinerary")
+# api_router.register(r"itinerary-items", ItineraryItemViewSet, basename="itinerary-item")
+# api_router.register(r"cases", CaseViewSet, basename="case")
+# api_router.register(r"search", CaseSearchViewSet, basename="search")
+# api_router.register(r"notes", NoteViewSet, basename="notes")
+# api_router.register(r"permits", PermitViewSet, basename="permits")
+# api_router.register(r"decos", DecosViewSet, basename="decos")
+# api_router.register(r"users", UserListView, basename="users")
+# api_router.register(r"visits", VisitViewSet, basename="visits")
+# api_router.register(r"observations", ObservationViewSet, basename="observations")
+# api_router.register(
+#     r"suggest-next-visit", SuggestNextVisitViewSet, basename="suggest-next-visit"
+# )
 
-api_router.register(r"team-settings", TeamSettingsViewSet, basename="team-settings")
-api_router.register(r"day-settings", DaySettingsViewSet, basename="day-settings")
-api_router.register(
-    r"postal-code-ranges-presets",
-    PostalCodeRangePresetViewSet,
-    basename="postal-code-ranges-presets",
-)
-api_router.register(
-    r"fraud-prediction/scoring",
-    FraudPredictionScoringViewSet,
-    basename="fraud-prediction-score",
-)
+# api_router.register(r"team-settings", TeamSettingsViewSet, basename="team-settings")
+# api_router.register(r"day-settings", DaySettingsViewSet, basename="day-settings")
+# api_router.register(
+#     r"postal-code-ranges-presets",
+#     PostalCodeRangePresetViewSet,
+#     basename="postal-code-ranges-presets",
+# )
+# api_router.register(
+#     r"fraud-prediction/scoring",
+#     FraudPredictionScoringViewSet,
+#     basename="fraud-prediction-score",
+# )
+
+# v2 router
+# api_router_v2 = DefaultRouter()
+# api_router_v2.register(r"itineraries", ItineraryViewSetV2, basename="itinerary")
+# api_router_v2.register(r"itinerary-items", ItineraryItemViewSet, basename="itinerary-item")
+# api_router_v2.register(r"cases", CaseViewSet, basename="case")
+# api_router_v2.register(r"search", CaseSearchViewSet, basename="search")
+# api_router_v2.register(r"notes", NoteViewSet, basename="notes")
+# api_router_v2.register(r"permits", PermitViewSet, basename="permits")
+# api_router_v2.register(r"decos", DecosViewSet, basename="decos")
+# api_router_v2.register(r"users", UserListView, basename="users")
+# api_router_v2.register(r"visits", VisitViewSet, basename="visits")
+# api_router_v2.register(r"observations", ObservationViewSet, basename="observations")
+# api_router_v2.register(
+#     r"suggest-next-visit", SuggestNextVisitViewSet, basename="suggest-next-visit"
+# )
+
+# api_router_v2.register(r"team-settings", TeamSettingsViewSet, basename="team-settings")
+# api_router_v2.register(r"day-settings", DaySettingsViewSet, basename="day-settings")
+# api_router_v2.register(
+#     r"postal-code-ranges-presets",
+#     PostalCodeRangePresetViewSet,
+#     basename="postal-code-ranges-presets",
+# )
+# api_router_v2.register(
+#     r"fraud-prediction/scoring",
+#     FraudPredictionScoringViewSet,
+#     basename="fraud-prediction-score",
+# )
+
 
 urlpatterns = [
     # Admin environment
@@ -65,7 +107,17 @@ urlpatterns = [
     path("looplijsten/health_bwv", health_bwv, name="health-bwv"),
     path("health/", include("health_check.urls")),
     # The API for requesting data
-    path("api/v1/", include(api_router.urls), name="api"),
+    path(
+        "api/v1/",
+        include((itinerary_router.api_router, "itineraries"), namespace="v1"),
+        name="api",
+    ),
+    # path("api/v1/", include((fraudprediction_router.api_router, "fraudprediction"), namespace="v1"), name="api_v2"),
+    path(
+        "api/v2/",
+        include((itinerary_router_v2.api_router, "itineraries"), namespace="v2"),
+        name="api_v2",
+    ),
     # Authentication endpoint for exchanging an OIDC code for a token
     path(
         "api/v1/oidc-authenticate/",
@@ -78,11 +130,24 @@ urlpatterns = [
         IsAuthorizedView.as_view(),
         name="is-authorized",
     ),
+    path(
+        "api/v2/is-authorized/",
+        IsAuthorizedView.as_view(),
+        name="is-authorized",
+    ),
     # # Swagger/OpenAPI documentation
-    path("api/v1/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/v1/schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema"),
     path(
         "api/v1/swagger/",
         SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/v2/schema/", SpectacularAPIView.as_view(api_version="v2"), name="schema_v2"
+    ),
+    path(
+        "api/v2/swagger/",
+        SpectacularSwaggerView.as_view(url_name="schema_v2"),
         name="swagger-ui",
     ),
     path("admin/decos-api-search/", DecosAPISearch.as_view(), name="decos_api_search"),
