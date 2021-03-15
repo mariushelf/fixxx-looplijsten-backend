@@ -28,7 +28,7 @@ class CaseViewSetTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("case-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:case-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -44,7 +44,7 @@ class CaseViewSetTest(APITestCase):
         mock_q.get_related_case_ids.return_value = {}
 
         MOCK_CASE_ID = "FOO_ID"
-        url = reverse("case-detail", kwargs={"pk": MOCK_CASE_ID})
+        url = reverse("v1:case-detail", kwargs={"pk": MOCK_CASE_ID})
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -114,7 +114,7 @@ class CaseViewSetTest(APITestCase):
 
         # Now that everythign is mocked, do the actual request
         MOCK_CASE_ID = "FOO_ID"
-        url = reverse("case-detail", kwargs={"pk": MOCK_CASE_ID})
+        url = reverse("v1:case-detail", kwargs={"pk": MOCK_CASE_ID})
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -150,7 +150,7 @@ class CaseViewSetTest(APITestCase):
         baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
         baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
 
-        url = reverse("case-visits", kwargs={"pk": case.case_id})
+        url = reverse("v1:case-visits", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -169,7 +169,7 @@ class CaseViewSetTest(APITestCase):
             Visit, itinerary_item=itinerary_item, start_time=datetime_future
         )
 
-        url = reverse("case-visits", kwargs={"pk": case.case_id})
+        url = reverse("v1:case-visits", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
         response = client.get(url)
         self.assertEqual(response.json()[0]["id"], visit_2.id)
@@ -193,7 +193,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         An unauthenticated search should not be possible
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_unauthenticated_client()
         response = client.get(url, self.MOCK_SEARCH_QUERY_PARAMETERS)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -203,7 +203,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         An authenticated search should fail if postal code and street number are not available
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         MOCK_SEARCH_QUERY_PARAMETERS = self.MOCK_SEARCH_QUERY_PARAMETERS.copy()
@@ -222,7 +222,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         An authenticated search should fail if street number is not available
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         MOCK_SEARCH_QUERY_PARAMETERS = self.MOCK_SEARCH_QUERY_PARAMETERS.copy()
@@ -240,7 +240,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         An authenticated search should fail if street name and postal code are not available
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         MOCK_SEARCH_QUERY_PARAMETERS = self.MOCK_SEARCH_QUERY_PARAMETERS.copy()
@@ -259,7 +259,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         An authenticated search works
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         # Mock search function
@@ -284,7 +284,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         An authenticated search works without optional suffix
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         # Mock search function
@@ -314,7 +314,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         The cases in a search result should contain a teams array
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         CASE_ID = "FOO-ID"
@@ -336,7 +336,7 @@ class CaseSearchViewSetTest(APITestCase):
         """
         The cases in a search result should contain a fraud_prediction if it's available
         """
-        url = reverse("search-list")
+        url = reverse("v1:search-list")
         client = get_authenticated_client()
 
         CASE_ID = "FOO-ID"
@@ -374,7 +374,7 @@ class UnplannedCasesTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -383,7 +383,7 @@ class UnplannedCasesTest(APITestCase):
         """
         An authenticated request should fail if no date is given
         """
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_authenticated_client()
 
         response = client.get(url, {})
@@ -393,7 +393,7 @@ class UnplannedCasesTest(APITestCase):
         """
         An authenticated request should fail if no stadium is given
         """
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_authenticated_client()
 
         response = client.get(url, {"date": "2020-04-05"})
@@ -403,7 +403,7 @@ class UnplannedCasesTest(APITestCase):
         """
         An authenticated request should fail if unknown stadium is given
         """
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_authenticated_client()
 
         response = client.get(url, {"date": "FOO", "stadium": ISSUEMELDING})
@@ -413,7 +413,7 @@ class UnplannedCasesTest(APITestCase):
         """
         An authenticated request should succeed with the right parameters
         """
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_authenticated_client()
 
         response = client.get(url, {"date": "2020-04-05", "stadium": ISSUEMELDING})
@@ -423,7 +423,7 @@ class UnplannedCasesTest(APITestCase):
         """
         Should return an empty list if no cases are found
         """
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_authenticated_client()
 
         response = client.get(url, {"date": "2020-04-05", "stadium": ISSUEMELDING})
@@ -434,7 +434,7 @@ class UnplannedCasesTest(APITestCase):
         """
         Should return a list with cases (which include a fraud_prediction entry)
         """
-        url = reverse("case-unplanned")
+        url = reverse("v1:case-unplanned")
         client = get_authenticated_client()
 
         mock_itinerary_class.get_unplanned_cases = Mock()

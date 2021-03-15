@@ -163,3 +163,13 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         best_list = sorted(best_list, key=lambda case: case["distance"])
 
         return best_list
+
+
+class ItineraryKnapsackListV1(ItineraryKnapsackList):
+    pass
+
+
+class ItineraryKnapsackListV2(ItineraryKnapsackList):
+    def __get_eligible_cases__(self):
+        print("v2 __get_eligible_cases__")
+        return []

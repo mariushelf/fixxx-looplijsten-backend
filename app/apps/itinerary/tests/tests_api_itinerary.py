@@ -26,7 +26,7 @@ class ItineraryViewsGetTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("itinerary-list")
+        url = reverse("v1:itinerary-list")
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -35,7 +35,7 @@ class ItineraryViewsGetTest(APITestCase):
         """
         Should succeed and return no itineraries (none have been created)
         """
-        url = reverse("itinerary-list")
+        url = reverse("v1:itinerary-list")
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -49,7 +49,7 @@ class ItineraryViewsGetTest(APITestCase):
         Should return an empty response if no users are associated with itinerary
         """
         Itinerary.objects.create()
-        url = reverse("itinerary-list")
+        url = reverse("v1:itinerary-list")
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -66,7 +66,7 @@ class ItineraryViewsGetTest(APITestCase):
     #     user = get_test_user()
     #     itinerary.add_team_members([user.id])
     #
-    #     url = reverse("itinerary-list")
+    #     url = reverse("v1:itinerary-list")
     #     client = get_authenticated_client()
     #     response = client.get(url)
     #
@@ -108,7 +108,7 @@ class ItineraryViewsGetTest(APITestCase):
     #     itinerary_a.add_team_members([user.id])
     #     itinerary_b.add_team_members([user.id])
     #
-    #     url = reverse("itinerary-list")
+    #     url = reverse("v:itinerary-list")
     #     client = get_authenticated_client()
     #     response = client.get(url)
     #
@@ -169,7 +169,7 @@ class ItineraryViewsGetTest(APITestCase):
     #     user = get_test_user()
     #     itinerary.add_team_members([user.id])
     #
-    #     url = reverse("itinerary-list")
+    #     url = reverse("v1:itinerary-list")
     #     client = get_authenticated_client()
     #     response = client.get(url, {"created_at": "2020-04-02"})
     #
@@ -210,7 +210,7 @@ class ItineraryViewsGetTest(APITestCase):
         user = get_test_user()
         itinerary.add_team_members([user.id])
 
-        url = reverse("itinerary-list")
+        url = reverse("v1:itinerary-list")
         client = get_authenticated_client()
         response = client.get(url, {"created_at": "2022-04-02"})
         expected_respsonse = {"itineraries": []}
@@ -231,7 +231,7 @@ class ItineraryViewsCreateTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("itinerary-list")
+        url = reverse("v1:itinerary-list")
         client = get_unauthenticated_client()
         response = client.post(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -244,7 +244,7 @@ class ItineraryViewsCreateTest(APITestCase):
         self.assertEqual(Itinerary.objects.count(), 0)
         mock_get_cases_from_settings.return_value = []
 
-        url = reverse("itinerary-list")
+        url = reverse("v1:itinerary-list")
         client = get_authenticated_client()
         user = get_test_user()
 
@@ -274,7 +274,7 @@ class ItineraryViewsCreateTest(APITestCase):
     #         {"case_id": "FOO_CASE_ID_B"},
     #     ]
     #
-    #     url = reverse("itinerary-list")
+    #     url = reverse("v1:itinerary-list")
     #     client = get_authenticated_client()
     #     user = get_test_user()
     #
@@ -312,7 +312,7 @@ class ItineraryViewsDeleteTest(APITestCase):
         An unauthenticated request should not be possible
         """
         itinerary = Itinerary.objects.create()
-        url = reverse("itinerary-detail", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-detail", kwargs={"pk": itinerary.id})
 
         client = get_unauthenticated_client()
         response = client.delete(url)
@@ -325,7 +325,7 @@ class ItineraryViewsDeleteTest(APITestCase):
         """
         itinerary = Itinerary.objects.create()
 
-        url = reverse("itinerary-detail", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-detail", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
         response = client.delete(url)
 
@@ -344,7 +344,7 @@ class ItineraryViewsSuggestionsTest(APITestCase):
         """
         itinerary = Itinerary.objects.create()
 
-        url = reverse("itinerary-suggestions", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-suggestions", kwargs={"pk": itinerary.id})
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -359,7 +359,7 @@ class ItineraryViewsSuggestionsTest(APITestCase):
         itinerary = Itinerary.objects.create()
         ItinerarySettings.objects.create(opening_date="2020-04-04", itinerary=itinerary)
 
-        url = reverse("itinerary-suggestions", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-suggestions", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
         response = client.get(url)
 

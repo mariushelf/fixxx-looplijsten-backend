@@ -27,10 +27,20 @@ class DaySettingsInline(admin.TabularInline):
 
 @admin.register(TeamSettings)
 class TeamSettingsAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = ("name", "use_zaken_backend")
 
     fieldsets = (
-        (None, {"fields": ("name", "fraud_prediction_model", "show_issuemelding")}),
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "use_zaken_backend",
+                    "fraud_prediction_model",
+                    "show_issuemelding",
+                )
+            },
+        ),
         (
             "Projects & stadia options",
             {

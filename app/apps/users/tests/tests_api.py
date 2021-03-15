@@ -20,7 +20,7 @@ class IsAuthenticatedViewTest(APITestCase):
         """
         is_authenticated is true when user is not logged in
         """
-        url = reverse("is-authorized")
+        url = reverse("is-authorized-v1")
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -32,7 +32,7 @@ class IsAuthenticatedViewTest(APITestCase):
         """
         is_authenticated false when user is not logged in
         """
-        url = reverse("is-authorized")
+        url = reverse("is-authorized-v1")
         client = get_unauthenticated_client()
         response = client.get(url)
 

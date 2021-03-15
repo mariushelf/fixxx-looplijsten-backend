@@ -21,7 +21,7 @@ class ItineraryTeamsViewsTest(APITestCase):
         """
 
         itinerary = Itinerary.objects.create()
-        url = reverse("itinerary-team", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-team", kwargs={"pk": itinerary.id})
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -31,7 +31,7 @@ class ItineraryTeamsViewsTest(APITestCase):
         Should return an empty response if no team is associated to itinerary
         """
         itinerary = Itinerary.objects.create()
-        url = reverse("itinerary-team", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-team", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -47,7 +47,7 @@ class ItineraryTeamsViewsTest(APITestCase):
         user_b = User.objects.create(email="foo_b@foo.com")
         itinerary.add_team_members([user_a.id, user_b.id])
 
-        url = reverse("itinerary-team", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-team", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -69,7 +69,7 @@ class ItineraryTeamsViewsTest(APITestCase):
 
         self.assertEquals([], list(itinerary.team_members.all()))
 
-        url = reverse("itinerary-team", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-team", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
 
         data = {
@@ -95,7 +95,7 @@ class ItineraryTeamsViewsTest(APITestCase):
         user_b = User.objects.create(email="foo_b@foo.com")
         itinerary.add_team_members([user_b.id])
 
-        url = reverse("itinerary-team", kwargs={"pk": itinerary.id})
+        url = reverse("v1:itinerary-team", kwargs={"pk": itinerary.id})
         client = get_authenticated_client()
 
         data = {

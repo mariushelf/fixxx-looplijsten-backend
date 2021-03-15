@@ -35,6 +35,11 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["created_at"]
 
+    def get_serializer_class(self):
+        print("get_serializer_class")
+        print(self.request.version)
+        return super().get_serializer_class()
+
     def get_object(self):
         MESSAGE = (
             "De looplijst is niet gevonden. De lijst is misschien verwijderd door een"
@@ -51,7 +56,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
         if date:
             itineraries = itineraries.filter(created_at=date)
 
-        serializer = self.serializer_class(itineraries, many=True)
+        serializer = self.get_serializer_class()(itineraries, many=True)
 
         return serializer.data
 
@@ -148,14 +153,6 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
                 "itineraries": itineraries,
             }
         )
-
-
-class ItineraryViewSetV2(ItineraryViewSet):
-    """
-    CRUD v2 for itineraries and teams
-    """
-
-    pass
 
 
 class ItineraryItemViewSet(

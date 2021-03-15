@@ -7,6 +7,3 @@ router.register(
     FraudPredictionScoringViewSet,
     basename="fraud-prediction-score",
 )
-
-
-api_router = router.urls
