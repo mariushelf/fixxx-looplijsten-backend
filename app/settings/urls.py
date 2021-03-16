@@ -29,6 +29,14 @@ v1_urls = (
     + planner_router.router.urls
     + users_router.router.urls
     + visits_router.router.urls
+    + [
+        path(
+            "oidc-authenticate/",
+            ObtainAuthTokenOIDC.as_view(),
+            name="oidc-authenticate",
+        ),
+        path("is-authorized/", IsAuthorizedView.as_view(), name="is-authorized"),
+    ]
 )
 
 urlpatterns = [
@@ -46,23 +54,6 @@ urlpatterns = [
     # The API for requesting data
     path("api/v1/", include((v1_urls, "app"), namespace="v1")),
     path("api/v2/", include((v1_urls, "app"), namespace="v2")),
-    # Authentication endpoint for exchanging an OIDC code for a token
-    path(
-        "api/v1/oidc-authenticate/",
-        ObtainAuthTokenOIDC.as_view(),
-        name="oidc-authenticate",
-    ),
-    # Endpoint for checking if user is authenticated
-    path(
-        "api/v1/is-authorized/",
-        IsAuthorizedView.as_view(),
-        name="is-authorized-v1",
-    ),
-    path(
-        "api/v2/is-authorized/",
-        IsAuthorizedView.as_view(),
-        name="is-authorized-v2",
-    ),
     # # Swagger/OpenAPI documentation
     path(
         "api/v1/schema/", SpectacularAPIView.as_view(api_version="v1"), name="schema-v1"
