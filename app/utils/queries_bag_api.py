@@ -30,11 +30,11 @@ def get_bag_search_query(address):
     """
     Constructs a BAG search query using the address data
     """
-    sttnaam = address.get("postcode")
-    hsnr = address.get("hsnr")
+    sttnaam = address.get("postal_code")
+    hsnr = address.get("number")
 
-    hsltr = address.get("hsltr", "") or ""
-    toev = address.get("toev", "") or ""
+    hsltr = address.get("suffix_letter", "") or ""
+    toev = address.get("suffix", "") or ""
 
     query = "{} {} {}{}".format(sttnaam, hsnr, hsltr, toev)
 

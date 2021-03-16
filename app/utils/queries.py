@@ -177,13 +177,11 @@ def get_bwv_personen(address_id):
 def get_import_adres(wng_id):
     query = """
             SELECT
-              sttnaam,
-              hsnr,
-              hsltr,
-              toev,
-              postcode,
-              sbw_omschr,
-              kmrs,
+              sttnaam as street_name,
+              hsnr as number,
+              hsltr as suffix_letter,
+              toev as suffix,
+              postcode as postal_code,
               landelijk_bag
             FROM import_adres WHERE wng_id = %(wng_id)s
             """

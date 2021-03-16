@@ -126,7 +126,7 @@ class CaseViewSetTest(APITestCase):
             "bwv_hotline_bevinding": FOO_BWV_HOTLINE_BEVINDINGEN,
             "bwv_hotline_melding": FOO_BWV_HOTLINE_MELDING,
             "bwv_personen": FOO_BWV_PERSONEN,
-            "import_adres": FOO_IMPORT_ADRES,
+            "address": FOO_IMPORT_ADRES,
             "import_stadia": FOO_IMPORT_STADIA,
             "bwv_tmp": FOO_BWV_TEMP,
             "fraud_prediction": FOO_FRAUD_PREDICTION_DATA,
