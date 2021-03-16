@@ -28,7 +28,7 @@ class CaseModelTest(TestCase):
 
     def test_case_object_bwv_data(self):
         """
-        The bwv_data property calls get_case util function using the Case object's ID
+        The data property calls get_case util function using the Case object's ID
         """
         CASE_ID = "CASE ID FOO"
         case = Case.objects.create(case_id=CASE_ID)
@@ -38,9 +38,9 @@ class CaseModelTest(TestCase):
         case.__get_case__ = Mock()
         case.__get_case__.return_value = MOCK_BWV_DATA
 
-        bwv_data = case.bwv_data
+        data = case.data
 
-        self.assertEquals(bwv_data, MOCK_BWV_DATA)
+        self.assertEquals(data, MOCK_BWV_DATA)
         case.__get_case__.assert_called_with(CASE_ID)
 
     def test_case_get_function(self):

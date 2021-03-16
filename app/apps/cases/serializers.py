@@ -14,7 +14,7 @@ class CaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Case
-        fields = ("id", "case_id", "bwv_data", "fraud_prediction")
+        fields = ("id", "case_id", "data", "fraud_prediction")
 
 
 class ProjectSerializer(serializers.ModelSerializer):

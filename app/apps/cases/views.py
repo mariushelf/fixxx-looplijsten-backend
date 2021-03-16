@@ -72,7 +72,7 @@ class CaseViewSet(ViewSet):
             "related_cases": q.get_related_cases(adres_id),
             "fraud_prediction": get_fraud_prediction(case_id),
             "day_settings_id": day_settings_id,
-            "is_sia": case_instance.bwv_data.get("is_sia"),
+            "is_sia": case_instance.data.get("is_sia"),
         }
 
         return JsonResponse(data)
