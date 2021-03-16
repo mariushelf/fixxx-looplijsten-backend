@@ -1,7 +1,9 @@
 from datetime import datetime
 
+import requests
 from apps.cases.models import Project
 from apps.cases.serializers import (
+    CaseSearchSerializer,
     DecosJoinFolderFieldsResponseSerializer,
     DecosJoinObjectFieldsResponseSerializer,
     DecosPermitSerializer,
@@ -17,6 +19,7 @@ from apps.itinerary.serializers import CaseSerializer, ItineraryTeamMemberSerial
 from apps.planner.models import TeamSettings
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
+from django.conf import settings
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -31,7 +34,9 @@ from utils import queries as q
 from utils import queries_bag_api as bag_api
 from utils import queries_brk_api as brk_api
 from utils.queries_decos_api import DecosJoinRequest
+from utils.queries_zaken_api import get_headers
 
+from .mock import get_zaken_case_list
 from .models import Case
 
 
@@ -123,13 +128,10 @@ class CaseViewSet(ViewSet):
         return Response(serializer.data)
 
 
-class CaseSearchViewSet(ViewSet, ListAPIView):
+class CaseSearchViewSet(ViewSet):
     """
     A temporary search ViewSet for listing cases
     """
-
-    serializer_class = CaseSerializer
-    queryset = ""
 
     def __add_fraud_prediction__(self, cases):
         """
@@ -181,26 +183,41 @@ class CaseSearchViewSet(ViewSet, ListAPIView):
         """
         Returns a list of cases found with the given parameters
         """
-        # TODO: Replace query parameter strings with constants
-        postal_code = request.GET.get("postalCode", None)
-        street_name = request.GET.get("streetName", "")
-        street_number = request.GET.get("streetNumber", None)
-        suffix = request.GET.get("suffix", "")
 
-        if postal_code is None and street_name == "":
-            return HttpResponseBadRequest(
-                "Missing postal code or street name is required"
-            )
-        elif not street_number:
-            return HttpResponseBadRequest("Missing street number is required")
+        if request.version == "v1":
+            # TODO: Replace query parameter strings with constants
+            postal_code = request.GET.get("postalCode", None)
+            street_name = request.GET.get("streetName", "")
+            street_number = request.GET.get("streetNumber", None)
+            suffix = request.GET.get("suffix", "")
+
+            if postal_code is None and street_name == "":
+                return HttpResponseBadRequest(
+                    "Missing postal code or street name is required"
+                )
+            elif not street_number:
+                return HttpResponseBadRequest("Missing street number is required")
+            else:
+                cases = q.get_search_results(
+                    postal_code, street_number, suffix, street_name
+                )
+                cases = self.__add_fraud_prediction__(cases)
+                cases = self.__add_teams__(cases, datetime.now())
+
+                return JsonResponse({"cases": cases})
         else:
-            cases = q.get_search_results(
-                postal_code, street_number, suffix, street_name
-            )
-            cases = self.__add_fraud_prediction__(cases)
-            cases = self.__add_teams__(cases, datetime.now())
+            url = f"{settings.ZAKEN_API_URL}/cases/search/"
+            queryParams = {}
+            queryParams.update(request.GET)
 
-            return JsonResponse({"cases": cases})
+            response = requests.get(
+                url,
+                params=queryParams,
+                timeout=0.5,
+                headers=get_headers(),
+            )
+            response.raise_for_status()
+            return JsonResponse({"cases": response.results})
 
 
 bag_id = OpenApiParameter(
