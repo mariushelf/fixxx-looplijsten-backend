@@ -62,7 +62,7 @@ class CaseViewSet(ViewSet):
             "bwv_hotline_bevinding": q.get_bwv_hotline_bevinding(wng_id),
             "bwv_hotline_melding": q.get_bwv_hotline_melding(wng_id),
             "bwv_personen": q.get_bwv_personen(adres_id),
-            "import_adres": q.get_import_adres(wng_id),
+            "address": q.get_import_adres(wng_id),
             "import_stadia": q.get_import_stadia(case_id),
             "bwv_tmp": q.get_bwv_tmp(case_id, adres_id),
             "statements": q.get_statements(case_id),
