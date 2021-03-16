@@ -29,6 +29,11 @@ class TeamSettings(models.Model):
     use_zaken_backend = models.BooleanField(
         default=False,
     )
+    zaken_team_name = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+    )
     default_weights = models.ForeignKey(
         to="Weights",
         blank=True,

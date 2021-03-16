@@ -9,6 +9,17 @@ class CaseSimpleSerializer(serializers.ModelSerializer):
         fields = ("case_id",)
 
 
+class CaseAddress(serializers.Serializer):
+    bag_id = serializers.CharField(required=True)
+
+
+class CaseSearchSerializer(serializers.Serializer):
+    id = serializers.CharField(required=False)
+    case_id = serializers.CharField(required=False)
+    fraud_prediction = FraudPredictionSerializer(required=False, read_only=True)
+    address = CaseAddress(read_only=True)
+
+
 class CaseSerializer(serializers.ModelSerializer):
     fraud_prediction = FraudPredictionSerializer(required=False, read_only=True)
 

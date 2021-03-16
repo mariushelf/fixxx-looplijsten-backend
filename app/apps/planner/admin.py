@@ -36,6 +36,7 @@ class TeamSettingsAdmin(admin.ModelAdmin):
                 "fields": (
                     "name",
                     "use_zaken_backend",
+                    "zaken_team_name",
                     "fraud_prediction_model",
                     "show_issuemelding",
                 )
