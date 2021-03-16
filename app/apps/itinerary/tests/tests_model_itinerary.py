@@ -305,10 +305,11 @@ class ItineraryModelTest(TestCase):
         """
         Calls the itineraryAlgorithm generate and exclude functions
         """
-        Itinerary.itineraryAlgorithm = Mock()
+        Itinerary.get_itinerary_algorithm = Mock()
         itinerary = Itinerary.objects.create()
 
         team_settings = TeamSettings.objects.create()
+
         day_settings = DaySettings.objects.create(team_settings=team_settings)
         ItinerarySettings.objects.create(
             opening_date="2020-04-04", itinerary=itinerary, day_settings=day_settings
@@ -321,7 +322,6 @@ class ItineraryModelTest(TestCase):
         )
 
         itinerary.get_cases_from_settings()
-
-        itinerary.itineraryAlgorithm.assert_called()
-        itinerary.itineraryAlgorithm().exclude.assert_called()
-        itinerary.itineraryAlgorithm().generate.assert_called()
+        itinerary.get_itinerary_algorithm.assert_called()
+        itinerary.get_itinerary_algorithm().exclude.assert_called()
+        itinerary.get_itinerary_algorithm().generate.assert_called()

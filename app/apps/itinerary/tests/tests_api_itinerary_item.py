@@ -20,7 +20,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("itinerary-item-list")
+        url = reverse("v1:itinerary-item-list")
         client = get_unauthenticated_client()
         response = client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -36,7 +36,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
 
         data = {"itinerary": itinerary.id, "case_id": CASE_ID}
 
-        url = reverse("itinerary-item-list")
+        url = reverse("v1:itinerary-item-list")
         client = get_authenticated_client()
         response = client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -57,7 +57,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
 
         data = {"itinerary": itinerary.id, "case_id": CASE_ID, "position": POSITION}
 
-        url = reverse("itinerary-item-list")
+        url = reverse("v1:itinerary-item-list")
         client = get_authenticated_client()
         response = client.post(url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -76,7 +76,7 @@ class ItineraryItemViewsDeleteTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("itinerary-item-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:itinerary-item-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -91,7 +91,7 @@ class ItineraryItemViewsDeleteTest(APITestCase):
 
         self.assertEqual(1, len(itinerary.items.all()))
 
-        url = reverse("itinerary-item-detail", kwargs={"pk": itinerary_item.id})
+        url = reverse("v1:itinerary-item-detail", kwargs={"pk": itinerary_item.id})
         client = get_authenticated_client()
         response = client.delete(url)
 
@@ -109,7 +109,7 @@ class ItineraryItemViewsUpdateTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("itinerary-item-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:itinerary-item-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.put(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -124,7 +124,7 @@ class ItineraryItemViewsUpdateTest(APITestCase):
             itinerary=itinerary, case=case, position=0
         )
 
-        url = reverse("itinerary-item-detail", kwargs={"pk": itinerary_item.id})
+        url = reverse("v1:itinerary-item-detail", kwargs={"pk": itinerary_item.id})
         client = get_authenticated_client()
 
         NEW_POSITION = 1

@@ -20,7 +20,7 @@ class IsAuthenticatedViewTest(APITestCase):
         """
         is_authenticated is true when user is not logged in
         """
-        url = reverse("is-authorized")
+        url = reverse("v1:is-authorized")
         client = get_authenticated_client()
         response = client.get(url)
 
@@ -32,7 +32,7 @@ class IsAuthenticatedViewTest(APITestCase):
         """
         is_authenticated false when user is not logged in
         """
-        url = reverse("is-authorized")
+        url = reverse("v1:is-authorized")
         client = get_unauthenticated_client()
         response = client.get(url)
 
@@ -50,7 +50,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         """
         fails if no authentication code is sent
         """
-        url = reverse("oidc-authenticate")
+        url = reverse("v1:oidc-authenticate")
         client = get_unauthenticated_client()
         response = client.post(url, {})
 
@@ -64,7 +64,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         mock_AuthenticationBackend.authenticate = Mock()
         mock_AuthenticationBackend.authenticate.return_value = get_test_user()
 
-        url = reverse("oidc-authenticate")
+        url = reverse("v1:oidc-authenticate")
         client = get_unauthenticated_client()
         response = client.post(url, {"code": "FOO-CODE"})
 
@@ -78,7 +78,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         mock_AuthenticationBackend.authenticate = Mock()
         mock_AuthenticationBackend.authenticate.return_value = get_test_user()
 
-        url = reverse("oidc-authenticate")
+        url = reverse("v1:oidc-authenticate")
         client = get_unauthenticated_client()
         response = client.post(url, {"code": "FOO-CODE"})
 
@@ -102,7 +102,7 @@ class ObtainAuthTokenOIDCTest(APITestCase):
         # This should cause the authenticate request to fail
         mock_authenticate.authenticate = Mock(side_effect=Exception("FOO Exception"))
 
-        url = reverse("oidc-authenticate")
+        url = reverse("v1:oidc-authenticate")
         client = get_unauthenticated_client()
         response = client.post(url, {"code": "FOO-CODE"})
 

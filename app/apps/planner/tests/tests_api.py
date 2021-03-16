@@ -17,7 +17,7 @@ class TeamSettingsViewSet(APITestCase):
     """
 
     def get_url(self):
-        return reverse("team-settings-list")
+        return reverse("v1:team-settings-list")
 
     def test_unauthenticated_request(self):
         """
@@ -61,7 +61,7 @@ class DaySettingsViewSet(APITestCase):
     """
 
     def get_url(self):
-        return reverse("day-settings-list")
+        return reverse("v1:day-settings-list")
 
     def test_unauthenticated_request(self):
         """
@@ -100,7 +100,7 @@ class DaySettingsViewSet(APITestCase):
         )
 
         client = get_authenticated_client()
-        response = client.get(reverse("day-settings-detail", kwargs={"pk": 1}))
+        response = client.get(reverse("v1:day-settings-detail", kwargs={"pk": 1}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json().get("name"), DAY_SETTINGS_NAME)
@@ -121,7 +121,7 @@ class DaySettingsViewSet(APITestCase):
         )
 
         client = get_authenticated_client()
-        response = client.get(reverse("day-settings-detail", kwargs={"pk": 1}))
+        response = client.get(reverse("v1:day-settings-detail", kwargs={"pk": 1}))
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json().get("name"), DAY_SETTINGS_NAME)
@@ -137,7 +137,7 @@ class DaySettingsUpdateTestViewSet(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("day-settings-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:day-settings-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.put(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -156,7 +156,7 @@ class DaySettingsUpdateTestViewSet(APITestCase):
             name=DAY_SETTINGS_NAME,
         )
 
-        url = reverse("day-settings-detail", kwargs={"pk": DAY_SETTINGS_ID})
+        url = reverse("v1:day-settings-detail", kwargs={"pk": DAY_SETTINGS_ID})
         client = get_unauthenticated_client()
         response = client.put(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -176,7 +176,7 @@ class DaySettingsUpdateTestViewSet(APITestCase):
             name=DAY_SETTINGS_NAME,
         )
 
-        url = reverse("day-settings-detail", kwargs={"pk": DAY_SETTINGS_ID})
+        url = reverse("v1:day-settings-detail", kwargs={"pk": DAY_SETTINGS_ID})
 
         client = get_authenticated_client()
         response = client.put(url, {})

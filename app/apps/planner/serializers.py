@@ -146,6 +146,7 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
         model = TeamSettings
         fields = (
             "name",
+            "use_zaken_backend",
             "observation_choices",
             "situation_choices",
             "suggest_next_visit_choices",
@@ -246,6 +247,7 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "use_zaken_backend",
             "observation_choices",
             "situation_choices",
             "suggest_next_visit_choices",

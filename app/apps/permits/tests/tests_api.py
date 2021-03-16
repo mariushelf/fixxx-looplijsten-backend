@@ -28,7 +28,7 @@ class PermitViewSetTest(APITestCase):
     """
 
     MOCK_BAG_ID = "0363010000809805"
-    PERMIT_URL_NAME = "decos-details"
+    PERMIT_URL_NAME = "v1:decos-details"
 
     def _get_url(self):
         return "%s?bag_id=%s" % (

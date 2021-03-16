@@ -20,7 +20,7 @@ class NoteViewsCreateTest(APITestCase):
         An unauthenticated request should not be possible
         """
 
-        url = reverse("notes-list")
+        url = reverse("v1:notes-list")
         client = get_unauthenticated_client()
         response = client.post(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -43,7 +43,7 @@ class NoteViewsCreateTest(APITestCase):
             "author": {"id": user.id},
         }
 
-        url = reverse("notes-list")
+        url = reverse("v1:notes-list")
         client = get_authenticated_client()
         response = client.post(url, note_data, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -62,7 +62,7 @@ class NoteViewsUpdateTest(APITestCase):
         """
         An unauthenticated request should not be possible
         """
-        url = reverse("notes-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:notes-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.put(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -81,7 +81,7 @@ class NoteViewsUpdateTest(APITestCase):
             itinerary_item=itinerary_item, author=user, text=NOTE_TEXT
         )
 
-        url = reverse("notes-detail", kwargs={"pk": note.id})
+        url = reverse("v1:notes-detail", kwargs={"pk": note.id})
         client = get_authenticated_client()
         response = client.put(
             url,
@@ -102,7 +102,7 @@ class NoteViewsDeleteTest(APITestCase):
         """
         An unauthenticated request should not be possible
         """
-        url = reverse("notes-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:notes-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.delete(url, {})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -120,7 +120,7 @@ class NoteViewsDeleteTest(APITestCase):
 
         self.assertEqual(1, len(itinerary_item.notes.all()))
 
-        url = reverse("notes-detail", kwargs={"pk": note.id})
+        url = reverse("v1:notes-detail", kwargs={"pk": note.id})
         client = get_authenticated_client()
         response = client.delete(url)
 
@@ -137,7 +137,7 @@ class NoteViewsGetTest(APITestCase):
         """
         An unauthenticated request should not be possible
         """
-        url = reverse("notes-detail", kwargs={"pk": "foo"})
+        url = reverse("v1:notes-detail", kwargs={"pk": "foo"})
         client = get_unauthenticated_client()
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -154,7 +154,7 @@ class NoteViewsGetTest(APITestCase):
             itinerary_item=itinerary_item, author=user, text=NOTE_TEXT
         )
 
-        url = reverse("notes-detail", kwargs={"pk": note.id})
+        url = reverse("v1:notes-detail", kwargs={"pk": note.id})
         client = get_authenticated_client()
         response = client.get(url, format="json")
 
