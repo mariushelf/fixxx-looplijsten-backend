@@ -20,8 +20,8 @@ class GetBagSearchQueryTest(TestCase):
         Returns a search query given a postal code and a house number
         """
         address = {
-            "postcode": "postcode_foo",
-            "hsnr": "hsnr_foo",
+            "postal_code": "postcode_foo",
+            "number": "hsnr_foo",
         }
 
         result = get_bag_search_query(address)
@@ -32,7 +32,11 @@ class GetBagSearchQueryTest(TestCase):
         """
         Returns a search query given a postal code, a house number, and a letter
         """
-        address = {"postcode": "postcode_foo", "hsnr": "hsnr_foo", "hsltr": "hsltr_foo"}
+        address = {
+            "postal_code": "postcode_foo",
+            "number": "hsnr_foo",
+            "suffix_letter": "hsltr_foo",
+        }
 
         result = get_bag_search_query(address)
 
@@ -42,7 +46,11 @@ class GetBagSearchQueryTest(TestCase):
         """
         Returns a search query given a postal code, a house number, and an addition
         """
-        address = {"postcode": "postcode_foo", "hsnr": "hsnr_foo", "toev": "toev_foo"}
+        address = {
+            "postal_code": "postcode_foo",
+            "number": "hsnr_foo",
+            "suffix": "toev_foo",
+        }
 
         result = get_bag_search_query(address)
 
@@ -53,10 +61,10 @@ class GetBagSearchQueryTest(TestCase):
         Returns a search query given all optional parameters
         """
         address = {
-            "postcode": "postcode_foo",
-            "hsnr": "hsnr_foo",
-            "hsltr": "hsltr_foo",
-            "toev": "toev_foo",
+            "postal_code": "postcode_foo",
+            "number": "hsnr_foo",
+            "suffix_letter": "hsltr_foo",
+            "suffix": "toev_foo",
         }
 
         result = get_bag_search_query(address)
@@ -68,10 +76,10 @@ class GetBagSearchQueryTest(TestCase):
         Returns a clean search query with house number set to None
         """
         address = {
-            "postcode": "postcode_foo",
-            "hsnr": "hsnr_foo",
-            "hsltr": None,
-            "toev": "toev_foo",
+            "postal_code": "postcode_foo",
+            "number": "hsnr_foo",
+            "suffix_letter": None,
+            "suffix": "toev_foo",
         }
 
         result = get_bag_search_query(address)
@@ -83,10 +91,10 @@ class GetBagSearchQueryTest(TestCase):
         Returns a clean search query with house number set to None
         """
         address = {
-            "postcode": "postcode_foo",
-            "hsnr": "hsnr_foo",
-            "hsltr": "hsltr_foo",
-            "toev": None,
+            "postal_code": "postcode_foo",
+            "number": "hsnr_foo",
+            "suffix_letter": "hsltr_foo",
+            "suffix": None,
         }
 
         result = get_bag_search_query(address)
