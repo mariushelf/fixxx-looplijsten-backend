@@ -192,7 +192,7 @@ class ItineraryKnapsackListV2(ItineraryKnapsackList):
         response = requests.get(
             url,
             params=queryParams,
-            timeout=0.5,
+            timeout=30,
             headers=get_headers(),
         )
         response.raise_for_status()
