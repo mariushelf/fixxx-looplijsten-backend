@@ -45,7 +45,9 @@ def get_case_coordinates(cases):
     """
     Maps the cases to an array of coordinates
     """
-    coordinates = list(map(lambda case: [case["lat"], case["lng"]], cases))
+    coordinates = list(
+        map(lambda case: [case["address"]["lat"], case["address"]["lng"]], cases)
+    )
 
     return coordinates
 
@@ -68,7 +70,8 @@ def filter_cases_with_missing_coordinates(cases):
     """
 
     def has_coordinates(case):
-        return case.get("lat", None) and case.get("lng", None)
+        address = case.get("address", {})
+        return address.get("lat", None) and address.get("lng", None)
 
     return list(filter(lambda case: has_coordinates(case), cases))
 

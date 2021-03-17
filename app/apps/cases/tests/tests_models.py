@@ -64,7 +64,7 @@ class CaseModelTest(TestCase):
         case = Case.get("FOO")
 
         # This patches the objects __get_case__ function
-        MOCK_BWV_DATA = {"lat": 0, "lng": 1, "foo": "OTHER DATA"}
+        MOCK_BWV_DATA = {"address": {"lat": 0, "lng": 1, "foo": "OTHER DATA"}}
         case.__get_case__ = Mock()
         case.__get_case__.return_value = MOCK_BWV_DATA
 

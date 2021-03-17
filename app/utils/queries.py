@@ -266,6 +266,20 @@ def get_case(case_id):
 
     case = return_first_or_empty(executed_query)
 
+    return prepare_bwv_case_for_zks(case)
+
+
+def prepare_bwv_case_for_zks(case):
+    case["id"] = case.get("case_id")
+    case["address"] = {
+        "postal_code": case.get("postal_code"),
+        "street_name": case.get("street_name"),
+        "number": case.get("street_number"),
+        "suffix_letter": case.get("suffix_letter"),
+        "suffix": case.get("suffix"),
+        "lat": case.get("lat"),
+        "lng": case.get("lng"),
+    }
     return case
 
 

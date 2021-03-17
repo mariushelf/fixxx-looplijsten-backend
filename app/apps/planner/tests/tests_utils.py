@@ -89,13 +89,23 @@ class UtilsTests(TestCase):
 
     def test_get_case_coordinates(self):
         case_a = {
-            "lat": 0,
-            "lng": 1,
+            "address": {
+                "lat": 0,
+                "lng": 1,
+            },
             "stadium": ONDERZOEK_BUITENDIENST,
             "case_id": "foo-a",
         }
-        case_b = {"lat": 2, "lng": 3, "stadium": ISSUEMELDING, "case_id": "foo-b"}
-        case_c = {"lat": 4, "lng": 5, "stadium": TWEEDE_CONTROLE, "case_id": "foo-c"}
+        case_b = {
+            "address": {"lat": 2, "lng": 3},
+            "stadium": ISSUEMELDING,
+            "case_id": "foo-b",
+        }
+        case_c = {
+            "address": {"lat": 4, "lng": 5},
+            "stadium": TWEEDE_CONTROLE,
+            "case_id": "foo-c",
+        }
         cases = [case_a, case_b, case_c]
         case_coordinates = get_case_coordinates(cases)
         expected = [[0, 1], [2, 3], [4, 5]]
@@ -106,15 +116,15 @@ class UtilsTests(TestCase):
         """
         Should filter out cases with missing coordinates
         """
-        valid_case = {"stadium": ISSUEMELDING, "lat": 12, "lng": -69}
+        valid_case = {"stadium": ISSUEMELDING, "address": {"lat": 12, "lng": -69}}
         cases = [
             {"stadium": ONDERZOEK_BUITENDIENST},
-            {"stadium": ISSUEMELDING, "lat": 12},
-            {"stadium": ONDERZOEK_BUITENDIENST, "lng": -69},
-            {"stadium": ISSUEMELDING, "lat": 12},
-            {"stadium": ISSUEMELDING, "lat": None, "lng": -69},
-            {"stadium": ONDERZOEK_BUITENDIENST, "lat": 12, "lng": None},
-            {"stadium": ONDERZOEK_BUITENDIENST, "lat": None, "lng": None},
+            {"stadium": ISSUEMELDING, "address": {"lat": 12}},
+            {"stadium": ONDERZOEK_BUITENDIENST, "address": {"lng": -69}},
+            {"stadium": ISSUEMELDING, "address": {"lat": 12}},
+            {"stadium": ISSUEMELDING, "address": {"lat": None, "lng": -69}},
+            {"stadium": ONDERZOEK_BUITENDIENST, "address": {"lat": 12, "lng": None}},
+            {"stadium": ONDERZOEK_BUITENDIENST, "address": {"lat": None, "lng": None}},
             valid_case,
         ]
 

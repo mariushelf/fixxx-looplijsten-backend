@@ -209,6 +209,9 @@ class CaseSearchViewSet(ViewSet):
 
                 return JsonResponse({"cases": cases})
         else:
+            if settings.USE_ZAKEN_MOCK_DATA:
+                return get_zaken_case_list()
+
             url = f"{settings.ZAKEN_API_URL}/cases/search/"
             queryParams = {}
             queryParams.update(request.GET)
@@ -220,9 +223,6 @@ class CaseSearchViewSet(ViewSet):
                 headers=get_headers(),
             )
             response.raise_for_status()
-
-            logger.error("zaken search")
-            logger.error(response.json())
 
             result = response.json()
             return JsonResponse({"cases": result.get("results", [])})

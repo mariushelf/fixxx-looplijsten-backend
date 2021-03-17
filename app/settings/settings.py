@@ -294,6 +294,7 @@ BAG_API_SEARCH_URL = "https://api.data.amsterdam.nl/atlas/search/adres/"
 # Zaken Access request settings
 ZAKEN_API_URL = os.getenv("ZAKEN_API_URL", None)
 ZAKEN_API_HEALTH_URL = os.getenv("ZAKEN_API_HEALTH_URL", None)
+USE_ZAKEN_MOCK_DATA = False
 
 # Allows pushes from Top to Zaken, defaults to True
 PUSH_ZAKEN = os.getenv("PUSH_ZAKEN", "True") == "True"
