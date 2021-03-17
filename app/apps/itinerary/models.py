@@ -39,7 +39,13 @@ class Itinerary(models.Model):
         """
         Adds a case to the itinerary
         """
-        case = Case.get(case_id=case_id)
+
+        case = Case.get(
+            case_id=case_id,
+            is_legacy_bwv=bool(
+                not self.settings.day_settings.team_settings.use_zaken_backend
+            ),
+        )
         used_cases = Itinerary.get_cases_for_date(self.created_at)
 
         if case in used_cases:

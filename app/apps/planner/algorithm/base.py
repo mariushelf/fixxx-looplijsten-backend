@@ -16,6 +16,7 @@ class ItineraryGenerateAlgorithm:
     """ An abstract class which forms the basis of itinerary generating algorithms """
 
     def __init__(self, settings, postal_code_settings=[]):
+        self.settings = settings
         self.opening_date = settings.opening_date
         self.stadia = list(
             settings.day_settings.team_settings.stadia_choices.all().values_list(

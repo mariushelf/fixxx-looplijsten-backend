@@ -35,11 +35,6 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["created_at"]
 
-    def get_serializer_class(self):
-        print("get_serializer_class")
-        print(self.request.version)
-        return super().get_serializer_class()
-
     def get_object(self):
         MESSAGE = (
             "De looplijst is niet gevonden. De lijst is misschien verwijderd door een"
@@ -135,7 +130,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
 
         # Populate the itinerary with cases
         for case in cases:
-            case_id = case.get("case_id")
+            case_id = case.get("case_id", case.get("id"))
             itinerary.add_case(case_id)
 
         # Serialize the itinerary again

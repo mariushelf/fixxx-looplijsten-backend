@@ -26,7 +26,9 @@ class ItineraryGenerateSuggestions(ItineraryGenerateAlgorithm):
         # Add the distances and fraud predictions to the cases
         for index, case in enumerate(cases):
             case["distance"] = distances[index]
-            case["fraud_prediction"] = get_fraud_prediction(case["case_id"])
+            case["fraud_prediction"] = get_fraud_prediction(
+                case.get("case_id", case.get("id"))
+            )
 
         # Sort the cases based on distance
         sorted_cases = sorted(cases, key=lambda item: item["distance"])[

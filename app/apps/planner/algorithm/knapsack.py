@@ -1,16 +1,20 @@
 import logging
 import multiprocessing
 
+import requests
+from apps.cases.mock import get_zaken_case_list
 from apps.fraudprediction.utils import get_fraud_predictions
 from apps.planner.algorithm.base import ItineraryGenerateAlgorithm
 from apps.planner.const import MAX_SUGGESTIONS_COUNT, SCORING_WEIGHTS
 from apps.planner.models import Weights
 from apps.planner.utils import calculate_geo_distances, remove_cases_from_list
+from django.conf import settings
 from joblib import Parallel, delayed
 from settings.const import ISSUEMELDING
 from utils.queries import get_case
+from utils.queries_zaken_api import get_headers
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
@@ -40,7 +44,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         except AttributeError:
             fraud_probability = 0
 
-        stadium = case["stadium"]
+        stadium = case.get("stadium")
         has_primary_stadium = stadium == self.primary_stadium
         has_secondary_stadium = stadium in self.secondary_stadia
         has_issuemelding_stadium = stadium == ISSUEMELDING
@@ -51,7 +55,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             has_primary_stadium,
             has_secondary_stadium,
             has_issuemelding_stadium,
-            bool(case["is_sia"] == "J"),
+            bool(case.get("is_sia") == "J"),
         )
 
         return score
@@ -76,7 +80,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
 
         # Add the distances and fraud predictions to the cases
         for index, case in enumerate(cases):
-            case_id = case["case_id"]
+            case_id = case.get("case_id", case.get("id"))
             case["distance"] = distances[index]
             case["normalized_inverse_distance"] = (
                 max_distance - case["distance"]
@@ -96,8 +100,12 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
         return best_list["list"]
 
     def is_same_address(self, case_a, case_b):
-        same_street = case_a.get("street_name") == case_b.get("street_name")
-        same_number = case_a.get("street_number") == case_b.get("street_number")
+        same_street = case_a.get("address", {}).get("street_name") == case_b.get(
+            "address", {}
+        ).get("street_name")
+        same_number = case_a.get("address", {}).get("number") == case_b.get(
+            "address", {}
+        ).get("number")
         return same_street and same_number
 
     def shorten_list(self, cases_all):
@@ -143,9 +151,8 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
         # If no location is given, generate all possible lists, and choose the best one
         cases = self.__get_eligible_cases__()
-
         if not cases:
-            LOGGER.warning("No eligible cases, could not generate best list")
+            logger.warning("No eligible cases, could not generate best list")
             return []
 
         # Run in parallel processes to improve speed
@@ -172,4 +179,26 @@ class ItineraryKnapsackListV1(ItineraryKnapsackList):
 class ItineraryKnapsackListV2(ItineraryKnapsackList):
     def __get_eligible_cases__(self):
         print("v2 __get_eligible_cases__")
-        return []
+        if settings.USE_ZAKEN_MOCK_DATA:
+            return get_zaken_case_list()
+
+        url = f"{settings.ZAKEN_API_URL}/cases/"
+        queryParams = {
+            "openCases": "true",
+            "team": self.settings.day_settings.team_settings.zaken_team_name,
+            "startDate": self.settings.opening_date.strftime("%Y-%m-%d"),
+        }
+
+        response = requests.get(
+            url,
+            params=queryParams,
+            timeout=0.5,
+            headers=get_headers(),
+        )
+        response.raise_for_status()
+
+        logger.info("zaken __get_eligible_cases__")
+        logger.info(response.json())
+
+        result = response.json()
+        return result.get("results", [])
