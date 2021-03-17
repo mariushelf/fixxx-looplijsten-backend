@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 import requests
@@ -38,6 +39,8 @@ from utils.queries_zaken_api import get_headers
 
 from .mock import get_zaken_case_list
 from .models import Case
+
+logger = logging.getLogger(__name__)
 
 
 class CaseViewSet(ViewSet):
@@ -217,7 +220,13 @@ class CaseSearchViewSet(ViewSet):
                 headers=get_headers(),
             )
             response.raise_for_status()
-            return JsonResponse({"cases": response.results})
+
+            logger.error("zaken search")
+            logger.error(response)
+            logger.error(response.json())
+
+            result = response.json()
+            return JsonResponse({"cases": result.results})
 
 
 bag_id = OpenApiParameter(
