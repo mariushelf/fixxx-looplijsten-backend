@@ -30,7 +30,7 @@ class Case(models.Model):
 
         response = requests.get(
             url,
-            timeout=0.5,
+            timeout=10,
             headers=get_headers(),
         )
         response.raise_for_status()
