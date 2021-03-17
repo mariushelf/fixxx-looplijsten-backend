@@ -222,11 +222,10 @@ class CaseSearchViewSet(ViewSet):
             response.raise_for_status()
 
             logger.error("zaken search")
-            logger.error(response)
             logger.error(response.json())
 
             result = response.json()
-            return JsonResponse({"cases": result.results})
+            return JsonResponse({"cases": result.get("results", [])})
 
 
 bag_id = OpenApiParameter(
