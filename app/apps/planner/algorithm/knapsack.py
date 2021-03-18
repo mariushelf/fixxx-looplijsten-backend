@@ -2,7 +2,7 @@ import logging
 import multiprocessing
 
 import requests
-from apps.cases.mock import get_zaken_case_list, get_zaken_cases
+from apps.cases.mock import get_zaken_case_list
 from apps.fraudprediction.utils import get_fraud_predictions
 from apps.planner.algorithm.base import ItineraryGenerateAlgorithm
 from apps.planner.const import MAX_SUGGESTIONS_COUNT, SCORING_WEIGHTS
@@ -15,6 +15,43 @@ from utils.queries import get_case
 from utils.queries_zaken_api import get_headers
 
 logger = logging.getLogger(__name__)
+
+
+def filter_out_incompatible_cases(cases):
+    return [
+        c
+        for c in cases
+        if c.get("address", {}).get("lat") and c.get("address", {}).get("lng")
+    ]
+
+
+def get_eligible_cases_v2(generator):
+    print("v2 __get_eligible_cases__")
+    if settings.USE_ZAKEN_MOCK_DATA:
+        cases = get_zaken_case_list()
+    else:
+        url = f"{settings.ZAKEN_API_URL}/cases/"
+        queryParams = {
+            "openCases": "true",
+            "team": generator.settings.day_settings.team_settings.zaken_team_name,
+            "startDate": generator.settings.opening_date.strftime("%Y-%m-%d"),
+        }
+
+        response = requests.get(
+            url,
+            params=queryParams,
+            timeout=5,
+            headers=get_headers(),
+        )
+        response.raise_for_status()
+
+        cases = response.json().get("results", [])
+
+    cases = filter_out_incompatible_cases(cases)
+
+    logger.info("zaken __get_eligible_cases__")
+    logger.info(cases)
+    return cases
 
 
 class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
@@ -92,6 +129,15 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         sorted_cases = sorted(cases, key=lambda case: case["score"], reverse=True)
 
         return sorted_cases[:MAX_SUGGESTIONS_COUNT]
+
+
+class ItineraryKnapsackSuggestionsV1(ItineraryKnapsackSuggestions):
+    pass
+
+
+class ItineraryKnapsackSuggestionsV2(ItineraryKnapsackSuggestions):
+    def __get_eligible_cases__(self):
+        return get_eligible_cases_v2(self)
 
 
 class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
@@ -178,32 +224,33 @@ class ItineraryKnapsackListV1(ItineraryKnapsackList):
 
 class ItineraryKnapsackListV2(ItineraryKnapsackList):
     def __get_eligible_cases__(self):
-        print("v2 __get_eligible_cases__")
-        if settings.USE_ZAKEN_MOCK_DATA:
-            cases = get_zaken_case_list()
-        else:
-            url = f"{settings.ZAKEN_API_URL}/cases/"
-            queryParams = {
-                "openCases": "true",
-                "team": self.settings.day_settings.team_settings.zaken_team_name,
-                "startDate": self.settings.opening_date.strftime("%Y-%m-%d"),
-            }
+        return get_eligible_cases_v2(self)
+        # print("v2 __get_eligible_cases__")
+        # if settings.USE_ZAKEN_MOCK_DATA:
+        #     cases = get_zaken_case_list()
+        # else:
+        #     url = f"{settings.ZAKEN_API_URL}/cases/"
+        #     queryParams = {
+        #         "openCases": "true",
+        #         "team": self.settings.day_settings.team_settings.zaken_team_name,
+        #         "startDate": self.settings.opening_date.strftime("%Y-%m-%d"),
+        #     }
 
-            response = requests.get(
-                url,
-                params=queryParams,
-                timeout=5,
-                headers=get_headers(),
-            )
-            response.raise_for_status()
+        #     response = requests.get(
+        #         url,
+        #         params=queryParams,
+        #         timeout=5,
+        #         headers=get_headers(),
+        #     )
+        #     response.raise_for_status()
 
-            logger.info("zaken __get_eligible_cases__")
-            logger.info(response.json())
+        #     logger.info("zaken __get_eligible_cases__")
+        #     logger.info(response.json())
 
-            cases = response.json().get("results", [])
+        #     cases = response.json().get("results", [])
 
-        cases = self.filter_out_incompatible_cases(cases)
-        return cases
+        # cases = self.filter_out_incompatible_cases(cases)
+        # return cases
 
     def filter_out_incompatible_cases(self, cases):
         return [
