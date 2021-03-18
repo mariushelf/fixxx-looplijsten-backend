@@ -38,7 +38,7 @@ from utils import queries_brk_api as brk_api
 from utils.queries_decos_api import DecosJoinRequest
 from utils.queries_zaken_api import get_headers
 
-from .mock import get_zaken_case_list
+from .mock import get_zaken_case_list, get_zaken_case_search_result_list
 from .models import Case
 
 logger = logging.getLogger(__name__)
@@ -230,7 +230,7 @@ class CaseSearchViewSet(ViewSet):
                 return JsonResponse({"cases": cases})
         else:
             if settings.USE_ZAKEN_MOCK_DATA:
-                return get_zaken_case_list()
+                return JsonResponse({"cases": get_zaken_case_search_result_list()})
 
             url = f"{settings.ZAKEN_API_URL}/cases/search/"
             queryParams = {}

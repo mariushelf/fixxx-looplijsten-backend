@@ -285,7 +285,7 @@ class ItineraryModelTest(TestCase):
         """
         Calls the suggestionAlgorithm generate and exclude functions
         """
-        Itinerary.suggestionAlgorithm = Mock()
+        Itinerary.get_suggestion_algorithm = Mock()
         itinerary = Itinerary.objects.create()
         ItinerarySettings.objects.create(opening_date="2020-04-04", itinerary=itinerary)
         PostalCodeSettings.objects.create(
@@ -297,9 +297,9 @@ class ItineraryModelTest(TestCase):
 
         itinerary.get_suggestions()
 
-        itinerary.suggestionAlgorithm.assert_called()
-        itinerary.suggestionAlgorithm().exclude.assert_called()
-        itinerary.suggestionAlgorithm().generate.assert_called()
+        itinerary.get_suggestion_algorithm.assert_called()
+        itinerary.get_suggestion_algorithm().exclude.assert_called()
+        itinerary.get_suggestion_algorithm().generate.assert_called()
 
     def test_get_cases_from_settings(self, mock):
         """

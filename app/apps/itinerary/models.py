@@ -3,10 +3,10 @@ import logging
 from apps.cases.models import Case, Project, Stadium
 from apps.planner.algorithm.clustering import ItineraryGenerateCluster
 from apps.planner.algorithm.knapsack import (
-    ItineraryKnapsackList,
     ItineraryKnapsackListV1,
     ItineraryKnapsackListV2,
-    ItineraryKnapsackSuggestions,
+    ItineraryKnapsackSuggestionsV1,
+    ItineraryKnapsackSuggestionsV2,
 )
 from apps.planner.models import Weights
 from apps.planner.utils import remove_cases_from_list
@@ -23,10 +23,6 @@ from utils.queries_planner import get_cases_from_bwv
 class Itinerary(models.Model):
     """ Itinerary for visiting cases """
 
-    suggestionAlgorithm = ItineraryKnapsackSuggestions
-    # itineraryAlgorithm = ItineraryGenerateCluster
-    itineraryAlgorithm = ItineraryKnapsackList
-
     created_at = models.DateField(auto_now_add=True)
 
     @property
@@ -34,6 +30,12 @@ class Itinerary(models.Model):
         if not self.settings.day_settings.team_settings.use_zaken_backend:
             return ItineraryKnapsackListV1
         return ItineraryKnapsackListV2
+
+    @property
+    def get_suggestion_algorithm(self):
+        if not self.settings.day_settings.team_settings.use_zaken_backend:
+            return ItineraryKnapsackSuggestionsV1
+        return ItineraryKnapsackSuggestionsV2
 
     def add_case(self, case_id, position=None):
         """
@@ -137,7 +139,7 @@ class Itinerary(models.Model):
         Returns a list of suggested cases which can be added to this itinerary
         """
         # Initialise using this itinerary's settings
-        generator = self.suggestionAlgorithm(
+        generator = self.get_suggestion_algorithm(
             self.settings, self.postal_code_settings.all()
         )
 

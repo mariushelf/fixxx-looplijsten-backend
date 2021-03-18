@@ -11,8 +11,8 @@ def get_zaken_case_list():
                 "suffix_letter": "string",
                 "suffix": "string",
                 "postal_code": "string",
-                "lat": "-81.6776",
-                "lng": "-39.431285",
+                "lat": -81.6776,
+                "lng": -39.431285,
             },
             "case_states": [
                 {
@@ -57,8 +57,8 @@ def get_zaken_case_list():
                 "suffix_letter": "string",
                 "suffix": "string",
                 "postal_code": "string",
-                "lat": "-28.239457",
-                "lng": "23.656034",
+                "lat": -28.239457,
+                "lng": 23.656034,
             },
             "case_states": [
                 {
@@ -103,8 +103,8 @@ def get_zaken_case_list():
                 "suffix_letter": "string",
                 "suffix": "string",
                 "postal_code": "string",
-                "lat": "37.143141",
-                "lng": "45.298988",
+                "lat": 37.143141,
+                "lng": 45.298988,
             },
             "case_states": [
                 {
@@ -194,8 +194,8 @@ def get_zaken_case_list():
                 "suffix_letter": "string",
                 "suffix": "string",
                 "postal_code": "string",
-                "lat": "-79.528073",
-                "lng": "-128.481114",
+                "lat": -79.528073,
+                "lng": -128.481114,
             },
             "case_states": [
                 {
@@ -232,32 +232,52 @@ def get_zaken_case_list():
     ]
 
 
-def get_zaken_cases():
+def get_zaken_case_search_result_list():
     return [
         {
-            "id": 3306,
+            "id": "6050c9c0983f8f4719065fce",
             "address": {
-                "bag_id": "0363010012143319",
-                "id": 834,
-                "full_address": "Amstel 1, 1011PN",
-                "street_name": "Amstel",
-                "number": 1,
-                "suffix_letter": "",
-                "suffix": "",
-                "postal_code": "1011PN",
-                "lat": None,
-                "lng": None,
+                "bag_id": "6050c9c00b6f231d7bfeea47",
+                "id": "6050c9c01b2f60b3054de20c",
+                "full_address": "string",
+                "street_name": "Fair Street",
+                "number": 0,
+                "suffix_letter": "string",
+                "suffix": "string",
+                "postal_code": "string",
+                "lat": -79.528073,
+                "lng": -128.481114,
             },
-            "case_states": [],
-            "current_states": [],
-            "team": {"id": 58, "name": "Vakantieverhuur"},
-            "reason": {"id": 30, "name": "Melding", "team": 58},
-            "identification": "03e70372-36f6-4f85-bbc3-729f1233a2a2",
-            "start_date": "2021-02-25",
-            "end_date": None,
-            "is_legacy_bwv": False,
-            "camunda_id": "False",
-            "description": "asfasfafs",
-            "author": "76397eac-c186-4a04-bcb2-e905fbe9fa4b",
-        }
+            "case_states": [
+                {
+                    "id": 0,
+                    "case": 0,
+                    "status_name": "blue",
+                    "status": 0,
+                    "start_date": "Sunday, July 31, 2016 5:10 AM",
+                    "end_date": "Thursday, May 28, 2020 1:03 PM",
+                    "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
+                }
+            ],
+            "current_states": [
+                {
+                    "id": 0,
+                    "case": 0,
+                    "status_name": "green",
+                    "status": 0,
+                    "start_date": "Wednesday, November 28, 2018 10:18 PM",
+                    "end_date": "Wednesday, December 16, 2020 2:50 AM",
+                    "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
+                }
+            ],
+            "team": {"id": 0, "name": "string"},
+            "reason": {"id": 0, "name": "string", "team": 0},
+            "identification": "string",
+            "start_date": "Tuesday, August 1, 2017 7:47 PM",
+            "end_date": "Wednesday, February 26, 2020 7:44 AM",
+            "is_legacy_bwv": True,
+            "camunda_id": "camunda_id",
+            "description": "string",
+            "author": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        },
     ]
