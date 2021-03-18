@@ -59,7 +59,7 @@ def do_bag_search_id(address):
     Search BAG using a BWV 'landelijk BAG ID'
     """
 
-    id = address["landelijk_bag"]
+    id = address.get("bag_id", address.get("landelijk_bag"))
     address_search = requests.get(
         settings.BAG_API_SEARCH_URL, params={"q": id}, timeout=0.5
     )
@@ -102,6 +102,24 @@ def get_bag_data(wng_id):
         error_objects = {
             "error": str(e),
             "wng_id": wng_id,
+            "api_url": settings.BAG_API_SEARCH_URL,
+            "address": address,
+        }
+        return error_objects
+
+
+def get_bag_data_by_bag_id(address):
+    try:
+        address_search = do_bag_search(address)
+        # Do a request using the the objects href
+        address_uri = address_search["results"][0]["_links"]["self"]["href"]
+        return get_address_bag_data(address_uri)
+
+    except Exception as e:
+        logger.error("Requesting BAG data failed: {}".format(str(e)))
+
+        error_objects = {
+            "error": str(e),
             "api_url": settings.BAG_API_SEARCH_URL,
             "address": address,
         }

@@ -2,7 +2,7 @@ import logging
 import multiprocessing
 
 import requests
-from apps.cases.mock import get_zaken_case_list
+from apps.cases.mock import get_zaken_case_list, get_zaken_cases
 from apps.fraudprediction.utils import get_fraud_predictions
 from apps.planner.algorithm.base import ItineraryGenerateAlgorithm
 from apps.planner.const import MAX_SUGGESTIONS_COUNT, SCORING_WEIGHTS
@@ -83,8 +83,8 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             case_id = case.get("case_id", case.get("id"))
             case["distance"] = distances[index]
             case["normalized_inverse_distance"] = (
-                max_distance - case["distance"]
-            ) / max_distance
+                (max_distance - case["distance"]) / max_distance if max_distance else 0
+            )
             case["fraud_prediction"] = fraud_predictions.get(case_id, None)
             case["score"] = self.get_score(case)
 
@@ -180,25 +180,34 @@ class ItineraryKnapsackListV2(ItineraryKnapsackList):
     def __get_eligible_cases__(self):
         print("v2 __get_eligible_cases__")
         if settings.USE_ZAKEN_MOCK_DATA:
-            return get_zaken_case_list()
+            cases = get_zaken_case_list()
+        else:
+            url = f"{settings.ZAKEN_API_URL}/cases/"
+            queryParams = {
+                "openCases": "true",
+                "team": self.settings.day_settings.team_settings.zaken_team_name,
+                "startDate": self.settings.opening_date.strftime("%Y-%m-%d"),
+            }
 
-        url = f"{settings.ZAKEN_API_URL}/cases/"
-        queryParams = {
-            "openCases": "true",
-            "team": self.settings.day_settings.team_settings.zaken_team_name,
-            "startDate": self.settings.opening_date.strftime("%Y-%m-%d"),
-        }
+            response = requests.get(
+                url,
+                params=queryParams,
+                timeout=5,
+                headers=get_headers(),
+            )
+            response.raise_for_status()
 
-        response = requests.get(
-            url,
-            params=queryParams,
-            timeout=30,
-            headers=get_headers(),
-        )
-        response.raise_for_status()
+            logger.info("zaken __get_eligible_cases__")
+            logger.info(response.json())
 
-        logger.info("zaken __get_eligible_cases__")
-        logger.info(response.json())
+            cases = response.json().get("results", [])
 
-        result = response.json()
-        return result.get("results", [])
+        cases = self.filter_out_incompatible_cases(cases)
+        return cases
+
+    def filter_out_incompatible_cases(self, cases):
+        return [
+            c
+            for c in cases
+            if c.get("address", {}).get("lat") and c.get("address", {}).get("lng")
+        ]

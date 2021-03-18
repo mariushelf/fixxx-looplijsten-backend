@@ -46,7 +46,13 @@ def get_case_coordinates(cases):
     Maps the cases to an array of coordinates
     """
     coordinates = list(
-        map(lambda case: [case["address"]["lat"], case["address"]["lng"]], cases)
+        map(
+            lambda case: [
+                case.get("address").get("lat"),
+                case.get("address").get("lng"),
+            ],
+            cases,
+        )
     )
 
     return coordinates

@@ -40,15 +40,15 @@ class Itinerary(models.Model):
         Adds a case to the itinerary
         """
 
-        is_legacy_bwv = True
+        is_top_bwv_case = True
         try:
-            is_legacy_bwv = bool(
+            is_top_bwv_case = bool(
                 not self.settings.day_settings.team_settings.use_zaken_backend
             )
         except Exception:
             pass
 
-        case = Case.get(case_id=case_id, is_legacy_bwv=is_legacy_bwv)
+        case = Case.get(case_id=case_id, is_top_bwv_case=is_top_bwv_case)
         used_cases = Itinerary.get_cases_for_date(self.created_at)
 
         if case in used_cases:
@@ -115,8 +115,8 @@ class Itinerary(models.Model):
             return self.get_city_center()
 
         locations = [case.get_location() for case in cases]
-        locations_lng = [location["lng"] for location in locations]
-        locations_lat = [location["lat"] for location in locations]
+        locations_lng = [location.get("lng") for location in locations]
+        locations_lat = [location.get("lat") for location in locations]
 
         locations_lng = sum(locations_lng) / len(cases)
         locations_lat = sum(locations_lat) / len(cases)
