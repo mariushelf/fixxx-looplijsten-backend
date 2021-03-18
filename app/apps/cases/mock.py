@@ -3,7 +3,7 @@ def get_zaken_case_list():
         {
             "id": "6050c9c0176f1d5bde5aa710",
             "address": {
-                "bag_id": "6050c9c04c5941da9e15bc57",
+                "bag_id": "0363010001173778",
                 "id": "6050c9c0be30f3bab57a8212",
                 "full_address": "string",
                 "street_name": "Stryker Street",
@@ -150,7 +150,6 @@ def get_zaken_case_list():
                 "suffix": "string",
                 "postal_code": "string",
                 "lat": "66.393756",
-                "lng": "160.788314",
             },
             "case_states": [
                 {
@@ -230,4 +229,35 @@ def get_zaken_case_list():
             "description": "string",
             "author": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
         },
+    ]
+
+
+def get_zaken_cases():
+    return [
+        {
+            "id": 3306,
+            "address": {
+                "bag_id": "0363010012143319",
+                "id": 834,
+                "full_address": "Amstel 1, 1011PN",
+                "street_name": "Amstel",
+                "number": 1,
+                "suffix_letter": "",
+                "suffix": "",
+                "postal_code": "1011PN",
+                "lat": None,
+                "lng": None,
+            },
+            "case_states": [],
+            "current_states": [],
+            "team": {"id": 58, "name": "Vakantieverhuur"},
+            "reason": {"id": 30, "name": "Melding", "team": 58},
+            "identification": "03e70372-36f6-4f85-bbc3-729f1233a2a2",
+            "start_date": "2021-02-25",
+            "end_date": None,
+            "is_legacy_bwv": False,
+            "camunda_id": "False",
+            "description": "asfasfafs",
+            "author": "76397eac-c186-4a04-bcb2-e905fbe9fa4b",
+        }
     ]

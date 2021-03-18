@@ -20,7 +20,7 @@ class ItineraryGenerateSuggestions(ItineraryGenerateAlgorithm):
             return []
 
         # Calculate a list of distances for each case
-        center = (location["lat"], location["lng"])
+        center = (location.get("lat"), location.get("lng"))
         distances = calculate_geo_distances(center, cases)
 
         # Add the distances and fraud predictions to the cases

@@ -18,11 +18,11 @@ class Case(models.Model):
     A simple case model
     """
     case_id = models.CharField(max_length=255, null=True, blank=False)
-    is_legacy_bwv = models.BooleanField(default=True)
+    is_top_bwv_case = models.BooleanField(default=True)
 
-    def get(case_id, is_legacy_bwv=True):
+    def get(case_id, is_top_bwv_case=True):
         return Case.objects.get_or_create(
-            case_id=case_id, defaults={"is_legacy_bwv": is_legacy_bwv}
+            case_id=case_id, defaults={"is_top_bwv_case": is_top_bwv_case}
         )[0]
 
     def fetch_case(self):
@@ -38,7 +38,7 @@ class Case(models.Model):
         return response.json()
 
     def __get_case__(self, case_id):
-        if self.is_legacy_bwv:
+        if self.is_top_bwv_case:
             return get_case(case_id)
         if settings.USE_ZAKEN_MOCK_DATA:
             return dict((c.get("id"), c) for c in get_zaken_case_list()).get(

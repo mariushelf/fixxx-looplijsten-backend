@@ -21,6 +21,7 @@ from apps.planner.models import TeamSettings
 from apps.visits.models import Visit
 from apps.visits.serializers import VisitSerializer
 from django.conf import settings
+from django.forms.models import model_to_dict
 from django.http import HttpResponseBadRequest, HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -50,38 +51,57 @@ class CaseViewSet(ViewSet):
 
     def retrieve(self, request, pk):
         case_id = pk
-        related_case_ids = q.get_related_case_ids(case_id)
-
-        wng_id = related_case_ids.get("wng_id", None)
-        adres_id = related_case_ids.get("adres_id", None)
-
-        if not wng_id or not adres_id:
-            return HttpResponseNotFound("Case not found")
-
-        # Get the bag_data first in order to retrieve the 'verblijfsobjectidentificatie' id
-        bag_data = bag_api.get_bag_data(wng_id)
-        bag_id = bag_data.get("verblijfsobjectidentificatie")
         case_instance = Case.get(case_id)
-        day_settings_id = (
-            case_instance.day_settings.id if case_instance.day_settings else None
-        )
 
-        data = {
-            "bwv_hotline_bevinding": q.get_bwv_hotline_bevinding(wng_id),
-            "bwv_hotline_melding": q.get_bwv_hotline_melding(wng_id),
-            "bwv_personen": q.get_bwv_personen(adres_id),
-            "address": q.get_import_adres(wng_id),
-            "import_stadia": q.get_import_stadia(case_id),
-            "bwv_tmp": q.get_bwv_tmp(case_id, adres_id),
-            "statements": q.get_statements(case_id),
-            "vakantie_verhuur": q.get_rental_information(wng_id),
-            "bag_data": bag_data,
-            "brk_data": brk_api.get_brk_data(bag_id),
-            "related_cases": q.get_related_cases(adres_id),
-            "fraud_prediction": get_fraud_prediction(case_id),
-            "day_settings_id": day_settings_id,
-            "is_sia": case_instance.data.get("is_sia"),
-        }
+        if case_instance.is_top_bwv_case:
+            related_case_ids = q.get_related_case_ids(case_id)
+
+            wng_id = related_case_ids.get("wng_id", None)
+            adres_id = related_case_ids.get("adres_id", None)
+
+            if not wng_id or not adres_id:
+                return HttpResponseNotFound("Case not found")
+
+            # Get the bag_data first in order to retrieve the 'verblijfsobjectidentificatie' id
+            bag_data = bag_api.get_bag_data(wng_id)
+            bag_id = bag_data.get("verblijfsobjectidentificatie")
+
+            day_settings_id = (
+                case_instance.day_settings.id if case_instance.day_settings else None
+            )
+
+            data = {
+                "bwv_hotline_bevinding": q.get_bwv_hotline_bevinding(wng_id),
+                "bwv_hotline_melding": q.get_bwv_hotline_melding(wng_id),
+                "bwv_personen": q.get_bwv_personen(adres_id),
+                "address": q.get_import_adres(wng_id),
+                "import_stadia": q.get_import_stadia(case_id),
+                "bwv_tmp": q.get_bwv_tmp(case_id, adres_id),
+                "statements": q.get_statements(case_id),
+                "vakantie_verhuur": q.get_rental_information(wng_id),
+                "bag_data": bag_data,
+                "brk_data": brk_api.get_brk_data(bag_id),
+                "related_cases": q.get_related_cases(adres_id),
+                "fraud_prediction": get_fraud_prediction(case_id),
+                "day_settings_id": day_settings_id,
+                "is_sia": case_instance.data.get("is_sia"),
+            }
+        else:
+            data = model_to_dict(case_instance)
+            data.update(case_instance.data)
+            bag_id = data.get("address", {}).get("bag_id")
+
+            day_settings_id = (
+                case_instance.day_settings.id if case_instance.day_settings else None
+            )
+            data.update(
+                {
+                    "bag_data": bag_api.get_bag_data_by_bag_id(data.get("address")),
+                    "brk_data": brk_api.get_brk_data(bag_id),
+                    "fraud_prediction": get_fraud_prediction(case_id),
+                    "day_settings_id": day_settings_id,
+                }
+            )
 
         return JsonResponse(data)
 
