@@ -130,7 +130,7 @@ class ItineraryViewSet(ViewSet, GenericAPIView, DestroyModelMixin, CreateModelMi
 
         # Populate the itinerary with cases
         for case in cases:
-            case_id = case.get("case_id", case.get("id"))
+            case_id = case.get("id")
             itinerary.add_case(case_id)
 
         # Serialize the itinerary again

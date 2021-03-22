@@ -54,7 +54,7 @@ def get_eligible_cases(projects):
 
     query = """
             SELECT
-              DISTINCT zaak_id AS case_id,
+              DISTINCT zaak_id AS id,
               import_wvs.beh_oms AS case_reason,
               import_wvs.is_sia as is_sia,
               import_adres.postcode AS postal_code,
@@ -85,7 +85,7 @@ def match_cases_to_stages(cases, stages):
     filtered_cases = []
 
     for case in cases:
-        case_id = case.get("case_id")
+        case_id = case.get("id")
         stage = stages.get(case_id, None)
 
         if stage:

@@ -342,7 +342,7 @@ class CaseSearchViewSetTest(APITestCase):
         CASE_ID = "FOO-ID"
 
         # Mock search function
-        FOO_SEARCH_RESULTS = [{"case_id": CASE_ID}]
+        FOO_SEARCH_RESULTS = [{"id": CASE_ID}]
         mock_q.get_search_results = Mock(return_value=FOO_SEARCH_RESULTS)
 
         # Create a fraud prediction object with the same CASE_ID

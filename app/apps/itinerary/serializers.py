@@ -83,15 +83,15 @@ class ItineraryItemUpdateSerializer(serializers.ModelSerializer):
 
 
 class ItineraryItemCreateSerializer(serializers.ModelSerializer):
-    case_id = serializers.CharField(required=True)
+    id = serializers.CharField(required=True)
     position = serializers.FloatField(required=False)
 
     class Meta:
         model = ItineraryItem
-        fields = ("itinerary", "case_id", "position")
+        fields = ("itinerary", "id", "position")
 
     def create(self, validated_data):
-        case_id = validated_data.get("case_id", validated_data.get("id"))
+        case_id = validated_data.get("id")
         itinerary_id = validated_data.get("itinerary")
         position = validated_data.get("position", None)
 
@@ -125,7 +125,7 @@ class ItinerarySerializer(serializers.ModelSerializer):
         """ Returns a Case object from the settings """
         try:
             case_dict = settings.get("start_case", None)
-            case_id = case_dict.get("case_id", case_dict.get("id", None))
+            case_id = case_dict.get("id", None)
             case = Case.get(case_id)
             return case
         except Exception:

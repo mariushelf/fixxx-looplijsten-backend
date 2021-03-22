@@ -4,9 +4,11 @@ from rest_framework import serializers
 
 
 class CaseSimpleSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(source="case_id")
+
     class Meta:
         model = Case
-        fields = ("case_id",)
+        fields = ("id",)
 
 
 class CaseAddress(serializers.Serializer):
@@ -14,18 +16,18 @@ class CaseAddress(serializers.Serializer):
 
 
 class CaseSearchSerializer(serializers.Serializer):
-    id = serializers.CharField(required=False)
-    case_id = serializers.CharField(required=False)
+    id = serializers.CharField(source="case_id")
     fraud_prediction = FraudPredictionSerializer(required=False, read_only=True)
     address = CaseAddress(read_only=True)
 
 
 class CaseSerializer(serializers.ModelSerializer):
     fraud_prediction = FraudPredictionSerializer(required=False, read_only=True)
+    id = serializers.CharField(source="case_id")
 
     class Meta:
         model = Case
-        fields = ("id", "case_id", "data", "fraud_prediction")
+        fields = ("id", "data", "fraud_prediction")
 
 
 class ProjectSerializer(serializers.ModelSerializer):

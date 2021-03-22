@@ -163,7 +163,7 @@ class CaseSearchViewSet(ViewSet):
         cases = cases.copy()
 
         for case in cases:
-            case_id = case.get("case_id")
+            case_id = case.get("id")
             case["fraud_prediction"] = get_fraud_prediction(case_id)
 
         return cases
@@ -178,7 +178,7 @@ class CaseSearchViewSet(ViewSet):
 
         for case in cases:
             # Map the objects so that they're easily accessible through the case_id
-            case_id = case.get("case_id")
+            case_id = case.get("id")
             mapped_cases[case_id] = case
             # Add a teams arrar to the case object as well
             case["teams"] = []
