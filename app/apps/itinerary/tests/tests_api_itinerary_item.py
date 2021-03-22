@@ -34,7 +34,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
 
         CASE_ID = "FOO CASE ID"
 
-        data = {"itinerary": itinerary.id, "case_id": CASE_ID}
+        data = {"itinerary": itinerary.id, "id": CASE_ID}
 
         url = reverse("v1:itinerary-item-list")
         client = get_authenticated_client()
@@ -55,7 +55,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
         CASE_ID = "FOO CASE ID"
         POSITION = 1.234567
 
-        data = {"itinerary": itinerary.id, "case_id": CASE_ID, "position": POSITION}
+        data = {"itinerary": itinerary.id, "id": CASE_ID, "position": POSITION}
 
         url = reverse("v1:itinerary-item-list")
         client = get_authenticated_client()

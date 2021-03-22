@@ -21,7 +21,7 @@ def get_search_results(postal_code, street_number, suffix, street_name):
     query = (
         """
             SELECT
-              case_id
+              case_id AS id
             FROM
               (
                 SELECT
@@ -56,7 +56,7 @@ def get_search_results(postal_code, street_number, suffix, street_name):
     }
 
     case_ids = do_query(query, args)
-    case_ids = [case_id["case_id"] for case_id in case_ids]
+    case_ids = [case_id["id"] for case_id in case_ids]
     cases = [get_case(case_id) for case_id in case_ids]
     cases = [case for case in cases if bool(case)]
 
@@ -81,7 +81,7 @@ def get_related_case_ids(case_id):
 
 def get_related_cases(address_id):
     query = """
-            SELECT wvs_nr as case_number, zaak_id as case_id, beh_oms AS case_reason
+            SELECT wvs_nr as case_number, zaak_id as id, beh_oms AS case_reason
             FROM import_wvs
             WHERE adres_id = %(address_id)s
             AND afs_code is Null
@@ -229,7 +229,7 @@ def get_import_stadia(case_id):
 def get_case(case_id):
     query = """
             SELECT
-              import_wvs.zaak_id AS case_id,
+              import_wvs.zaak_id AS id,
               import_wvs.begindatum AS start_date,
               import_wvs.einddatum AS end_date,
               import_adres.postcode AS postal_code,
@@ -270,7 +270,6 @@ def get_case(case_id):
 
 
 def prepare_bwv_case_for_zks(case):
-    case["id"] = case.get("case_id")
     case["address"] = {
         "postal_code": case.get("postal_code"),
         "street_name": case.get("street_name"),

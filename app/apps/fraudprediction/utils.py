@@ -39,7 +39,7 @@ def add_fraud_predictions(cases):
     cases = cases.copy()
 
     for case in cases:
-        case_id = case.get("case_id")
+        case_id = case.get("id")
         case["fraud_prediction"] = get_fraud_prediction(case_id)
 
     return cases

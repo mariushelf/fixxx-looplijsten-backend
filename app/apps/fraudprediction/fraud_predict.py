@@ -123,7 +123,7 @@ class FraudPredict:
             self.get_projects_to_score(),
             self.get_stadia_to_score(),
         )
-        case_ids = [case.get("case_id") for case in cases]
+        case_ids = [case.get("id") for case in cases]
         return case_ids
 
     def clear_cache_dir(self, dir):

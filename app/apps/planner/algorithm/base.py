@@ -113,3 +113,6 @@ class ItineraryGenerateAlgorithm:
 
     def generate(self):
         raise NotImplementedError()
+
+    def sort_cases_by_distance(self, cases):
+        return sorted(cases, key=lambda k: k.get("distance"))
