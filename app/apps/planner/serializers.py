@@ -173,6 +173,13 @@ class DaySettingsCompactSerializer(serializers.ModelSerializer):
         )
 
 
+class TeamSchedules(serializers.Serializer):
+    actions = serializers.ListField(read_only=True)
+    day_segments = serializers.ListField(read_only=True)
+    priorities = serializers.ListField(read_only=True)
+    week_segments = serializers.ListField(read_only=True)
+
+
 class DaySettingsSerializer(serializers.ModelSerializer):
     projects = StringRelatedToIdField(many=True, queryset=Project.objects.all())
     primary_stadium = StringRelatedToIdField(
@@ -182,6 +189,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
     exclude_stadia = StringRelatedToIdField(many=True, queryset=Stadium.objects.all())
     team_settings = TeamSettingsCompactSerializer(read_only=True)
     week_day = serializers.IntegerField(read_only=True, allow_null=True)
+    team_schedules = TeamSchedules(read_only=True, allow_null=True)
 
     class Meta:
         model = DaySettings
@@ -199,6 +207,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "exclude_stadia",
             "team_settings",
             "sia_presedence",
+            "team_schedules",
         )
 
     def validate(self, data):
