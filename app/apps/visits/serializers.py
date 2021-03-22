@@ -1,3 +1,4 @@
+from apps.cases.models import Case
 from apps.users.serializers import UserSerializer
 from apps.visits.models import (
     Observation,
@@ -47,8 +48,27 @@ class VisitTeamMemberSerializer(serializers.ModelSerializer):
         )
 
 
+class CaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Case
+        fields = ("id", "case_id")
+
+
+class CaseField(serializers.RelatedField):
+    def get_queryset(self):
+        return Case.objects.all()
+
+    def to_internal_value(self, data):
+        print(data)
+        return self.get_queryset().get(case_id=data)
+
+    def to_representation(self, value):
+        return CaseSerializer(value).data
+
+
 class VisitSerializer(serializers.ModelSerializer):
     team_members = VisitTeamMemberSerializer(many=True, read_only=True)
+    case_id = CaseField()
 
     class Meta:
         model = Visit
