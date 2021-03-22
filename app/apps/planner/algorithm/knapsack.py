@@ -117,7 +117,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
 
         # Add the distances and fraud predictions to the cases
         for index, case in enumerate(cases):
-            case_id = case.get("case_id", case.get("id"))
+            case_id = case.get("id")
             case["distance"] = distances[index]
             case["normalized_inverse_distance"] = (
                 (max_distance - case["distance"]) / max_distance if max_distance else 0

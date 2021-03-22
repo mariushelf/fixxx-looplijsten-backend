@@ -270,8 +270,8 @@ class ItineraryViewsCreateTest(APITestCase):
     #     """
     #     self.assertEqual(Itinerary.objects.count(), 0)
     #     mock_get_cases_from_settings.return_value = [
-    #         {"case_id": "FOO_CASE_ID_A"},
-    #         {"case_id": "FOO_CASE_ID_B"},
+    #         {"id": "FOO_CASE_ID_A"},
+    #         {"id": "FOO_CASE_ID_B"},
     #     ]
     #
     #     url = reverse("v1:itinerary-list")

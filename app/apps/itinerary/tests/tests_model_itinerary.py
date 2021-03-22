@@ -164,17 +164,17 @@ class ItineraryModelTest(TestCase):
         itinerary.add_case(FOO_CASE_ID_C)
 
         all_cases = [
-            {"case_id": FOO_CASE_ID_A},
-            {"case_id": FOO_CASE_ID_B},
-            {"case_id": FOO_CASE_ID_C},
-            {"case_id": FOO_CASE_ID_D},
+            {"id": FOO_CASE_ID_A},
+            {"id": FOO_CASE_ID_B},
+            {"id": FOO_CASE_ID_C},
+            {"id": FOO_CASE_ID_D},
         ]
         # Mock the results from the BWV query
         mock_get_cases_from_bwv.return_value = all_cases
 
         cases = Itinerary.get_unplanned_cases("2019-12-25", "FOO_STADIUM", [])
         # Should only return the unplanned FOO_CASE_ID_D
-        self.assertEquals(cases, [{"case_id": FOO_CASE_ID_D}])
+        self.assertEquals(cases, [{"id": FOO_CASE_ID_D}])
 
     @freeze_time("2019-12-25")
     @patch("apps.itinerary.models.get_cases_from_bwv")
@@ -195,10 +195,10 @@ class ItineraryModelTest(TestCase):
         itinerary.add_case(FOO_CASE_ID_C)
 
         all_cases = [
-            {"case_id": FOO_CASE_ID_A},
-            {"case_id": FOO_CASE_ID_B},
-            {"case_id": FOO_CASE_ID_C},
-            {"case_id": FOO_CASE_ID_D},
+            {"id": FOO_CASE_ID_A},
+            {"id": FOO_CASE_ID_B},
+            {"id": FOO_CASE_ID_C},
+            {"id": FOO_CASE_ID_D},
         ]
         # Mock the results from the BWV query
         mock_get_cases_from_bwv.return_value = all_cases

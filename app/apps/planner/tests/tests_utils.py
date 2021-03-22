@@ -54,11 +54,11 @@ class UtilsTests(TestCase):
         self.assertEquals(result, expected)
 
     def test_remove_cases_from_list(self):
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST, "case_id": "foo-a"}
-        case_b = {"stadium": ISSUEMELDING, "case_id": "foo-b"}
-        case_c = {"stadium": TWEEDE_CONTROLE, "case_id": "foo-c"}
-        case_d = {"stadium": ONDERZOEK_BUITENDIENST, "case_id": "foo-d"}
-        case_e = {"stadium": ISSUEMELDING, "case_id": "foo-e"}
+        case_a = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-a"}
+        case_b = {"stadium": ISSUEMELDING, "id": "foo-b"}
+        case_c = {"stadium": TWEEDE_CONTROLE, "id": "foo-c"}
+        case_d = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-d"}
+        case_e = {"stadium": ISSUEMELDING, "id": "foo-e"}
 
         cases = [case_a, case_b, case_c, case_d, case_e]
         cases_to_remove = [case_b, case_e]
@@ -72,12 +72,12 @@ class UtilsTests(TestCase):
         """
         Wil still succeed if items from the cases_to_remove don't exist in the cases list
         """
-        case_a = {"stadium": ONDERZOEK_BUITENDIENST, "case_id": "foo-a"}
-        case_b = {"stadium": ISSUEMELDING, "case_id": "foo-b"}
-        case_c = {"stadium": TWEEDE_CONTROLE, "case_id": "foo-c"}
-        case_d = {"stadium": ONDERZOEK_BUITENDIENST, "case_id": "foo-d"}
-        case_e = {"stadium": ISSUEMELDING, "case_id": "foo-e"}
-        case_not_in_list = {"stadium": ISSUEMELDING, "case_id": "foo-f"}
+        case_a = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-a"}
+        case_b = {"stadium": ISSUEMELDING, "id": "foo-b"}
+        case_c = {"stadium": TWEEDE_CONTROLE, "id": "foo-c"}
+        case_d = {"stadium": ONDERZOEK_BUITENDIENST, "id": "foo-d"}
+        case_e = {"stadium": ISSUEMELDING, "id": "foo-e"}
+        case_not_in_list = {"stadium": ISSUEMELDING, "id": "foo-f"}
 
         cases = [case_a, case_b, case_c, case_d, case_e]
         cases_to_remove = [case_a, case_b, case_not_in_list]
@@ -94,17 +94,17 @@ class UtilsTests(TestCase):
                 "lng": 1,
             },
             "stadium": ONDERZOEK_BUITENDIENST,
-            "case_id": "foo-a",
+            "id": "foo-a",
         }
         case_b = {
             "address": {"lat": 2, "lng": 3},
             "stadium": ISSUEMELDING,
-            "case_id": "foo-b",
+            "id": "foo-b",
         }
         case_c = {
             "address": {"lat": 4, "lng": 5},
             "stadium": TWEEDE_CONTROLE,
-            "case_id": "foo-c",
+            "id": "foo-c",
         }
         cases = [case_a, case_b, case_c]
         case_coordinates = get_case_coordinates(cases)
