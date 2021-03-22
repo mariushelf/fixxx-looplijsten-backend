@@ -22,6 +22,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
+from .mock import get_team_schedules
+
 
 class PostalCodeRangePresetViewSet(ModelViewSet):
     """
@@ -48,6 +50,23 @@ class DaySettingsViewSet(ModelViewSet):
 
     serializer_class = DaySettingsSerializer
     queryset = DaySettings.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        data = serializer.data
+        if instance.team_settings.use_zaken_backend:
+            if settings.USE_ZAKEN_MOCK_DATA:
+                team_schedules = get_team_schedules()
+            else:
+                team_schedules = instance.fetch_team_schedules()
+            data.update(
+                {
+                    "team_schedules": team_schedules,
+                }
+            )
+
+        return Response(data)
 
 
 @user_passes_test(lambda u: u.is_superuser)

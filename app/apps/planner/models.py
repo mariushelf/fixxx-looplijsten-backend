@@ -1,3 +1,4 @@
+import requests
 from apps.cases.models import Project, Stadium, StadiumLabel
 from apps.visits.models import Observation, Situation, SuggestNextVisit
 from django.conf import settings
@@ -5,6 +6,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from settings.const import POSTAL_CODE_RANGES, WEEK_DAYS_CHOICES
+from utils.queries_zaken_api import get_headers
 
 from .const import SCORING_WEIGHTS
 
@@ -176,6 +178,18 @@ class DaySettings(models.Model):
         related_name="exclude_stadia_day_settings_list",
     )
     sia_presedence = models.BooleanField(default=False)
+
+    def fetch_team_schedules(self):
+        url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/schedule-types/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(),
+        )
+        response.raise_for_status()
+
+        return response.json()
 
     class Meta:
         ordering = ("week_day", "start_time")

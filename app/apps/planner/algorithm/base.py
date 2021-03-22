@@ -93,7 +93,7 @@ class ItineraryGenerateAlgorithm:
             )
         )
 
-        exclude_cases = [{"case_id": case.case_id} for case in self.exclude_cases]
+        exclude_cases = [{"id": case.case_id} for case in self.exclude_cases]
         filtered_cases = remove_cases_from_list(filtered_cases, exclude_cases)
         LOGGER.info(
             "Total cases after removing exclude cases: {}".format(len(filtered_cases))

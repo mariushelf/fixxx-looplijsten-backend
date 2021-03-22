@@ -84,7 +84,7 @@ class Itinerary(models.Model):
         Returns a list of unplanned cases which
         """
         planned_cases = Itinerary.get_cases_for_date(date)
-        exclude_cases = [{"case_id": case.case_id} for case in planned_cases]
+        exclude_cases = [{"id": case.case_id} for case in planned_cases]
         all_cases = get_cases_from_bwv(STARTING_FROM_DATE, projects, [stadium])
         cases = remove_cases_from_list(all_cases, exclude_cases)
 
