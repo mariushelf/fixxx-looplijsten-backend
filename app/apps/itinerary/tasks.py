@@ -131,7 +131,7 @@ def push_visit(self, visit_id, created=False):
     data = serializer.data        
     data.pop('author')
     team_members = data.pop('team_members')
-    authors = [team_member['user']['email'] for team_member in team_members]    
+    authors = [{"email": team_member['user']['email']} for team_member in team_members]    
     data['authors'] = authors
 
     try:
