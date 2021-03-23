@@ -127,12 +127,12 @@ def push_visit(self, visit_id, created=False):
 
     visit = Visit.objects.get(id=visit_id)
     serializer = VisitSerializer(visit)
-    
-    data = serializer.data        
-    data.pop('author')
-    team_members = data.pop('team_members')
-    authors = [{"email": team_member['user']['email']} for team_member in team_members]    
-    data['authors'] = authors
+
+    data = serializer.data
+    data.pop("author")
+    team_members = data.pop("team_members")
+    authors = [{"email": team_member["user"]["email"]} for team_member in team_members]
+    data["authors"] = authors
 
     try:
         response = requests.post(
