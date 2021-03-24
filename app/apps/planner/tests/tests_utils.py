@@ -198,11 +198,11 @@ class UtilsTests(TestCase):
         FOO_END_RANGE = 2000
         RANGES = [{"range_start": FOO_START_RANGE, "range_end": FOO_END_RANGE}]
 
-        FOO_CASE_A = {"postal_code": "1055XX"}
-        FOO_CASE_B = {"postal_code": "2055XX"}
-        FOO_CASE_C = {"postal_code": "2000XX"}
-        FOO_CASE_D = {"postal_code": "1000XX"}
-        FOO_CASE_E = {"postal_code": "0000XX"}
+        FOO_CASE_A = {"address": {"postal_code": "1055XX"}}
+        FOO_CASE_B = {"address": {"postal_code": "2055XX"}}
+        FOO_CASE_C = {"address": {"postal_code": "2000XX"}}
+        FOO_CASE_D = {"address": {"postal_code": "1000XX"}}
+        FOO_CASE_E = {"address": {"postal_code": "0000XX"}}
 
         cases = [FOO_CASE_A, FOO_CASE_B, FOO_CASE_C, FOO_CASE_D, FOO_CASE_E]
 
@@ -219,11 +219,11 @@ class UtilsTests(TestCase):
             {"range_start": 2000, "range_end": 2050},
         ]
 
-        FOO_CASE_A = {"postal_code": "1055XX"}
-        FOO_CASE_B = {"postal_code": "1056XX"}
-        FOO_CASE_C = {"postal_code": "1060XX"}
-        FOO_CASE_D = {"postal_code": "2000XX"}
-        FOO_CASE_E = {"postal_code": "2050XX"}
+        FOO_CASE_A = {"address": {"postal_code": "1055XX"}}
+        FOO_CASE_B = {"address": {"postal_code": "1056XX"}}
+        FOO_CASE_C = {"address": {"postal_code": "1060XX"}}
+        FOO_CASE_D = {"address": {"postal_code": "2000XX"}}
+        FOO_CASE_E = {"address": {"postal_code": "2050XX"}}
 
         cases = [FOO_CASE_A, FOO_CASE_B, FOO_CASE_C, FOO_CASE_D, FOO_CASE_E]
 

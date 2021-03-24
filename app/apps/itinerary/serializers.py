@@ -154,6 +154,11 @@ class ItinerarySerializer(serializers.ModelSerializer):
             start_case=start_case,
             day_settings=day_settings,
             sia_presedence=day_settings.sia_presedence,
+            day_segments=day_settings.day_segments,
+            week_segments=day_settings.week_segments,
+            priorities=day_settings.priorities,
+            reasons=day_settings.reasons,
+            state_types=day_settings.state_types,
         )
 
         # Next, add the many-to-many relations of the itinerary_Settings

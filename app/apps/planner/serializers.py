@@ -180,6 +180,16 @@ class TeamSchedules(serializers.Serializer):
     week_segments = serializers.ListField(read_only=True)
 
 
+class TeamReasons(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    team = serializers.IntegerField(read_only=True)
+
+
+class TeamStateTypes(TeamReasons):
+    pass
+
+
 class DaySettingsSerializer(serializers.ModelSerializer):
     projects = StringRelatedToIdField(many=True, queryset=Project.objects.all())
     primary_stadium = StringRelatedToIdField(
@@ -189,7 +199,9 @@ class DaySettingsSerializer(serializers.ModelSerializer):
     exclude_stadia = StringRelatedToIdField(many=True, queryset=Stadium.objects.all())
     team_settings = TeamSettingsCompactSerializer(read_only=True)
     week_day = serializers.IntegerField(read_only=True, allow_null=True)
-    team_schedules = TeamSchedules(read_only=True, allow_null=True)
+    team_schedule_options = TeamSchedules(read_only=True, allow_null=True)
+    reason_options = TeamReasons(read_only=True, many=True)
+    state_type_options = TeamStateTypes(read_only=True, many=True)
 
     class Meta:
         model = DaySettings
@@ -201,13 +213,20 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "postal_code_ranges",
             "postal_code_ranges_presets",
             "length_of_list",
+            "day_segments",
+            "week_segments",
+            "priorities",
+            "reasons",
+            "state_types",
             "projects",
             "primary_stadium",
             "secondary_stadia",
             "exclude_stadia",
             "team_settings",
             "sia_presedence",
-            "team_schedules",
+            "team_schedule_options",
+            "reason_options",
+            "state_type_options",
         )
 
     def validate(self, data):

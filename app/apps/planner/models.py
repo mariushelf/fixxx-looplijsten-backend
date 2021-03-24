@@ -155,6 +155,35 @@ class DaySettings(models.Model):
     length_of_list = models.PositiveSmallIntegerField(
         default=8,
     )
+
+    # ZKS Fields
+    day_segments = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    week_segments = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    priorities = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    reasons = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    state_types = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+
+    # BWV Fields
     projects = models.ManyToManyField(
         to=Project,
         blank=True,
@@ -190,6 +219,30 @@ class DaySettings(models.Model):
         response.raise_for_status()
 
         return response.json()
+
+    def fetch_team_reasons(self):
+        url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/reasons/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
+
+    def fetch_team_state_types(self):
+        url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/state-types/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
 
     class Meta:
         ordering = ("week_day", "start_time")

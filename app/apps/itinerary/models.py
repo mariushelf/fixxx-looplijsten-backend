@@ -13,6 +13,7 @@ from apps.planner.utils import remove_cases_from_list
 from apps.users.models import User
 from django.conf import settings
 from django.contrib.admin.utils import flatten
+from django.contrib.postgres.fields import ArrayField
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -219,6 +220,38 @@ class ItinerarySettings(models.Model):
         related_name="settings",
     )
 
+    start_case = models.ForeignKey(
+        Case, on_delete=models.CASCADE, null=True, blank=True
+    )
+
+    # ZKS Fields
+    day_segments = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    week_segments = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    priorities = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    reasons = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+    state_types = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
+        blank=True,
+        null=True,
+    )
+
+    # BWV Fields
     projects = models.ManyToManyField(to=Project, blank=False, related_name="settings")
 
     primary_stadium = models.ForeignKey(
@@ -235,10 +268,6 @@ class ItinerarySettings(models.Model):
 
     exclude_stadia = models.ManyToManyField(
         to=Stadium, blank=True, related_name="settings_as_exclude_stadia"
-    )
-
-    start_case = models.ForeignKey(
-        Case, on_delete=models.CASCADE, null=True, blank=True
     )
 
     sia_presedence = models.BooleanField(default=False)

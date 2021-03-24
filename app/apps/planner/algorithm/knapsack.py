@@ -4,10 +4,21 @@ import multiprocessing
 import requests
 from apps.cases.mock import get_zaken_case_list
 from apps.fraudprediction.utils import get_fraud_predictions
-from apps.planner.algorithm.base import ItineraryGenerateAlgorithm
+from apps.planner.algorithm.base import (
+    ItineraryGenerateAlgorithm,
+    filter_cases_with_postal_code,
+)
 from apps.planner.const import MAX_SUGGESTIONS_COUNT, SCORING_WEIGHTS
+from apps.planner.mock import get_team_reasons, get_team_schedules, get_team_state_types
 from apps.planner.models import Weights
-from apps.planner.utils import calculate_geo_distances, remove_cases_from_list
+from apps.planner.utils import (
+    calculate_geo_distances,
+    filter_out_incompatible_cases,
+    filter_reasons,
+    filter_schedules,
+    filter_state_types,
+    remove_cases_from_list,
+)
 from django.conf import settings
 from joblib import Parallel, delayed
 from settings.const import ISSUEMELDING
@@ -17,18 +28,13 @@ from utils.queries_zaken_api import get_headers
 logger = logging.getLogger(__name__)
 
 
-def filter_out_incompatible_cases(cases):
-    return [
-        c
-        for c in cases
-        if c.get("address", {}).get("lat") and c.get("address", {}).get("lng")
-    ]
-
-
 def get_eligible_cases_v2(generator):
-    print("v2 __get_eligible_cases__")
+    logger.info("v2 __get_eligible_cases__")
     if settings.USE_ZAKEN_MOCK_DATA:
         cases = get_zaken_case_list()
+        team_schedules = get_team_schedules()
+        reasons = get_team_reasons()
+        state_types = get_team_state_types()
     else:
         url = f"{settings.ZAKEN_API_URL}/cases/"
         queryParams = {
@@ -47,10 +53,51 @@ def get_eligible_cases_v2(generator):
 
         cases = response.json().get("results", [])
 
-    cases = filter_out_incompatible_cases(cases)
+        team_schedules = generator.settings.day_settings.fetch_team_schedules()
+        reasons = generator.settings.day_settings.fetch_team_reasons()
+        state_types = generator.settings.day_settings.fetch_team_state_types()
 
-    logger.info("zaken __get_eligible_cases__")
-    logger.info(cases)
+    logger.info("validate team_schedules")
+    team_schedules = dict(
+        (
+            k,
+            [
+                s
+                for s in getattr(generator.settings, k)
+                if s in [ss.get("id", 0) for ss in v]
+            ],
+        )
+        for k, v in team_schedules.items()
+        if hasattr(generator.settings, k)
+    )
+    logger.info("validate reasons")
+    reasons = [
+        r
+        for r in generator.settings.reasons
+        if r in [reason.get("id", 0) for reason in reasons]
+    ]
+    logger.info("validate state_types")
+    reasons = [
+        st
+        for st in generator.settings.state_types
+        if st in [state.get("id", 0) for state in state_types]
+    ]
+
+    cases = filter_out_incompatible_cases(cases)
+    logger.info("after filter_out_incompatible_cases")
+    logger.info(len(cases))
+    cases = filter_schedules(cases, team_schedules)
+    logger.info("after filter_schedules")
+    logger.info(len(cases))
+    cases = filter_cases_with_postal_code(cases, generator.postal_code_ranges)
+    logger.info("after filter_cases_with_postal_code")
+    logger.info(len(cases))
+    cases = filter_reasons(cases, generator.settings.reasons)
+    logger.info("after filter_reasons")
+    logger.info(len(cases))
+    cases = filter_state_types(cases, generator.settings.state_types)
+    logger.info("after filter_state_types")
+    logger.info(len(cases))
     return cases
 
 
@@ -225,36 +272,3 @@ class ItineraryKnapsackListV1(ItineraryKnapsackList):
 class ItineraryKnapsackListV2(ItineraryKnapsackList):
     def __get_eligible_cases__(self):
         return get_eligible_cases_v2(self)
-        # print("v2 __get_eligible_cases__")
-        # if settings.USE_ZAKEN_MOCK_DATA:
-        #     cases = get_zaken_case_list()
-        # else:
-        #     url = f"{settings.ZAKEN_API_URL}/cases/"
-        #     queryParams = {
-        #         "openCases": "true",
-        #         "team": self.settings.day_settings.team_settings.zaken_team_name,
-        #         "startDate": self.settings.opening_date.strftime("%Y-%m-%d"),
-        #     }
-
-        #     response = requests.get(
-        #         url,
-        #         params=queryParams,
-        #         timeout=5,
-        #         headers=get_headers(),
-        #     )
-        #     response.raise_for_status()
-
-        #     logger.info("zaken __get_eligible_cases__")
-        #     logger.info(response.json())
-
-        #     cases = response.json().get("results", [])
-
-        # cases = self.filter_out_incompatible_cases(cases)
-        # return cases
-
-    def filter_out_incompatible_cases(self, cases):
-        return [
-            c
-            for c in cases
-            if c.get("address", {}).get("lat") and c.get("address", {}).get("lng")
-        ]
