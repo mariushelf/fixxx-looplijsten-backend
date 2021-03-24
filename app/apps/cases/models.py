@@ -41,7 +41,7 @@ class Case(models.Model):
         if self.is_top_bwv_case:
             return get_case(case_id)
         if settings.USE_ZAKEN_MOCK_DATA:
-            return dict((c.get("id"), c) for c in get_zaken_case_list()).get(
+            return dict((str(c.get("id")), c) for c in get_zaken_case_list()).get(
                 case_id, {}
             )
         return self.fetch_case()
