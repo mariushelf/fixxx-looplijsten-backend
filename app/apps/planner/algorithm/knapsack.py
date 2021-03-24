@@ -41,6 +41,7 @@ def get_eligible_cases_v2(generator):
             "openCases": "true",
             "team": generator.settings.day_settings.team_settings.zaken_team_name,
             "startDate": generator.settings.opening_date.strftime("%Y-%m-%d"),
+            "no_page": "true",
         }
 
         response = requests.get(
@@ -77,7 +78,7 @@ def get_eligible_cases_v2(generator):
         if r in [reason.get("id", 0) for reason in reasons]
     ]
     logger.info("validate state_types")
-    reasons = [
+    state_types = [
         st
         for st in generator.settings.state_types
         if st in [state.get("id", 0) for state in state_types]
@@ -86,16 +87,17 @@ def get_eligible_cases_v2(generator):
     cases = filter_out_incompatible_cases(cases)
     logger.info("after filter_out_incompatible_cases")
     logger.info(len(cases))
-    cases = filter_schedules(cases, team_schedules)
-    logger.info("after filter_schedules")
-    logger.info(len(cases))
+    # Enable line below if zaken api provides schedules data
+    # cases = filter_schedules(cases, team_schedules)
+    # logger.info("after filter_schedules")
+    # logger.info(len(cases))
     cases = filter_cases_with_postal_code(cases, generator.postal_code_ranges)
     logger.info("after filter_cases_with_postal_code")
     logger.info(len(cases))
-    cases = filter_reasons(cases, generator.settings.reasons)
+    cases = filter_reasons(cases, reasons)
     logger.info("after filter_reasons")
     logger.info(len(cases))
-    cases = filter_state_types(cases, generator.settings.state_types)
+    cases = filter_state_types(cases, state_types)
     logger.info("after filter_state_types")
     logger.info(len(cases))
     return cases
