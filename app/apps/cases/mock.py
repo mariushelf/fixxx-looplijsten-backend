@@ -10,13 +10,13 @@ def get_zaken_case_list():
                 "number": 0,
                 "suffix_letter": "string",
                 "suffix": "string",
-                "postal_code": "string",
+                "postal_code": "1045TD",
                 "lat": -81.6776,
                 "lng": -39.431285,
             },
             "case_states": [
                 {
-                    "id": 0,
+                    "id": 6,
                     "case": 0,
                     "status_name": "green",
                     "status": 0,
@@ -34,6 +34,16 @@ def get_zaken_case_list():
                     "start_date": "Monday, November 16, 2020 3:12 PM",
                     "end_date": "Sunday, January 17, 2021 4:16 PM",
                     "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
+                }
+            ],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
                 }
             ],
             "team": {"id": 0, "name": "string"},
@@ -56,7 +66,7 @@ def get_zaken_case_list():
                 "number": 0,
                 "suffix_letter": "string",
                 "suffix": "string",
-                "postal_code": "string",
+                "postal_code": "1044TD",
                 "lat": -28.239457,
                 "lng": 23.656034,
             },
@@ -82,6 +92,16 @@ def get_zaken_case_list():
                     "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
                 }
             ],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 2, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 1, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "team": {"id": 0, "name": "string"},
             "reason": {"id": 0, "name": "string", "team": 0},
             "identification": "string",
@@ -102,13 +122,13 @@ def get_zaken_case_list():
                 "number": 0,
                 "suffix_letter": "string",
                 "suffix": "string",
-                "postal_code": "string",
+                "postal_code": "1090TD",
                 "lat": 37.143141,
                 "lng": 45.298988,
             },
             "case_states": [
                 {
-                    "id": 0,
+                    "id": 6,
                     "case": 0,
                     "status_name": "green",
                     "status": 0,
@@ -128,8 +148,18 @@ def get_zaken_case_list():
                     "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
                 }
             ],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 2, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "team": {"id": 0, "name": "string"},
-            "reason": {"id": 0, "name": "string", "team": 0},
+            "reason": {"id": 30, "name": "string", "team": 0},
             "identification": "string",
             "start_date": "Tuesday, February 9, 2021 5:42 AM",
             "end_date": "Monday, August 17, 2020 5:57 AM",
@@ -148,12 +178,13 @@ def get_zaken_case_list():
                 "number": 0,
                 "suffix_letter": "string",
                 "suffix": "string",
-                "postal_code": "string",
-                "lat": "66.393756",
+                "postal_code": "1001TD",
+                "lat": 66.393756,
+                "lng": 45.298988,
             },
             "case_states": [
                 {
-                    "id": 0,
+                    "id": 4,
                     "case": 0,
                     "status_name": "blue",
                     "status": 0,
@@ -172,6 +203,23 @@ def get_zaken_case_list():
                     "end_date": "Saturday, January 25, 2020 1:28 PM",
                     "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
                 }
+            ],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                },
+                {
+                    "id": 3,
+                    "schedule_type": {"id": 1, "name": "Huisbezoek"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 1, "name": "Normaal", "weight": 0},
+                    "case": 3,
+                },
             ],
             "team": {"id": 0, "name": "string"},
             "reason": {"id": 0, "name": "string", "team": 0},
@@ -193,13 +241,13 @@ def get_zaken_case_list():
                 "number": 0,
                 "suffix_letter": "string",
                 "suffix": "string",
-                "postal_code": "string",
+                "postal_code": "1073TD",
                 "lat": -79.528073,
                 "lng": -128.481114,
             },
             "case_states": [
                 {
-                    "id": 0,
+                    "id": 4,
                     "case": 0,
                     "status_name": "blue",
                     "status": 0,
@@ -219,8 +267,25 @@ def get_zaken_case_list():
                     "users": ["3fa85f64-5717-4562-b3fc-2c963f66afa6"],
                 }
             ],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                },
+                {
+                    "id": 3,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "day_segment": {"id": 2, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 3,
+                },
+            ],
             "team": {"id": 0, "name": "string"},
-            "reason": {"id": 0, "name": "string", "team": 0},
+            "reason": {"id": 30, "name": "string", "team": 0},
             "identification": "string",
             "start_date": "Tuesday, August 1, 2017 7:47 PM",
             "end_date": "Wednesday, February 26, 2020 7:44 AM",
@@ -244,7 +309,7 @@ def get_zaken_case_search_result_list():
                 "number": 0,
                 "suffix_letter": "string",
                 "suffix": "string",
-                "postal_code": "string",
+                "postal_code": "1026TD",
                 "lat": -79.528073,
                 "lng": -128.481114,
             },

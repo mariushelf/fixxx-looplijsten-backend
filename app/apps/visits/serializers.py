@@ -59,7 +59,6 @@ class CaseField(serializers.RelatedField):
         return Case.objects.all()
 
     def to_internal_value(self, data):
-        print(data)
         return self.get_queryset().get(case_id=data)
 
     def to_representation(self, value):

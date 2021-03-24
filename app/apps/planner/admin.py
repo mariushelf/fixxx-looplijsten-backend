@@ -17,6 +17,11 @@ class DaySettingsInline(admin.TabularInline):
             {
                 "fields": (
                     "name",
+                    "day_segments",
+                    "week_segments",
+                    "priorities",
+                    "reasons",
+                    "state_types",
                     "week_day",
                     "start_time",
                 )

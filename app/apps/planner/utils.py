@@ -1,6 +1,7 @@
 from geopy.distance import distance
 
 
+# BWV
 def filter_out_cases(cases, stadia=[]):
     """
     Returns a list of cases without the given stadia
@@ -14,6 +15,7 @@ def filter_out_cases(cases, stadia=[]):
     return list(filter(lambda case: has_stadium(case), cases))
 
 
+# BWV
 def filter_cases(cases, stadia):
     """
     Returns a list of cases with the given stadia
@@ -27,6 +29,7 @@ def filter_cases(cases, stadia):
     return list(filter(lambda case: has_stadium(case), cases))
 
 
+# ZKS and BWV
 def remove_cases_from_list(cases, cases_to_remove):
     """
     Returns a new list without the 'cases_to_remove' items
@@ -41,6 +44,7 @@ def remove_cases_from_list(cases, cases_to_remove):
     return new_list
 
 
+# ZKS and BWV
 def get_case_coordinates(cases):
     """
     Maps the cases to an array of coordinates
@@ -58,6 +62,7 @@ def get_case_coordinates(cases):
     return coordinates
 
 
+# ZKS and BWV
 def calculate_geo_distances(center, cases):
     """
     Returns a set of distances in KM from the given center
@@ -70,6 +75,7 @@ def calculate_geo_distances(center, cases):
     return distances
 
 
+# BWV
 def filter_cases_with_missing_coordinates(cases):
     """
     Cases with polluted data (missing coordinates) are removed
@@ -82,6 +88,7 @@ def filter_cases_with_missing_coordinates(cases):
     return list(filter(lambda case: has_coordinates(case), cases))
 
 
+# ZKS and BWV
 def filter_cases_with_postal_code(cases, ranges=[]):
     """
     Returns a list of cases for which the postal code falls within the given start and end range
@@ -96,8 +103,7 @@ def filter_cases_with_postal_code(cases, ranges=[]):
 
         if range_start > range_end:
             raise ValueError("Start range can't be larger than end_range")
-
-        postal_code = case.get("postal_code")
+        postal_code = case.get("address", {}).get("postal_code")
         postal_code_numbers = int(postal_code[:4])
 
         return range_start <= postal_code_numbers <= range_end
@@ -110,3 +116,53 @@ def filter_cases_with_postal_code(cases, ranges=[]):
 
     cases = filter(lambda case: is_in_ranges(case, ranges), cases)
     return list(cases)
+
+
+# ZKS
+def filter_out_incompatible_cases(cases):
+    return [
+        c
+        for c in cases
+        if c.get("address", {}).get("lat") and c.get("address", {}).get("lng")
+    ]
+
+
+# ZKS
+def filter_schedules(cases, team_schedules):
+    schedule_keys = [
+        ["day_segment", "day_segments"],
+        ["week_segment", "week_segments"],
+        ["priority", "priorities"],
+    ]
+
+    def case_in_schedule(case):
+        valid = True
+        for key_set in schedule_keys:
+            if not set(team_schedules.get(key_set[1], [])).intersection(
+                set(
+                    [
+                        schedule.get(key_set[0], {}).get("id", 0)
+                        for schedule in case.get("schedules", [])
+                    ]
+                )
+            ):
+                valid = False
+        return valid
+
+    return [c for c in cases if case_in_schedule(c)]
+
+
+# ZKS
+def filter_reasons(cases, reasons):
+    return [c for c in cases if c.get("reason", {}).get("id", 0) in reasons]
+
+
+# ZKS
+def filter_state_types(cases, state_types):
+    return [
+        case
+        for case in cases
+        if set([c.get("id", 0) for c in case.get("case_states", [])]).intersection(
+            set(state_types)
+        )
+    ]
