@@ -4,6 +4,7 @@ from datetime import datetime
 import requests
 from apps.cases.models import Project
 from apps.cases.serializers import (
+    CaseEventSerializer,
     CaseSearchSerializer,
     DecosJoinFolderFieldsResponseSerializer,
     DecosJoinObjectFieldsResponseSerializer,
@@ -147,6 +148,20 @@ class CaseViewSet(ViewSet):
         """
         visits = Visit.objects.filter(itinerary_item__case__case_id=pk)
         serializer = VisitSerializer(visits, many=True)
+
+        return Response(serializer.data)
+
+    @extend_schema(
+        description="Lists all events for this case",
+        responses={200: CaseEventSerializer()},
+    )
+    @action(detail=True, methods=["get"], name="events")
+    def events(self, request, pk):
+        """
+        Lists all events for this case
+        """
+        case = get_object_or_404(Case, id=pk)
+        serializer = CaseEventSerializer(case.fetch_events())
 
         return Response(serializer.data)
 

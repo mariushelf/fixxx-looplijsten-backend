@@ -3,6 +3,15 @@ from apps.fraudprediction.serializers import FraudPredictionSerializer
 from rest_framework import serializers
 
 
+class CaseEventSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    date_created = serializers.DateTimeField(read_only=True)
+    case = serializers.CharField(required=True)
+    type = serializers.CharField(required=False, read_only=True)
+    emitter_id = serializers.IntegerField(read_only=True)
+    event_values = serializers.JSONField(read_only=True)
+
+
 class CaseSimpleSerializer(serializers.ModelSerializer):
     id = serializers.CharField(source="case_id")
 
