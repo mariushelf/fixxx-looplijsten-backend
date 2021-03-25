@@ -162,7 +162,7 @@ def filter_state_types(cases, state_types):
     return [
         case
         for case in cases
-        if set([c.get("status", 0) for c in case.get("case_states", [])]).intersection(
-            set(state_types)
-        )
+        if set(
+            [c.get("status", 0) for c in case.get("current_states", [])]
+        ).intersection(set(state_types))
     ]
