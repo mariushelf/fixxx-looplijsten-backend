@@ -43,12 +43,14 @@ class PostalCodeSettingsSerializer(serializers.ModelSerializer):
 
 
 class ItinerarySettingsSerializer(serializers.ModelSerializer):
-    projects = ProjectSerializer(many=True)
     day_settings = DaySettingsSerializer()
+    start_case = CaseSimpleSerializer(required=False)
+
+    # BWV data below
+    projects = ProjectSerializer(many=True)
     primary_stadium = StadiumSerializer()
     secondary_stadia = StadiumSerializer(many=True)
     exclude_stadia = StadiumSerializer(many=True)
-    start_case = CaseSimpleSerializer(required=False)
 
     class Meta:
         model = ItinerarySettings
@@ -56,11 +58,17 @@ class ItinerarySettingsSerializer(serializers.ModelSerializer):
             "opening_date",
             "day_settings",
             "target_length",
+            "start_case",
+            "day_segments",
+            "week_segments",
+            "priorities",
+            "reasons",
+            "state_types",
+            # BWV data below
             "projects",
             "primary_stadium",
             "secondary_stadia",
             "exclude_stadia",
-            "start_case",
         )
 
 
