@@ -84,6 +84,8 @@ def get_eligible_cases_v2(generator):
         if st in [state.get("id", 0) for state in state_types]
     ]
 
+    logger.info("initial case count")
+    logger.info(len(cases))
     cases = filter_out_incompatible_cases(cases)
     logger.info("after filter_out_incompatible_cases")
     logger.info(len(cases))
@@ -100,6 +102,15 @@ def get_eligible_cases_v2(generator):
     cases = filter_state_types(cases, state_types)
     logger.info("after filter_state_types")
     logger.info(len(cases))
+    cases = [
+        c
+        for c in cases
+        if str(c.get("id"))
+        not in [str(case.get("id")) for case in generator.exclude_cases]
+    ]
+    logger.info("after remove_cases_from_list")
+    logger.info(len(cases))
+
     return cases
 
 
