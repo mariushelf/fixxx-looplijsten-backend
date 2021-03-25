@@ -30,7 +30,19 @@ class Case(models.Model):
 
         response = requests.get(
             url,
-            timeout=10,
+            timeout=5,
+            headers=get_headers(),
+        )
+        response.raise_for_status()
+
+        return response.json()
+
+    def fetch_events(self):
+        url = f"{settings.ZAKEN_API_URL}/cases/{self.case_id}/events/"
+
+        response = requests.get(
+            url,
+            timeout=5,
             headers=get_headers(),
         )
         response.raise_for_status()
