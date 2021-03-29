@@ -52,7 +52,7 @@ def get_eligible_cases_v2(generator):
         )
         response.raise_for_status()
 
-        cases = response.json().get("results", [])
+        cases = response.json()
 
         team_schedules = generator.settings.day_settings.fetch_team_schedules()
         reasons = generator.settings.day_settings.fetch_team_reasons()
