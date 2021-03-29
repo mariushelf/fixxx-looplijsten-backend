@@ -96,12 +96,6 @@ def get_eligible_cases_v2(generator):
     cases = filter_cases_with_postal_code(cases, generator.postal_code_ranges)
     logger.info("after filter_cases_with_postal_code")
     logger.info(len(cases))
-    cases = filter_reasons(cases, reasons)
-    logger.info("after filter_reasons")
-    logger.info(len(cases))
-    cases = filter_state_types(cases, state_types)
-    logger.info("after filter_state_types")
-    logger.info(len(cases))
     cases = [
         c
         for c in cases
@@ -124,6 +118,8 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             self.weights = Weights(
                 distance=settings_weights.distance,
                 fraud_probability=settings_weights.fraud_probability,
+                reason=settings_weights.reason,
+                state_types=settings_weights.state_types,
                 primary_stadium=settings_weights.primary_stadium,
                 secondary_stadium=settings_weights.secondary_stadium,
                 issuemelding=settings_weights.issuemelding,
@@ -141,6 +137,16 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         except AttributeError:
             fraud_probability = 0
 
+        reason = (
+            case.get("reason", {}).get("id", 0) in self.settings.reasons
+            if self.settings.reasons
+            else []
+        )
+        state_types = set(
+            [case.get("status") for case in case.get("current_states", [])]
+        ).intersection(
+            set(self.settings.state_types if self.settings.state_types else [])
+        )
         stadium = case.get("stadium")
         has_primary_stadium = stadium == self.primary_stadium
         has_secondary_stadium = stadium in self.secondary_stadia
@@ -149,6 +155,8 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         score = self.weights.score(
             distance,
             fraud_probability,
+            bool(reason),
+            bool(state_types),
             has_primary_stadium,
             has_secondary_stadium,
             has_issuemelding_stadium,

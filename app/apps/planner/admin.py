@@ -17,6 +17,7 @@ class DaySettingsInline(admin.TabularInline):
             {
                 "fields": (
                     "name",
+                    "sia_presedence",
                     "day_segments",
                     "week_segments",
                     "priorities",
