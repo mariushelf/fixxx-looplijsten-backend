@@ -115,16 +115,7 @@ def update_external_states(itinerary):
             update_external_state.delay(state_id, team_member_emails)
 
 
-@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
-def push_visit(self, visit_id, created=False):
-    logger.info(f"Pushing visit {visit_id} to zaken")
-
-    assert_allow_push()
-    url = f"{settings.ZAKEN_API_URL}/visits/"
-
-    if not created:
-        logger.info("Zaken does not support updating visits anymore.")
-
+def get_serialized_visit(visit_id):
     visit = Visit.objects.get(id=visit_id)
     serializer = VisitSerializer(visit)
     data = serializer.data
@@ -138,6 +129,21 @@ def push_visit(self, visit_id, created=False):
     # Set the case id
     case = data.pop("case_id")
     data["case"] = case["case_id"]
+
+    return data
+
+
+@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
+def push_visit(self, visit_id, created=False):
+    logger.info(f"Pushing visit {visit_id} to zaken")
+
+    assert_allow_push()
+    url = f"{settings.ZAKEN_API_URL}/visits/"
+
+    if not created:
+        logger.info("Zaken does not support updating visits anymore.")
+
+    data = get_serialized_visit(visit_id)
 
     try:
         response = requests.post(
