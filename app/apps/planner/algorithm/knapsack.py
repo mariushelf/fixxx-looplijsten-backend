@@ -41,7 +41,7 @@ def get_eligible_cases_v2(generator):
             "openCases": "true",
             "team": generator.settings.day_settings.team_settings.zaken_team_name,
             "startDate": generator.settings.opening_date.strftime("%Y-%m-%d"),
-            "no_pagination": "true",
+            "noPagination": "true",
         }
 
         response = requests.get(
