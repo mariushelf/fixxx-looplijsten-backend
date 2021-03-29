@@ -9,6 +9,8 @@ from settings import const
 class SCORING_WEIGHTS(Enum):
     DISTANCE = 0.25
     FRAUD_PROBABILITY = 1
+    REASON = 0.25
+    STATE_TYPE = 0.25
     PRIMARY_STADIUM = 0.25
     SECONDARY_STADIUM = 0.25
     ISSUEMELDING = 0.25
