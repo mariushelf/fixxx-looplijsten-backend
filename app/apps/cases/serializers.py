@@ -4,12 +4,12 @@ from rest_framework import serializers
 
 
 class CaseEventSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    date_created = serializers.DateTimeField(read_only=True)
-    case = serializers.CharField(required=True)
-    type = serializers.CharField(required=False, read_only=True)
-    emitter_id = serializers.IntegerField(read_only=True)
-    event_values = serializers.JSONField(read_only=True)
+    id = serializers.IntegerField(read_only=True, required=False)
+    date_created = serializers.DateTimeField(read_only=True, required=False)
+    case = serializers.IntegerField(read_only=True, required=False)
+    type = serializers.CharField(read_only=True, required=False)
+    emitter_id = serializers.IntegerField(read_only=True, required=False)
+    event_values = serializers.JSONField(read_only=True, required=False)
 
 
 class CaseSimpleSerializer(serializers.ModelSerializer):
