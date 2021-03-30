@@ -4,6 +4,8 @@ LABEL maintainer="datapunt@amsterdam.nl"
 ENV PYTHONUNBUFFERED 1
 ARG INTEGRALE_AANPAK_ONDERMIJNING_CREDS
 ARG INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN
+ARG ONDERHUUR_MODEL_CREDS
+ARG ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN
 
 # Setup Certificates for ADP/Motiv
 COPY certificates/adp_rootca.crt /usr/local/share/ca-certificates/extras/adp_rootca.crt
@@ -20,6 +22,7 @@ WORKDIR /app
 COPY requirements.txt /app/
 
 RUN mkdir /tmp/integrale_aanpak_ondermijning
+RUN mkdir /tmp/onderhuur_model
 
 ARG INTEGRALE_AANPAK_ONDERMIJNING_VERSION=v1.2.0
 # Clone the private cto-fraude-aanpak library using a deploy token
@@ -28,7 +31,9 @@ RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS" = "x" ] ; then echo INTEGRALE_A
 # Clone the private cto-fraude-aanpak library using a personal access token
 RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then echo INTEGRALE_AANPAK_ONDERMIJNING_CREDS not provided ; else git clone -b ${INTEGRALE_AANPAK_ONDERMIJNING_VERSION} --single-branch https://oauth2:${INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN}@git.data.amsterdam.nl/cto-fraude-aanpak/integrale_aanpak_ondermijning /tmp/integrale_aanpak_ondermijning ; fi
 
-# Install the private cto-fraude-aanpak library
+
+# Clone the private cto-onderhuur library using a deploy token
+RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else git clone -b bwv_branch --single-branch https://${ONDERHUUR_MODEL_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/onderhuur-adreskwaliteit-backend /tmp/onderhuur_model ; fi
 
 RUN apt-get update && apt-get install -y
 RUN pip install --upgrade pip

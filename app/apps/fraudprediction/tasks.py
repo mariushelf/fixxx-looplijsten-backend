@@ -29,3 +29,23 @@ def fraudpredict(self):
         return True
     except Exception as exception:
         self.retry(exc=exception)
+
+
+@shared_task(bind=True, default_retry_delay=DEFAULT_RETRY_DELAY)
+def fraudpredict_onderhuur(self):
+    """
+    Calculate fraudpredictions per type
+    """
+
+    try:
+        logger.info("Started fraudpredict onderhuur task")
+        fraud_predict = FraudPredict(
+            model_name=settings.FRAUD_PREDICTION_MODEL_ONDERHUUR,
+            score_module_path="woonfraude_model.score",
+        )
+        fraud_predict.start()
+        logger.info("Ended fraudpredict onderhuur task")
+
+        return True
+    except Exception as exception:
+        self.retry(exc=exception)
