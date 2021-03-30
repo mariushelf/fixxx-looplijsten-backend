@@ -105,6 +105,9 @@ class PostalCodeRangeSet(models.Model):
         max_length=50,
     )
 
+    class Meta:
+        ordering = ["name"]
+
 
 class PostalCodeRange(models.Model):
     range_start = models.PositiveSmallIntegerField(
