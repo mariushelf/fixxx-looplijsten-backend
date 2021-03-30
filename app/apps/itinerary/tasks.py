@@ -125,6 +125,7 @@ def get_serialized_visit(visit_id):
     team_members = data.pop("team_members")
     authors = [{"email": team_member["user"]["email"]} for team_member in team_members]
     data["authors"] = authors
+    data["notes"] = data.pop("description", None)
 
     # Set the case id
     case = data.pop("case_id")
