@@ -327,6 +327,7 @@ class ItineraryTeamMember(models.Model):
 
     class Meta:
         unique_together = ["user", "itinerary"]
+        ordering = ["id"]
 
     user = models.ForeignKey(
         User,
