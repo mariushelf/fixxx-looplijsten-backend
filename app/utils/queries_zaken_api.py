@@ -11,12 +11,13 @@ from utils.queries_bag_api import get_bag_id
 logger = logging.getLogger(__name__)
 
 
-def get_headers():
+def get_headers(auth_header=None):
     token = settings.SECRET_KEY_TOP_ZAKEN
     headers = {
-        "Authorization": f"{token}",
+        "Authorization": auth_header if f"{auth_header}" else f"{token}",
         "content-type": "application/json",
     }
+    print(headers)
     return headers
 
 

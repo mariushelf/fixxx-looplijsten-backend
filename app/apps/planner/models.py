@@ -208,37 +208,37 @@ class DaySettings(models.Model):
     )
     sia_presedence = models.BooleanField(default=False)
 
-    def fetch_team_schedules(self):
+    def fetch_team_schedules(self, auth_header):
         url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/schedule-types/"
 
         response = requests.get(
             url,
             timeout=5,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         response.raise_for_status()
 
         return response.json()
 
-    def fetch_team_reasons(self):
+    def fetch_team_reasons(self, auth_header):
         url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/reasons/"
 
         response = requests.get(
             url,
             timeout=5,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         response.raise_for_status()
 
         return response.json().get("results", [])
 
-    def fetch_team_state_types(self):
+    def fetch_team_state_types(self, auth_header):
         url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/state-types/"
 
         response = requests.get(
             url,
             timeout=5,
-            headers=get_headers(),
+            headers=get_headers(auth_header),
         )
         response.raise_for_status()
 
