@@ -278,7 +278,6 @@ class DecosJoinRequest:
             }
 
             if settings.DECOS_JOIN_AUTH_BASE64:
-                logger.info("Request to Decos using token")
                 request_params["headers"].update(
                     {
                         "Authorization": f"Basic {settings.DECOS_JOIN_AUTH_BASE64}",
@@ -288,9 +287,6 @@ class DecosJoinRequest:
             logger.info(url)
 
             response = requests.get(url, **request_params)
-
-            logger.info(response.status_code)
-            logger.info(response.text)
 
             return response.json()
         except requests.exceptions.Timeout:

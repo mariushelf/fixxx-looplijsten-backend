@@ -160,7 +160,7 @@ class CaseViewSet(ViewSet):
         """
         Lists all events for this case
         """
-        case = get_object_or_404(Case, id=pk)
+        case = get_object_or_404(Case, case_id=pk)
         serializer = CaseEventSerializer(case.fetch_events())
 
         return Response(serializer.data)
