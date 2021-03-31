@@ -118,13 +118,16 @@ class Itinerary(models.Model):
             return self.get_city_center()
 
         locations = [case.get_location() for case in cases]
-        locations_lng = [location.get("lng") for location in locations]
-        locations_lat = [location.get("lat") for location in locations]
 
-        locations_lng = sum(locations_lng) / len(cases)
-        locations_lat = sum(locations_lat) / len(cases)
+        locs = [
+            [location.get("lng"), location.get("lat")]
+            for location in locations
+            if location.get("lng") and location.get("lat")
+        ]
 
-        return {"lat": locations_lat, "lng": locations_lng}
+        locs_lng = sum([lng[0] for lng in locs]) / len(cases)
+        locs_lat = sum([lat[1] for lat in locs]) / len(cases)
+        return {"lat": locs_lat, "lng": locs_lng}
 
     def get_city_center(self):
         """
