@@ -153,7 +153,7 @@ class DecosJoinConfTest(TestCase):
         MOCK_NO_DATESTRING = "mbk2020-08-26T11::59:35:98"
 
         self.assertEqual(
-            DecosJoinConf().datestring_to_timestamp(MOCK_DATESTRING), 1598400000.0
+            DecosJoinConf().datestring_to_timestamp(MOCK_DATESTRING), 1598392800.0
         )
         self.assertEqual(
             DecosJoinConf().datestring_to_timestamp(MOCK_NO_DATESTRING),
@@ -176,7 +176,7 @@ class DecosJoinConfTest(TestCase):
         self.assertEqual(
             DecosJoinConf().clean_data(MOCK_DATA),
             {
-                "field_datestring": 1598400000.0,
+                "field_datestring": 1598392800.0,
                 "field_no_datestring": MOCK_NO_DATESTRING,
             },
         )
@@ -315,7 +315,7 @@ class DecosJoinConfTest(TestCase):
 
         conf_instance = DecosJoinConf()
 
-        conf_instance.set_default_initial_data({"date6": 1598400000.0})
+        conf_instance.set_default_initial_data({"date6": 1598392800.0})
         conf_instance.add_conf(MOCK_CONF)
 
         conf = conf_instance.get_conf_by_book_key(MOCK_CONF_BOOK_KEY)
