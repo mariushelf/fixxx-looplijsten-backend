@@ -120,10 +120,12 @@ def get_serialized_visit(visit_id):
     serializer = VisitSerializer(visit)
     data = serializer.data
 
-    # Set the authors using emails
+    #  Reset author and team_members due to race condition
     data.pop("author")
-    team_members = data.pop("team_members")
-    authors = [{"email": team_member["user"]["email"]} for team_member in team_members]
+    data.pop("team_members")
+
+    team_members = visit.itinerary_item.itinerary.team_members.all()
+    authors = [{"email": team_member.user.email} for team_member in team_members]
     data["authors"] = authors
     data["notes"] = data.pop("description", None)
 
