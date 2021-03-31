@@ -160,8 +160,9 @@ class CaseViewSet(ViewSet):
         """
         Lists all events for this case
         """
-        case = get_object_or_404(Case, case_id=pk)
-        serializer = CaseEventSerializer(case.fetch_events())
+
+        case = Case.get(case_id=pk, is_top_bwv_case=False)
+        serializer = CaseEventSerializer(case.fetch_events(), many=True)
 
         return Response(serializer.data)
 
@@ -245,22 +246,30 @@ class CaseSearchViewSet(ViewSet):
                 return JsonResponse({"cases": cases})
         else:
             if settings.USE_ZAKEN_MOCK_DATA:
-                return JsonResponse({"cases": get_zaken_case_search_result_list()})
+                result = get_zaken_case_search_result_list()
+            else:
+                url = f"{settings.ZAKEN_API_URL}/cases/search/"
+                queryParams = {}
+                queryParams.update(request.GET)
 
-            url = f"{settings.ZAKEN_API_URL}/cases/search/"
-            queryParams = {}
-            queryParams.update(request.GET)
+                response = requests.get(
+                    url,
+                    params=queryParams,
+                    timeout=0.5,
+                    headers=get_headers(),
+                )
+                response.raise_for_status()
 
-            response = requests.get(
-                url,
-                params=queryParams,
-                timeout=0.5,
-                headers=get_headers(),
+                result = response.json().get("results", [])
+
+            Case.objects.bulk_create(
+                [
+                    Case(case_id=c.get("id"), is_top_bwv_case=False)
+                    for c in result
+                    if c.get("id")
+                ]
             )
-            response.raise_for_status()
-
-            result = response.json()
-            return JsonResponse({"cases": result.get("results", [])})
+            return JsonResponse({"cases": result})
 
 
 bag_id = OpenApiParameter(
