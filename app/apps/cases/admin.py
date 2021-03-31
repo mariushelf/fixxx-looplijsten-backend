@@ -4,7 +4,8 @@ from django.contrib import admin
 
 @admin.register(Case)
 class CaseAdmin(admin.ModelAdmin):
-    list_display = ("case_id",)
+    list_display = ("case_id", "is_top_bwv_case")
+    search_fields = ("case_id",)
 
 
 @admin.register(Project)
