@@ -38,7 +38,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "a9ab2268-652b-4994-8a2c-78c0941912d8",
             "start_date": "2021-02-26",
             "end_date": "nulll",
@@ -85,7 +94,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "83c12cda-230a-4b6b-930d-94027a8dbc73",
             "start_date": "2021-03-01",
             "end_date": "nulll",
@@ -132,7 +150,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "0f138a15-7c16-4de3-8ec4-f97d7fbd694f",
             "start_date": "2021-03-01",
             "end_date": "nulll",
@@ -179,7 +206,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "8c953de5-c26b-41df-9ddc-44291ffa5944",
             "start_date": "2021-03-02",
             "end_date": "nulll",
@@ -226,7 +262,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "c0c63ed1-c1be-448c-acab-212e6659020c",
             "start_date": "2021-03-02",
             "end_date": "nulll",
@@ -273,7 +318,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "efec1d99-c4ea-4c29-acd8-222f26ce5c1f",
             "start_date": "2021-03-03",
             "end_date": "nulll",
@@ -320,7 +374,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "6473a4e4-62c7-4113-a751-5235963ba82e",
             "start_date": "2021-03-03",
             "end_date": "nulll",
@@ -367,7 +430,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "b2917530-1b71-4ad0-8c1a-ec3b3a02b0f6",
             "start_date": "2021-03-10",
             "end_date": "nulll",
@@ -414,7 +486,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "d75a9888-7130-4494-b21c-431dd388f54e",
             "start_date": "2021-03-11",
             "end_date": "nulll",
@@ -461,7 +542,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "b87f7c26-87a9-41bc-a664-12eb3342c6a2",
             "start_date": "2021-03-11",
             "end_date": "nulll",
@@ -508,7 +598,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "cf1b8e36-0c3b-4910-9e7d-94f757b809d4",
             "start_date": "2021-03-11",
             "end_date": "nulll",
@@ -555,7 +654,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 1, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "4f0a8d45-b770-4f6c-9de4-0db3ba7117ba",
             "start_date": "2021-03-11",
             "end_date": "nulll",
@@ -602,7 +710,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "4b451e0d-b1b4-4ba1-9ce1-ac14f481c53c",
             "start_date": "2021-03-11",
             "end_date": "nulll",
@@ -649,7 +766,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "f06f7ca8-ac04-424a-acd3-da621ef405b1",
             "start_date": "2021-03-15",
             "end_date": "nulll",
@@ -696,7 +822,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "d0040a2d-05bd-455a-94ab-adeae9825711",
             "start_date": "2021-03-16",
             "end_date": "nulll",
@@ -743,7 +878,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "8e0dfaff-8bb0-413e-a191-865bdaf63495",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -790,7 +934,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "db9156cf-77f6-4829-9728-68ec4174e11e",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -837,7 +990,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "d09aac2b-4c84-4dfb-b8db-ca2fda621066",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -884,7 +1046,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "f84c34df-7c57-4d22-ac1c-126f07084682",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -931,7 +1102,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "2b1da1c5-5af5-4adb-8b09-37b04cfb2b52",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -978,7 +1158,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "3e9c3fb5-54cc-4731-a4b9-b41da15d4134",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -1025,7 +1214,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "32cb36ad-abd7-4989-bba9-ec4266713d22",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -1072,7 +1270,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "02aba042-1fe6-4deb-8941-ae2b7615493a",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -1119,7 +1326,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "60ddc874-0985-4b30-b5c0-8ea4022e29c0",
             "start_date": "2021-03-18",
             "end_date": "nulll",
@@ -1166,7 +1382,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "495c9ea7-b246-434b-b41a-d1b610d9057d",
             "start_date": "2021-03-18",
             "end_date": None,
@@ -1213,7 +1438,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "65bbc677-57f8-44e0-a0b8-7ab93e494f6b",
             "start_date": "2021-03-18",
             "end_date": None,
@@ -1260,7 +1494,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "2f30c3d3-923f-487c-8834-c1023a097d3c",
             "start_date": "2021-03-18",
             "end_date": None,
@@ -1307,7 +1550,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "4d51cbd5-b4a8-4bce-9d94-a4564a4b8021",
             "start_date": "2021-03-18",
             "end_date": None,
@@ -1354,7 +1606,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "7c0d7e11-563a-4601-89b2-8cb910832c25",
             "start_date": "2021-03-22",
             "end_date": None,
@@ -1437,7 +1698,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "f5396d51-14bb-4241-a7a7-a9579e05dd74",
             "start_date": "2021-03-22",
             "end_date": None,
@@ -1520,7 +1790,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "c4fc9b58-7c97-4668-816b-99daae75658c",
             "start_date": "2021-03-23",
             "end_date": None,
@@ -1585,7 +1864,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "abae018a-74e0-4ec9-b6ef-abd0f1ecd370",
             "start_date": "2021-03-23",
             "end_date": None,
@@ -1632,7 +1920,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "b7b32e65-aaba-4661-934e-521fdb8b132e",
             "start_date": "2021-03-24",
             "end_date": None,
@@ -1679,7 +1976,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "a251f329-02b8-4c97-adca-532233fc8223",
             "start_date": "2021-03-25",
             "end_date": None,
@@ -1726,7 +2032,16 @@ def get_zaken_case_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "e087e7f3-7924-493c-a48d-e6a903348fe6",
             "start_date": "2021-03-25",
             "end_date": None,
@@ -1796,7 +2111,16 @@ def get_zaken_case_search_result_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "abae018a-74e0-4ec9-b6ef-abd0f1ecd370",
             "start_date": "2021-03-23",
             "end_date": None,
@@ -1843,7 +2167,16 @@ def get_zaken_case_search_result_list():
             ],
             "team": {"id": 58, "name": "Vakantieverhuur"},
             "reason": {"id": 30, "name": "Melding", "team": 58},
-            "schedules": [],
+            "schedules": [
+                {
+                    "id": 2,
+                    "schedule_type": {"id": 2, "name": "Huisbezoek"},
+                    "week_segment": {"id": 1, "name": "Weekend"},
+                    "day_segment": {"id": 1, "name": "Avond"},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "case": 2,
+                }
+            ],
             "identification": "b7b32e65-aaba-4661-934e-521fdb8b132e",
             "start_date": "2021-03-24",
             "end_date": None,
