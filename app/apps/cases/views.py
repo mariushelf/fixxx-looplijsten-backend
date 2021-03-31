@@ -262,13 +262,9 @@ class CaseSearchViewSet(ViewSet):
 
                 result = response.json().get("results", [])
 
-            Case.objects.bulk_create(
-                [
-                    Case(case_id=c.get("id"), is_top_bwv_case=False)
-                    for c in result
-                    if c.get("id")
-                ]
-            )
+            for case in result:
+                Case.get(case_id=case.get("id"), is_top_bwv_case=False)
+
             return JsonResponse({"cases": result})
 
 
