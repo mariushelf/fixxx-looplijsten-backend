@@ -89,10 +89,9 @@ def get_eligible_cases_v2(generator):
     cases = filter_out_incompatible_cases(cases)
     logger.info("after filter_out_incompatible_cases")
     logger.info(len(cases))
-    # Enable line below if zaken api provides schedules data
-    # cases = filter_schedules(cases, team_schedules)
-    # logger.info("after filter_schedules")
-    # logger.info(len(cases))
+    cases = filter_schedules(cases, team_schedules)
+    logger.info("after filter_schedules")
+    logger.info(len(cases))
     cases = filter_cases_with_postal_code(cases, generator.postal_code_ranges)
     logger.info("after filter_cases_with_postal_code")
     logger.info(len(cases))
