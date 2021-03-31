@@ -33,13 +33,13 @@ RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then 
 
 
 # Clone the private cto-onderhuur library using a deploy token
-RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else git clone -b bwv_branch --single-branch https://${ONDERHUUR_MODEL_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/onderhuur-adreskwaliteit-backend /tmp/onderhuur_model ; fi
+RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else git clone -b bwv_branch --single-branch https://gitlab+deploy-token-176:${ONDERHUUR_MODEL_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/onderhuur-adreskwaliteit-backend /tmp/onderhuur_model ; fi
 
 RUN apt-get update && apt-get install -y
 RUN pip install --upgrade pip
 RUN pip install uwsgi
 RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then pip install --no-cache-dir -r requirements.txt ;  else pip install --no-cache-dir -r requirements.txt /tmp/integrale_aanpak_ondermijning ; fi
-# RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir /tmp/onderhuur_model
 
 RUN pip install -I shap==0.38.1
 

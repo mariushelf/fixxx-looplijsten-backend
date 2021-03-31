@@ -4,6 +4,7 @@ import importlib
 import logging
 import math
 import os
+from enum import Flag, auto, unique
 from unittest.mock import Mock
 
 from apps.cases.models import Project, Stadium
@@ -36,7 +37,7 @@ class FraudPredict:
 
     def start(self):
         LOGGER.info("Started scoring Logger")
-        dbconfig = self.get_all_database_configs(DATABASE_CONFIG)
+        config = {"databases": self.get_all_database_configs(DATABASE_CONFIG)}
         LOGGER.info("Get all db configs")
         case_ids = self.get_case_ids_to_score()
         LOGGER.info("get case ids to score")
@@ -48,17 +49,36 @@ class FraudPredict:
 
         try:
             LOGGER.info("Importing scoring library")
+
             score_module = importlib.import_module(self.score_module_path)
         except ModuleNotFoundError as e:
             LOGGER.error("Could not import library. Scoring failed. {}".format(e))
             return
 
         try:
-            scorer = score_module.Scorer(cache_dir=cache_dir, dbconfig=dbconfig)
-            LOGGER.info("init scoring logger")
-            results = scorer.score(
-                zaak_ids=case_ids, zaken_con=connections[settings.BWV_DATABASE_NAME]
+            print(len(case_ids))
+            from onderhuur_prediction_model.helper_functions import (
+                _strings2flags,
+                load_config,
             )
+
+            config.update(
+                {
+                    "flags": _strings2flags(
+                        [
+                            "ADRES",
+                            "STADIA",
+                            "WVS",
+                            "BAG",
+                            "BWV_PERSONEN_HIST",
+                            "BWV_PERSONEN",
+                        ]
+                    )
+                }
+            )
+            scorer = score_module.Scorer(cache_dir=cache_dir, config=config)
+            LOGGER.info("init scoring logger")
+            results = scorer.score(zaak_ids=case_ids)
             LOGGER.info("retrieved results")
             results = results.to_dict(orient="index")
             LOGGER.info("results to dict")
