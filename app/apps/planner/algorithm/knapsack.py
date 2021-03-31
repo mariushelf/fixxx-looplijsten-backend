@@ -3,6 +3,7 @@ import multiprocessing
 
 import requests
 from apps.cases.mock import get_zaken_case_list
+from apps.cases.models import Case
 from apps.fraudprediction.utils import get_fraud_predictions
 from apps.planner.algorithm.base import (
     ItineraryGenerateAlgorithm,
@@ -250,9 +251,11 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
     def generate(self):
         fraud_predictions = get_fraud_predictions()
-
         if self.start_case_id:
-            case = get_case(self.start_case_id)
+            case = Case.get(
+                case_id=self.start_case_id,
+                is_top_bwv_case=not self.settings.day_settings.team_settings.use_zaken_backend,
+            ).__get_case__(self.start_case_id)
             case["fraud_prediction"] = fraud_predictions.get(self.start_case_id, None)
 
             suggestions = super().generate(case)
