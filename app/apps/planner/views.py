@@ -61,9 +61,10 @@ class DaySettingsViewSet(ModelViewSet):
                 reason_options = get_team_reasons()
                 state_type_options = get_team_state_types()
             else:
-                team_schedule_options = instance.fetch_team_schedules()
-                reason_options = instance.fetch_team_reasons()
-                state_type_options = instance.fetch_team_state_types()
+                auth_header = request.headers.get("Authorization")
+                state_type_options = instance.fetch_team_state_types(auth_header)
+                reason_options = instance.fetch_team_reasons(auth_header)
+                team_schedule_options = instance.fetch_team_schedules(auth_header)
             data.update(
                 {
                     "team_schedule_options": team_schedule_options,
