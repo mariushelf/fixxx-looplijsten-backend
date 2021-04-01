@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 def get_headers(auth_header=None):
     token = settings.SECRET_KEY_TOP_ZAKEN
     headers = {
-        "Authorization": auth_header if f"{auth_header}" else f"{token}",
+        "Authorization": f"{auth_header}" if auth_header else f"{token}",
         "content-type": "application/json",
     }
     print(headers)
