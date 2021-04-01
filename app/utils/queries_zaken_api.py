@@ -17,7 +17,6 @@ def get_headers(auth_header=None):
         "Authorization": f"{auth_header}" if auth_header else f"{token}",
         "content-type": "application/json",
     }
-    print(headers)
     return headers
 
 
