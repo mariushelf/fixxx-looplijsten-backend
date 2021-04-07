@@ -33,3 +33,9 @@ ITINERARY_NOT_ENOUGH_CASES = {
     "message": "Er zijn vandaag niet genoeg zaken die voldoen aan de ingestelde criteria. Neem contact op met je dagcoördinator of handhaver.",
     "title": "Helaas, geen looplijst mogelijk",
 }
+
+DAY_SETTING_IN_USE = {
+    "severity": API_EXCEPTION_SEVERITY_INFO,
+    "message": "De dag instelling is in gebruik. Als morgen deze instelling niet wordt gebruikt kun je hem alsnog verwijderen.",
+    "title": "Verwijderen niet mogelijk",
+}

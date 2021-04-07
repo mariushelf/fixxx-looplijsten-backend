@@ -23,6 +23,7 @@ class DaySettingsInline(admin.TabularInline):
                     "priorities",
                     "reasons",
                     "state_types",
+                    "week_days",
                     "week_day",
                     "start_time",
                 )

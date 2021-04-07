@@ -9,6 +9,7 @@ from settings.const import POSTAL_CODE_RANGES, WEEK_DAYS_CHOICES
 from utils.queries_zaken_api import get_headers
 
 from .const import SCORING_WEIGHTS
+from .mock import get_team_reasons, get_team_schedules, get_team_state_types
 
 WEIGHTS_VALIDATORS = [MinValueValidator(0), MaxValueValidator(1)]
 
@@ -88,6 +89,51 @@ class TeamSettings(models.Model):
         related_name="team_settings_list",
     )
 
+    def fetch_team_schedules(self, auth_header=None):
+        if settings.USE_ZAKEN_MOCK_DATA:
+            return get_team_schedules()
+
+        url = f"{settings.ZAKEN_API_URL}/teams/{self.zaken_team_name}/schedule-types/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json()
+
+    def fetch_team_reasons(self, auth_header=None):
+        if settings.USE_ZAKEN_MOCK_DATA:
+            return get_team_reasons()
+
+        url = f"{settings.ZAKEN_API_URL}/teams/{self.zaken_team_name}/reasons/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
+
+    def fetch_team_state_types(self, auth_header=None):
+        if settings.USE_ZAKEN_MOCK_DATA:
+            return get_team_state_types()
+
+        url = f"{settings.ZAKEN_API_URL}/teams/{self.zaken_team_name}/state-types/"
+
+        response = requests.get(
+            url,
+            timeout=5,
+            headers=get_headers(auth_header),
+        )
+        response.raise_for_status()
+
+        return response.json().get("results", [])
+
     class Meta:
         verbose_name_plural = "Team settings"
         ordering = ["name"]
@@ -137,6 +183,11 @@ class DaySettings(models.Model):
     )
     week_day = models.PositiveSmallIntegerField(
         choices=WEEK_DAYS_CHOICES,
+        blank=True,
+        null=True,
+    )
+    week_days = ArrayField(
+        base_field=models.PositiveSmallIntegerField(),
         blank=True,
         null=True,
     )

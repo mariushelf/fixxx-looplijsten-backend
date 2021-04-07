@@ -145,6 +145,7 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamSettings
         fields = (
+            "id",
             "name",
             "use_zaken_backend",
             "zaken_team_name",
@@ -162,6 +163,7 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
 class DaySettingsCompactSerializer(serializers.ModelSerializer):
     team_settings = TeamSettingsCompactSerializer(read_only=True)
     week_day = serializers.IntegerField(read_only=True)
+    week_days = serializers.ListField(child=serializers.IntegerField(), read_only=True)
 
     class Meta:
         model = DaySettings
@@ -169,39 +171,50 @@ class DaySettingsCompactSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "week_day",
+            "week_days",
             "team_settings",
         )
 
 
-class TeamSchedules(serializers.Serializer):
+class TeamScheduleTypesSerializer(serializers.Serializer):
     actions = serializers.ListField(read_only=True)
     day_segments = serializers.ListField(read_only=True)
     priorities = serializers.ListField(read_only=True)
     week_segments = serializers.ListField(read_only=True)
 
 
-class TeamReasons(serializers.Serializer):
+class CaseReasonSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(read_only=True)
     team = serializers.IntegerField(read_only=True)
 
 
-class TeamStateTypes(TeamReasons):
+class CaseStateTypeSerializer(CaseReasonSerializer):
     pass
 
 
+class TeamSettingsRelatedField(serializers.RelatedField):
+    def to_internal_value(self, data):
+        return self.get_queryset().get(id=data)
+
+    def to_representation(self, value):
+        return TeamSettingsCompactSerializer(value).data
+
+
 class DaySettingsSerializer(serializers.ModelSerializer):
-    projects = StringRelatedToIdField(many=True, queryset=Project.objects.all())
+    team_settings = TeamSettingsCompactSerializer(read_only=True)
+    projects = StringRelatedToIdField(
+        many=True, queryset=Project.objects.all(), required=False
+    )
     primary_stadium = StringRelatedToIdField(
         queryset=Stadium.objects.all(), allow_null=True, required=False
     )
-    secondary_stadia = StringRelatedToIdField(many=True, queryset=Stadium.objects.all())
-    exclude_stadia = StringRelatedToIdField(many=True, queryset=Stadium.objects.all())
-    team_settings = TeamSettingsCompactSerializer(read_only=True)
-    week_day = serializers.IntegerField(read_only=True, allow_null=True)
-    team_schedule_options = TeamSchedules(read_only=True, allow_null=True)
-    reason_options = TeamReasons(read_only=True, many=True)
-    state_type_options = TeamStateTypes(read_only=True, many=True)
+    secondary_stadia = StringRelatedToIdField(
+        many=True, queryset=Stadium.objects.all(), required=False
+    )
+    exclude_stadia = StringRelatedToIdField(
+        many=True, queryset=Stadium.objects.all(), required=False
+    )
 
     class Meta:
         model = DaySettings
@@ -209,6 +222,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "week_day",
+            "week_days",
             "opening_date",
             "postal_code_ranges",
             "postal_code_ranges_presets",
@@ -224,41 +238,69 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "exclude_stadia",
             "team_settings",
             "sia_presedence",
-            "team_schedule_options",
-            "reason_options",
-            "state_type_options",
         )
 
     def validate(self, data):
         data = super().validate(data)
+        team_settings = (
+            self.instance.team_settings if self.instance else data.get("team_settings")
+        )
+
         # clean projects based on real team settings choices
         data["projects"] = [
             project
-            for project in data["projects"]
-            if project in self.instance.team_settings.project_choices.all()
+            for project in data.get("projects", [])
+            if project in team_settings.project_choices.all()
         ]
 
         # clean all stdium options based on real team settings choices
         data["primary_stadium"] = (
             data.get("primary_stadium")
-            if data.get("primary_stadium")
-            in self.instance.team_settings.stadia_choices.all()
+            if data.get("primary_stadium") in team_settings.stadia_choices.all()
             else None
         )
 
         data["secondary_stadia"] = [
             stadium
-            for stadium in data["secondary_stadia"]
-            if stadium in self.instance.team_settings.stadia_choices.all()
+            for stadium in data.get("secondary_stadia", [])
+            if stadium in team_settings.stadia_choices.all()
         ]
         data["exclude_stadia"] = [
             stadium
-            for stadium in data["exclude_stadia"]
-            if stadium in self.instance.team_settings.stadia_choices.all()
+            for stadium in data.get("exclude_stadia", [])
+            if stadium in team_settings.stadia_choices.all()
             and stadium not in data.get("secondary_stadia", [])
             and stadium != data.get("primary_stadium", [])
         ]
         return data
+
+
+class NewDaySettingsSerializer(DaySettingsSerializer):
+    team_settings = TeamSettingsRelatedField(queryset=TeamSettings.objects.all())
+
+    class Meta:
+        model = DaySettings
+        fields = (
+            "id",
+            "name",
+            "week_day",
+            "week_days",
+            "opening_date",
+            "postal_code_ranges",
+            "postal_code_ranges_presets",
+            "length_of_list",
+            "day_segments",
+            "week_segments",
+            "priorities",
+            "reasons",
+            "state_types",
+            "projects",
+            "primary_stadium",
+            "secondary_stadia",
+            "exclude_stadia",
+            "team_settings",
+            "sia_presedence",
+        )
 
 
 class TeamSettingsSerializer(serializers.ModelSerializer):
@@ -285,4 +327,5 @@ class TeamSettingsSerializer(serializers.ModelSerializer):
             "stadia_choices",
             "marked_stadia",
             "day_settings_list",
+            "fraud_prediction_model",
         )
