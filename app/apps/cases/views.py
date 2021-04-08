@@ -179,7 +179,7 @@ class CaseSearchViewSet(ViewSet):
         cases = cases.copy()
 
         for case in cases:
-            case_id = case.get("id")
+            case_id = str(case.get("id"))
             case["fraud_prediction"] = get_fraud_prediction(case_id)
 
         return cases
@@ -194,7 +194,7 @@ class CaseSearchViewSet(ViewSet):
 
         for case in cases:
             # Map the objects so that they're easily accessible through the case_id
-            case_id = case.get("id")
+            case_id = str(case.get("id"))
             mapped_cases[case_id] = case
             # Add a teams arrar to the case object as well
             case["teams"] = []
@@ -246,7 +246,7 @@ class CaseSearchViewSet(ViewSet):
                 return JsonResponse({"cases": cases})
         else:
             if settings.USE_ZAKEN_MOCK_DATA:
-                result = get_zaken_case_search_result_list()
+                result = get_zaken_case_list()
             else:
                 url = f"{settings.ZAKEN_API_URL}/cases/search/"
                 queryParams = {}
@@ -265,7 +265,9 @@ class CaseSearchViewSet(ViewSet):
             for case in result:
                 Case.get(case_id=case.get("id"), is_top_bwv_case=False)
 
-            return JsonResponse({"cases": result})
+            cases = self.__add_fraud_prediction__(result)
+            cases = self.__add_teams__(cases, datetime.now())
+            return JsonResponse({"cases": cases})
 
 
 bag_id = OpenApiParameter(
