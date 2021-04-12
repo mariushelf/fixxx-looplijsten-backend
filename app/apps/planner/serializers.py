@@ -162,16 +162,16 @@ class TeamSettingsCompactSerializer(serializers.ModelSerializer):
 
 class DaySettingsCompactSerializer(serializers.ModelSerializer):
     team_settings = TeamSettingsCompactSerializer(read_only=True)
-    week_day = serializers.IntegerField(read_only=True)
     week_days = serializers.ListField(child=serializers.IntegerField(), read_only=True)
+    used_today_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = DaySettings
         fields = (
             "id",
             "name",
-            "week_day",
             "week_days",
+            "used_today_count",
             "team_settings",
         )
 
@@ -215,6 +215,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
     exclude_stadia = StringRelatedToIdField(
         many=True, queryset=Stadium.objects.all(), required=False
     )
+    used_today_count = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = DaySettings
@@ -238,6 +239,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "exclude_stadia",
             "team_settings",
             "sia_presedence",
+            "used_today_count",
         )
 
     def validate(self, data):

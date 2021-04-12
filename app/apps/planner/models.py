@@ -1,3 +1,5 @@
+import datetime
+
 import requests
 from apps.cases.models import Project, Stadium, StadiumLabel
 from apps.visits.models import Observation, Situation, SuggestNextVisit
@@ -297,6 +299,16 @@ class DaySettings(models.Model):
         response.raise_for_status()
 
         return response.json().get("results", [])
+
+    @property
+    def used_today_count(self):
+        from apps.itinerary.models import Itinerary
+
+        date = datetime.datetime.now()
+        return Itinerary.objects.filter(
+            created_at=date,
+            settings__day_settings=self,
+        ).count()
 
     class Meta:
         ordering = ("week_day", "start_time")
