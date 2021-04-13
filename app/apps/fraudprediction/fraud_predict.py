@@ -18,14 +18,9 @@ from utils.queries_planner import get_cases_from_bwv
 LOGGER = logging.getLogger(__name__)
 
 DATABASE_CONFIG = {
-    "adres": {"table_name": "import_adres"},
-    "bwv_adres_periodes": {},
-    "bbga": {},
-    "hotline": {},
-    "personen": {},
-    "personen_hist": {},
-    "stadia": {"table_name": "import_stadia"},
-    "zaken": {"table_name": "import_wvs"},
+    "bwv_adres": {"table_name": "import_adres"},
+    "bwv_stadia": {"table_name": "import_stadia"},
+    "bwv_wvs": {"table_name": "import_wvs"},
 }
 SCORE_STARTING_FROM_DATE = STARTING_FROM_DATE
 
@@ -44,7 +39,7 @@ class FraudPredict:
         cache_dir = settings.FRAUD_PREDICTION_CACHE_DIR
         self.clear_cache_dir(cache_dir)
         LOGGER.info("Cleared cache")
-
+        print(len(case_ids))
         # Scoring library is optional for local development. This makes sure it's available.
 
         try:
@@ -56,11 +51,13 @@ class FraudPredict:
             return
 
         try:
-            print(len(case_ids))
+
             from onderhuur_prediction_model.helper_functions import (
                 _strings2flags,
                 load_config,
             )
+
+            LOGGER.info("Update config with flags")
 
             config.update(
                 {
@@ -70,12 +67,11 @@ class FraudPredict:
                             "STADIA",
                             "WVS",
                             "BAG",
-                            "BWV_PERSONEN_HIST",
-                            "BWV_PERSONEN",
                         ]
                     )
                 }
             )
+            print(config)
             scorer = score_module.Scorer(cache_dir=cache_dir, config=config)
             LOGGER.info("init scoring logger")
             results = scorer.score(zaak_ids=case_ids)
@@ -110,7 +106,7 @@ class FraudPredict:
         config = settings.DATABASES[settings.BWV_DATABASE_NAME]
         config = {
             "host": config.get("HOST"),
-            "dbname": config.get("NAME"),
+            "db": config.get("NAME"),
             "user": config.get("USER"),
             "password": config.get("PASSWORD"),
         }
