@@ -63,12 +63,16 @@ class TeamSettingsViewSet(ModelViewSet):
     )
     def reasons(self, request, pk):
         team_settings = self.get_object()
-        serializer = CaseReasonSerializer(
-            team_settings.fetch_team_reasons(request.headers.get("Authorization")),
-            many=True,
-        )
+        data = []
 
-        return Response(serializer.data)
+        if team_settings.use_zaken_backend:
+            serializer = CaseReasonSerializer(
+                team_settings.fetch_team_reasons(request.headers.get("Authorization")),
+                many=True,
+            )
+            data = serializer.data
+
+        return Response(data)
 
     @extend_schema(
         description="Gets the Scheduling Types associated with the given team",
@@ -81,11 +85,15 @@ class TeamSettingsViewSet(ModelViewSet):
     )
     def schedule_types(self, request, pk):
         team_settings = self.get_object()
-        serializer = TeamScheduleTypesSerializer(
-            team_settings.fetch_team_schedules(request.headers.get("Authorization"))
-        )
+        data = {}
 
-        return Response(serializer.data)
+        if team_settings.use_zaken_backend:
+            serializer = TeamScheduleTypesSerializer(
+                team_settings.fetch_team_schedules(request.headers.get("Authorization"))
+            )
+            data = serializer.data
+
+        return Response(data)
 
     @extend_schema(
         description="Gets the CaseStateTypes associated with the given team",
@@ -98,12 +106,18 @@ class TeamSettingsViewSet(ModelViewSet):
     )
     def state_types(self, request, pk):
         team_settings = self.get_object()
-        serializer = CaseStateTypeSerializer(
-            team_settings.fetch_team_state_types(request.headers.get("Authorization")),
-            many=True,
-        )
+        data = []
 
-        return Response(serializer.data)
+        if team_settings.use_zaken_backend:
+            serializer = CaseStateTypeSerializer(
+                team_settings.fetch_team_state_types(
+                    request.headers.get("Authorization")
+                ),
+                many=True,
+            )
+            data = serializer.data
+
+        return Response(data)
 
 
 class DaySettingsViewSet(ModelViewSet):
