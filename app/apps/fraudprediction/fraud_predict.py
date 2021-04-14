@@ -39,7 +39,6 @@ class FraudPredict:
         cache_dir = settings.FRAUD_PREDICTION_CACHE_DIR
         self.clear_cache_dir(cache_dir)
         LOGGER.info("Cleared cache")
-        print(len(case_ids))
         # Scoring library is optional for local development. This makes sure it's available.
 
         try:
@@ -139,7 +138,7 @@ class FraudPredict:
             self.get_projects_to_score(),
             self.get_stadia_to_score(),
         )
-        case_ids = [case.get("id") for case in cases]
+        case_ids = list(set([case.get("id") for case in cases]))
         return case_ids
 
     def clear_cache_dir(self, dir):
@@ -171,10 +170,10 @@ class FraudPredict:
         return dictionary
 
     def create_or_update_prediction(self, case_id, result):
-        fraud_probability = result.get("prob_woonfraude")
-        fraud_prediction = result.get("prediction_woonfraude")
-        business_rules = result.get("business_rules")
-        shap_values = result.get("shap_values")
+        fraud_probability = result.get("score", 0)
+        fraud_prediction = result.get("prediction_woonfraude", False)
+        business_rules = result.get("business_rules", {})
+        shap_values = result.get("shap_values", {})
 
         # Cleans the dictionary which might contains NaN (due to a possible bug)
         business_rules = self.clean_dictionary(business_rules)
@@ -183,6 +182,7 @@ class FraudPredict:
         FraudPrediction.objects.update_or_create(
             case_id=case_id,
             defaults={
+                "fraud_prediction_model": self.model_name,
                 "fraud_probability": fraud_probability,
                 "fraud_prediction": fraud_prediction,
                 "business_rules": business_rules,

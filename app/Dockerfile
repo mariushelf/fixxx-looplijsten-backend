@@ -33,7 +33,7 @@ RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then 
 
 
 # Clone the private cto-onderhuur library using a deploy token
-RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else git clone -b bwv_branch --single-branch https://gitlab+deploy-token-176:${ONDERHUUR_MODEL_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/onderhuur-adreskwaliteit-backend /tmp/onderhuur_model ; fi
+RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else git clone -b bwv_branch --single-branch https://${ONDERHUUR_MODEL_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/onderhuur-adreskwaliteit-backend /tmp/onderhuur_model ; fi
 
 RUN apt-get update && apt-get install -y
 RUN pip install --upgrade pip

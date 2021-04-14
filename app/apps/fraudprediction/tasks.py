@@ -46,6 +46,7 @@ def fraudpredict_onderhuur(self):
         fraud_predict.start()
         logger.info("Ended fraudpredict onderhuur task")
 
-        return True
     except Exception as exception:
         self.retry(exc=exception)
+
+    return True
