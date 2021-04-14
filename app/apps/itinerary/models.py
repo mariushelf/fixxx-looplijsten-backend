@@ -49,7 +49,7 @@ class Itinerary(models.Model):
                 not self.settings.day_settings.team_settings.use_zaken_backend
             )
         except Exception:
-            raise ValueError("Settings for this itinerary are missing")
+            pass
 
         if is_top_bwv_case is not (str(case_id).find("_") >= 0):
             raise ValueError("This case can not be used for this itinerary")
