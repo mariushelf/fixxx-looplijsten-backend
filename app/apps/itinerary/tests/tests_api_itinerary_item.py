@@ -32,7 +32,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
         itinerary = Itinerary.objects.create()
         self.assertEquals([], list(itinerary.items.all()))
 
-        CASE_ID = "FOO CASE ID"
+        CASE_ID = "FOO_CASE_ID"
 
         data = {"itinerary": itinerary.id, "id": CASE_ID}
 
@@ -52,7 +52,7 @@ class ItineraryItemViewsCreateTest(APITestCase):
         itinerary = Itinerary.objects.create()
         self.assertEquals([], list(itinerary.items.all()))
 
-        CASE_ID = "FOO CASE ID"
+        CASE_ID = "FOO_CASE_ID"
         POSITION = 1.234567
 
         data = {"itinerary": itinerary.id, "id": CASE_ID, "position": POSITION}
