@@ -62,7 +62,7 @@ pipeline {
           def image = docker.build("${DOCKER_IMAGE_URL}:${env.COMMIT_HASH}",
             "--no-cache " +
             "--shm-size 1G " +
-            "--build-arg INTEGRALE_AANPAK_ONDERMIJNING_CREDS=gitlab+deploy-token-90:${INTEGRALE_AANPAK_ONDERMIJNING_KEY}" +
+            "--build-arg INTEGRALE_AANPAK_ONDERMIJNING_CREDS=gitlab+deploy-token-90:${INTEGRALE_AANPAK_ONDERMIJNING_KEY} " +
             "--build-arg ONDERHUUR_MODEL_CREDS=gitlab+deploy-token-176:${ONDERHUUR_MODEL_KEY}" +
             " ./app")
           image.push()
