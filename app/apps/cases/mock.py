@@ -100,7 +100,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.67},
                     "case": 2,
                 }
             ],
@@ -156,7 +156,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.12},
                     "case": 2,
                 }
             ],
@@ -212,7 +212,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.49},
                     "case": 2,
                 }
             ],
@@ -268,7 +268,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.33},
                     "case": 2,
                 }
             ],
@@ -324,7 +324,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.72},
                     "case": 2,
                 }
             ],
@@ -380,7 +380,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.01},
                     "case": 2,
                 }
             ],
@@ -436,7 +436,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.23},
                     "case": 2,
                 }
             ],
@@ -492,7 +492,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.64},
                     "case": 2,
                 }
             ],
@@ -548,7 +548,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.47},
                     "case": 2,
                 }
             ],
@@ -604,7 +604,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.74},
                     "case": 2,
                 }
             ],
@@ -660,7 +660,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 1, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.63},
                     "case": 2,
                 }
             ],
@@ -716,7 +716,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.86},
                     "case": 2,
                 }
             ],
@@ -772,7 +772,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.23},
                     "case": 2,
                 }
             ],
@@ -828,7 +828,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.25},
                     "case": 2,
                 }
             ],
@@ -884,7 +884,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.24},
                     "case": 2,
                 }
             ],
@@ -940,7 +940,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.74},
                     "case": 2,
                 }
             ],
@@ -996,7 +996,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.63},
                     "case": 2,
                 }
             ],
@@ -1052,7 +1052,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.74},
                     "case": 2,
                 }
             ],
@@ -1108,7 +1108,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.32},
                     "case": 2,
                 }
             ],
@@ -1164,7 +1164,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.43},
                     "case": 2,
                 }
             ],
@@ -1220,7 +1220,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.32},
                     "case": 2,
                 }
             ],
@@ -1276,7 +1276,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.68},
                     "case": 2,
                 }
             ],
@@ -1332,7 +1332,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.43},
                     "case": 2,
                 }
             ],
@@ -1388,7 +1388,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.29},
                     "case": 2,
                 }
             ],
@@ -1444,7 +1444,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.32},
                     "case": 2,
                 }
             ],
@@ -1500,7 +1500,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.93},
                     "case": 2,
                 }
             ],
@@ -1556,7 +1556,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.34},
                     "case": 2,
                 }
             ],
@@ -1612,7 +1612,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.13},
                     "case": 2,
                 }
             ],
@@ -1704,7 +1704,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.62},
                     "case": 2,
                 }
             ],
@@ -1796,7 +1796,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.75},
                     "case": 2,
                 }
             ],
@@ -1870,7 +1870,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.45},
                     "case": 2,
                 }
             ],
@@ -1926,7 +1926,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.85},
                     "case": 2,
                 }
             ],
@@ -1982,7 +1982,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.54},
                     "case": 2,
                 }
             ],
@@ -2038,7 +2038,7 @@ def get_zaken_case_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.33},
                     "case": 2,
                 }
             ],
@@ -2117,7 +2117,7 @@ def get_zaken_case_search_result_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 2, "name": "Normaal", "weight": 0.20},
                     "case": 2,
                 }
             ],
@@ -2173,7 +2173,7 @@ def get_zaken_case_search_result_list():
                     "schedule_type": {"id": 2, "name": "Huisbezoek"},
                     "week_segment": {"id": 1, "name": "Weekend"},
                     "day_segment": {"id": 1, "name": "Avond"},
-                    "priority": {"id": 2, "name": "Normaal", "weight": 0},
+                    "priority": {"id": 1, "name": "Hoog", "weight": 0.87},
                     "case": 2,
                 }
             ],
