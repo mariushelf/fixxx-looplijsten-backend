@@ -3,6 +3,7 @@ from apps.fraudprediction import router as fraudprediction_router
 from apps.health.views import health_bwv, health_default
 from apps.itinerary import router as itinerary_router
 from apps.permits import router as permits_router
+from apps.permits.views import DecosAPISearch
 from apps.planner import router as planner_router
 from apps.planner.views import dumpdata as planner_dumpdata
 from apps.planner.views_sandbox import AlgorithmListView, AlgorithmView, BWVTablesView
@@ -43,6 +44,7 @@ urlpatterns = [
     # Admin environment
     path("admin/", admin.site.urls),
     path("admin/planner/dumpdata", planner_dumpdata, name="planner-dumpdata"),
+    path("admin/decos-api-search/", DecosAPISearch.as_view(), name="decos_api_search"),
     # Algorithm sandbox environment
     path("admin/bwv-structure", BWVTablesView.as_view(), name="bwv-structure"),
     path("algorithm/", AlgorithmListView.as_view(), name="algorithm-list"),

@@ -284,6 +284,8 @@ class DecosJoinRequest:
                     }
                 )
 
+            logger.info(url)
+
             response = requests.get(url, **request_params)
 
             return response.json()
