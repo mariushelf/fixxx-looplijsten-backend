@@ -146,9 +146,17 @@ class CaseViewSetTest(APITestCase):
         datetime_future = datetime.datetime.now() + datetime.timedelta(hours=1)
 
         case = baker.make(Case, case_id="test")
+
         itinerary_item = baker.make(ItineraryItem, case=case)
-        baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_now)
-        baker.make(Visit, itinerary_item=itinerary_item, start_time=datetime_future)
+        baker.make(
+            Visit, itinerary_item=itinerary_item, start_time=datetime_now, case_id=case
+        )
+        baker.make(
+            Visit,
+            itinerary_item=itinerary_item,
+            start_time=datetime_future,
+            case_id=case,
+        )
 
         url = reverse("v1:case-visits", kwargs={"pk": case.case_id})
         client = get_authenticated_client()
@@ -163,10 +171,13 @@ class CaseViewSetTest(APITestCase):
         case = baker.make(Case, case_id="test")
         itinerary_item = baker.make(ItineraryItem, case=case)
         visit_1 = baker.make(
-            Visit, itinerary_item=itinerary_item, start_time=datetime_now
+            Visit, itinerary_item=itinerary_item, start_time=datetime_now, case_id=case
         )
         visit_2 = baker.make(
-            Visit, itinerary_item=itinerary_item, start_time=datetime_future
+            Visit,
+            itinerary_item=itinerary_item,
+            start_time=datetime_future,
+            case_id=case,
         )
 
         url = reverse("v1:case-visits", kwargs={"pk": case.case_id})
