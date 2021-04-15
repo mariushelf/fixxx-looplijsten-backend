@@ -39,7 +39,8 @@ RUN apt-get update && apt-get install -y
 RUN pip install --upgrade pip
 RUN pip install uwsgi
 RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then pip install --no-cache-dir -r requirements.txt ;  else pip install --no-cache-dir -r requirements.txt /tmp/integrale_aanpak_ondermijning ; fi
-RUN pip install --no-cache-dir /tmp/onderhuur_model
+
+RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS" = "x" ] ; then echo INTEGRALE_AANPAK_ONDERMIJNING_CREDS not provided ; else pip install --no-cache-dir /tmp/onderhuur_model ; fi
 
 RUN pip install -I shap==0.38.1
 
