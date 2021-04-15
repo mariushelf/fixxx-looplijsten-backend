@@ -24,7 +24,7 @@ class DaySettingsInline(admin.TabularInline):
                     "reasons",
                     "state_types",
                     "week_days",
-                    "week_day",
+                    "max_use_limit",
                     "start_time",
                 )
             },

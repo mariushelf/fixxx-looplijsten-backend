@@ -211,6 +211,7 @@ class DaySettings(models.Model):
     length_of_list = models.PositiveSmallIntegerField(
         default=8,
     )
+    max_use_limit = models.PositiveSmallIntegerField(default=0)
 
     # ZKS Fields
     day_segments = ArrayField(
