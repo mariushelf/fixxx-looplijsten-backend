@@ -40,7 +40,7 @@ RUN pip install --upgrade pip
 RUN pip install uwsgi
 RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS$INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN" = "x" ] ; then pip install --no-cache-dir -r requirements.txt ;  else pip install --no-cache-dir -r requirements.txt /tmp/integrale_aanpak_ondermijning ; fi
 
-RUN if [ "x$INTEGRALE_AANPAK_ONDERMIJNING_CREDS" = "x" ] ; then echo INTEGRALE_AANPAK_ONDERMIJNING_CREDS not provided ; else pip install --no-cache-dir /tmp/onderhuur_model ; fi
+RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else pip install --no-cache-dir /tmp/onderhuur_model ; fi
 
 RUN pip install -I shap==0.38.1
 
