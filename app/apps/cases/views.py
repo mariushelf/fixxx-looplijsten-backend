@@ -146,9 +146,14 @@ class CaseViewSet(ViewSet):
         """
         Lists all visits for this case
         """
-
+        print(pk)
+        print(Case.objects.all())
         case = get_object_or_404(Case, case_id=pk)
+        print(case)
         visits = Visit.objects.filter(case_id=case)
+        for v in Visit.objects.all():
+            print(v.case_id)
+        print(visits)
         serializer = VisitSerializer(visits, many=True)
 
         return Response(serializer.data)
