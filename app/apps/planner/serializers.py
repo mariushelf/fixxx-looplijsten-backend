@@ -172,6 +172,7 @@ class DaySettingsCompactSerializer(serializers.ModelSerializer):
             "name",
             "week_days",
             "used_today_count",
+            "max_use_limit",
             "team_settings",
         )
 
@@ -240,6 +241,7 @@ class DaySettingsSerializer(serializers.ModelSerializer):
             "team_settings",
             "sia_presedence",
             "used_today_count",
+            "max_use_limit",
         )
 
     def validate(self, data):
