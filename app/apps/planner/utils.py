@@ -132,7 +132,6 @@ def filter_schedules(cases, team_schedules):
     schedule_keys = [
         ["day_segment", "day_segments"],
         ["week_segment", "week_segments"],
-        ["priority", "priorities"],
     ]
 
     def case_in_schedule(case):

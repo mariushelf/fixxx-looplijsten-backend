@@ -342,6 +342,10 @@ class Weights(models.Model):
         default=SCORING_WEIGHTS.STATE_TYPE.value,
         validators=WEIGHTS_VALIDATORS,
     )
+    priority = models.FloatField(
+        default=SCORING_WEIGHTS.PRIORITY.value,
+        validators=WEIGHTS_VALIDATORS,
+    )
     primary_stadium = models.FloatField(
         default=SCORING_WEIGHTS.PRIMARY_STADIUM.value,
         validators=WEIGHTS_VALIDATORS,
@@ -369,6 +373,7 @@ class Weights(models.Model):
         fraud_probability,
         reason,
         state_types,
+        priority,
         primary_stadium,
         secondary_stadium,
         issuemelding,
@@ -379,6 +384,7 @@ class Weights(models.Model):
             fraud_probability,
             reason,
             state_types,
+            priority,
             primary_stadium,
             secondary_stadium,
             issuemelding,
@@ -389,6 +395,7 @@ class Weights(models.Model):
             self.fraud_probability,
             self.reason,
             self.state_types,
+            self.priority,
             self.primary_stadium,
             self.secondary_stadium,
             self.issuemelding,
@@ -399,12 +406,13 @@ class Weights(models.Model):
         return sum(products)
 
     def __str__(self):
-        return "%s: %s-%s-%s-%s-%s-%s-%s-%s" % (
+        return "%s: %s-%s-%s-%s-%s-%s-%s-%s-%s" % (
             self.name,
             self.distance,
             self.fraud_probability,
             self.reason,
             self.state_types,
+            self.priority,
             self.primary_stadium,
             self.secondary_stadium,
             self.issuemelding,

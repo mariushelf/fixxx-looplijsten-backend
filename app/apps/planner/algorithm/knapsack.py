@@ -120,6 +120,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
                 fraud_probability=settings_weights.fraud_probability,
                 reason=settings_weights.reason,
                 state_types=settings_weights.state_types,
+                priority=settings_weights.priority,
                 primary_stadium=settings_weights.primary_stadium,
                 secondary_stadium=settings_weights.secondary_stadium,
                 issuemelding=settings_weights.issuemelding,
@@ -133,9 +134,13 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         distance = case["normalized_inverse_distance"]
 
         try:
-            fraud_probability = case["fraud_prediction"].get("fraud_probability")
+            fraud_probability = case["fraud_prediction"].get("fraud_probability", 0)
         except AttributeError:
             fraud_probability = 0
+        try:
+            priority = case.get("schedules", {}).get("priority", {}).get("weight", 0)
+        except Exception:
+            priority = 0
 
         reason = (
             case.get("reason", {}).get("id", 0) in self.settings.reasons
@@ -157,6 +162,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             fraud_probability,
             bool(reason),
             bool(state_types),
+            priority,
             has_primary_stadium,
             has_secondary_stadium,
             has_issuemelding_stadium,
