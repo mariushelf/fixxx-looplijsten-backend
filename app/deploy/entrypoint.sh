@@ -20,7 +20,7 @@ chmod -R 700 /fraud_prediction_cache
 celery -A settings worker  -l INFO -D
 
 # Run celery beat
-celery -A settings beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler -D
+celery -A settings beat -l INFO -D --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
 # run uwsgi
 exec uwsgi --ini /app/deploy/config.ini # --py-auto-reload=1
