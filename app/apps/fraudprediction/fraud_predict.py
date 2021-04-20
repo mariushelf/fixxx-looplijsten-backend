@@ -36,6 +36,8 @@ class FraudPredict:
         LOGGER.info("Get all db configs")
         case_ids = self.get_case_ids_to_score()
         LOGGER.info("get case ids to score")
+        LOGGER.info(len(case_ids))
+        LOGGER.info(case_ids)
         cache_dir = settings.FRAUD_PREDICTION_CACHE_DIR
         self.clear_cache_dir(cache_dir)
         LOGGER.info("Cleared cache")

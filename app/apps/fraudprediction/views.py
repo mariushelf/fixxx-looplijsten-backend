@@ -30,8 +30,8 @@ class FraudPredictionScoringViewSet(ViewSet):
             LOGGER.info("Scoring process: {}".format(os.getpid()))
 
         fraud_predict = FraudPredict(
-            model_name=settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR,
-            score_module_path="woonfraude_model.score",
+            model_name=settings.FRAUD_PREDICTION_MODEL_ONDERHUUR,
+            score_module_path="onderhuur_prediction_model.score",
         )
         fraud_predict.start()
 
