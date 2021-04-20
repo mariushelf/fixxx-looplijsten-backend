@@ -4,3 +4,9 @@ services:
   api:
     env_file:
       - .env.local
+  looplijsten_celery_worker:
+    env_file:
+      - .env.local
+  looplijsten_celery_beat:
+    env_file:
+      - .env.local
