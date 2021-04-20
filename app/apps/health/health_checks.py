@@ -70,6 +70,16 @@ class ZakenServiceCheck(APIServiceCheckBackend):
     verbose_name = "Zaken API Endpoint"
 
 
+class VakantieverhuurHitkansServiceCheck(APIServiceCheckBackend):
+    """
+    Endpoint for checking vakantieverhuur fraudpredictions API Endpoint
+    """
+
+    critical_service = False
+    api_url = settings.VAKANTIEVERHUUR_HITKANS_HEALTH_URL
+    verbose_name = "Vakantieverhuur fraudpredictions API Endpoint"
+
+
 class BWVDatabaseCheck(BaseHealthCheckBackend):
     def check_status(self):
         logger.debug("Checking status of API url...")
