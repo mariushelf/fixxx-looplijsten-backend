@@ -33,7 +33,7 @@ pipeline {
     APP = "looplijsten-api"
     DOCKER_IMAGE_URL = "${DOCKER_REGISTRY_NO_PROTOCOL}/fixxx/looplijsten"
     INTEGRALE_AANPAK_ONDERMIJNING_KEY = credentials('deploy_key_integrale_aanpak_ondermijning')
-    ONDERHUUR_MODEL_KEY = "gitlab_token_onderhuur_model"
+    ONDERHUUR_MODEL_KEY = credentials('gitlab_token_onderhuur_model')
   }
 
   stages {
