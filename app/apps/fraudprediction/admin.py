@@ -6,9 +6,16 @@ from django.contrib import admin
 class FraudPredictionAdmin(admin.ModelAdmin):
     list_display = (
         "case_id",
+        "business_rules",
+        "fraud_prediction",
         "fraud_probability",
         "sync_date",
         "fraud_prediction_model",
+    )
+    list_filter = (
+        "fraud_prediction_model",
+        "sync_date",
+        "fraud_prediction",
     )
 
     search_fields = ("case_id",)
