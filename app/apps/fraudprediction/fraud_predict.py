@@ -21,6 +21,7 @@ DATABASE_CONFIG = {
     "bwv_adres": {"table_name": "import_adres"},
     "bwv_stadia": {"table_name": "import_stadia"},
     "bwv_wvs": {"table_name": "import_wvs"},
+    "bwv_personen_hist": {"table_name": "bwv_personen_hist"},
 }
 SCORE_STARTING_FROM_DATE = STARTING_FROM_DATE
 
@@ -68,6 +69,7 @@ class FraudPredict:
                             "STADIA",
                             "WVS",
                             "BAG",
+                            "BWV_PERSONEN_HIST",
                         ]
                     )
                 }
