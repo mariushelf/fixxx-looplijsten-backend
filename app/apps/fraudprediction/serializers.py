@@ -6,6 +6,7 @@ class FraudPredictionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FraudPrediction
         fields = (
+            "fraud_prediction_model",
             "fraud_probability",
             "fraud_prediction",
             "business_rules",
