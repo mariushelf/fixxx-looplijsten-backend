@@ -1,13 +1,68 @@
 import logging
 import math
+import os
 
+import requests
 from apps.cases.models import Project, Stadium
 from apps.fraudprediction.models import FraudPrediction
 from apps.fraudprediction.serializers import FraudPredictionSerializer
+from django.conf import settings
 from settings.const import STARTING_FROM_DATE
 from utils.queries_planner import get_cases_from_bwv
 
+from .mock import fraud_prediction_results
+
 LOGGER = logging.getLogger(__name__)
+
+
+def fraudpredict_vakantieverhuur():
+    """
+    Calculate fraudpredictions for vakantieverhuur
+    """
+    CONNECT_TIMEOUT = 10
+    READ_TIMEOUT = 60
+
+    model_name = settings.FRAUD_PREDICTION_MODEL_VAKANTIEVERHUUR
+
+    LOGGER.info(os.environ)
+    LOGGER.info(settings.VAKANTIEVERHUUR_HITKANS_API_BASE)
+    case_ids = get_case_ids_to_score(model_name)
+    LOGGER.info("vakantieverhuur task: case id count")
+    LOGGER.info(len(case_ids))
+    LOGGER.info("vakantieverhuur task: case ids")
+    LOGGER.info(case_ids)
+    LOGGER.info("vakantieverhuur task: use mock data?")
+    LOGGER.info(settings.USE_HITKANS_MOCK_DATA)
+    if settings.USE_HITKANS_MOCK_DATA:
+        LOGGER.info("vakantieverhuur task: use mock data")
+        result = fraud_prediction_results()
+    else:
+        data = {
+            "zaken_ids": get_case_ids_to_score(model_name),
+            "auth_token": settings.VAKANTIEVERHUUR_HITKANS_AUTH_TOKEN,
+        }
+
+        response = requests.post(
+            settings.VAKANTIEVERHUUR_HITKANS_API_BASE + "/score_zaken",
+            timeout=(CONNECT_TIMEOUT, READ_TIMEOUT),
+            json=data,
+            headers={
+                "content-type": "application/json",
+            },
+        )
+        response.raise_for_status()
+        LOGGER.info("vakantieverhuur task: response status")
+        LOGGER.info(response.status)
+        LOGGER.info("vakantieverhuur task: response text")
+        LOGGER.info(response.text)
+        LOGGER.info("vakantieverhuur task: response json")
+        LOGGER.info(response.json())
+        result = response.json()
+
+    LOGGER.info("vakantieverhuur task: api_results_to_instances")
+    api_results_to_instances(result, model_name)
+
+    return True
 
 
 def get_stadia_to_score(model_name):

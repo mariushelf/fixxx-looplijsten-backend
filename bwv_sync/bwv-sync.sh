@@ -68,3 +68,8 @@ done
 timestamp_finished="$(TZ="Europe/Amsterdam" date "+%Y-%m-%d %H:%M:%S Europe/Amsterdam")"
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "UPDATE sync_log set finished = '${timestamp_finished}' where start = '${timestamp_start}';"
+
+curl "${url}/api/v1/fraud-prediction/scoring/" \
+  -X POST \
+  -H "Accept: application/json" \
+  -H "Authorization: ${fraud_prediction_secret_key}"

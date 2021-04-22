@@ -2,8 +2,6 @@ FROM amsterdam/python
 LABEL maintainer="datapunt@amsterdam.nl"
 
 ENV PYTHONUNBUFFERED 1
-ARG INTEGRALE_AANPAK_ONDERMIJNING_CREDS
-ARG INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN
 ARG ONDERHUUR_MODEL_CREDS
 ARG ONDERHUUR_MODEL_PERSONAL_ACCESS_TOKEN
 
@@ -23,7 +21,6 @@ COPY requirements.txt /app/
 
 RUN mkdir /tmp/onderhuur_model
 
-RUN echo $ONDERHUUR_MODEL_CREDS
 # Clone the private cto-onderhuur library using a deploy token
 RUN if [ "x$ONDERHUUR_MODEL_CREDS" = "x" ] ; then echo ONDERHUUR_MODEL_CREDS not provided ; else git clone -b bwv_branch --single-branch https://${ONDERHUUR_MODEL_CREDS}@git.data.amsterdam.nl/cto-fraude-aanpak/onderhuur-adreskwaliteit-backend /tmp/onderhuur_model ; fi
 
