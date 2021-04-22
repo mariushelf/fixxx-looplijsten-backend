@@ -312,7 +312,7 @@ class DaySettings(models.Model):
         ).count()
 
     class Meta:
-        ordering = ("week_day", "start_time")
+        ordering = ("name",)
         verbose_name_plural = "Day settings"
 
     def __str__(self):
