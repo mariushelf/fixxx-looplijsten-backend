@@ -171,10 +171,10 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
 
         return score
 
-    def get_center(self, location):
-        return location.get("lat"), location.get("lng")
+    def get_center(self, case):
+        return case.get("address", {}).get("lat"), case.get("address", {}).get("lng")
 
-    def generate(self, location, cases=[], fraud_predictions=[]):
+    def generate(self, center_case, cases=[], fraud_predictions=[]):
         if not cases:
             cases = self.__get_eligible_cases__()
 
@@ -185,7 +185,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             fraud_predictions = get_fraud_predictions()
 
         # Calculate a list of distances for each case
-        center = self.get_center(location)
+        center = self.get_center(center_case)
         distances = calculate_geo_distances(center, cases)
         max_distance = max(distances)
 
