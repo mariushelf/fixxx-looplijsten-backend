@@ -1,5 +1,5 @@
-# fixxx-looplijsten
-plannen en inzien van efficiëntere looplijsten, bedoeld voor toezichthouders en handhavers van illegaal vakantieverhuur.
+# TOP app (Toezicht op pad)
+Dankzij de TOP app hebben toezichthouders Wonen veel informatie over zaken, adressen en bewoners bij de hand als zij op straat hun werk doen. Ook kunnen zij hun eigen looplijst samenstellen, op basis van instellingen die planners hebben klaargezet.
 
 # Prerequisites
 
@@ -12,18 +12,11 @@ plannen en inzien van efficiëntere looplijsten, bedoeld voor toezichthouders en
 docker-compose build
 ```
 
-## Build with hitkans (optional):
-If you want to run fraud prediction scoring (hitkans) you can run the build with an optional argument:
-```bash
-docker-compose build --build-arg INTEGRALE_AANPAK_ONDERMIJNING_PERSONAL_ACCESS_TOKEN=GITLAB_PERSONAL_ACCESS_TOKEN_HERE
-```
-Replace the GITLAB_PERSONAL_ACCESS_TOKEN_HERE with your private token.
-This token can be acquired through the private Amsterdam gitlab woonfraude repository.
-
 ## Creating networks
 Before running the project, you need to create the networks:
 ```bash
 docker network create looplijsten_backend
+docker network create top_and_zaak_backend_bridge
 ```
 ## Starting the development server:
 Start the dev server for local development:
@@ -43,11 +36,12 @@ Make sure you are pointing to a directory, not the sql dump file itself.
 ## Importing fixtures dump
 The Django project needs some configuration in order to run locally. It's possible to add these manually, but the quickest way is importing using fixtures from the acceptance environment. You can download these at: https://acc.api.top.amsterdam.nl/admin/planner/dumpdata/. You'll need to be logged in using an admin account first to access this url.
 
-Move the json into a fixture folder underneath one of the installed apps, and run the following command
+Move the json into the app directory on the root of your project, and run the following command
 
 ```bash
 docker-compose run --rm api python manage.py loaddata <name of fixture>
 ```
+Remove the json fixture after installing it.
 
 ## Creating a superuser:
 ```bash
@@ -61,8 +55,8 @@ You can add other users easily through the Django admin.
 Navigate to http://localhost:8000/admin and sign in using the superuser you just created.
 Once you're in the admin, you can click on "add" in the User section to create new users.
 
-## Bypassing Grip and using local development authentication:
-It's possible to bypass Grip authentication when running the project locally.
+## Bypassing Keycloak and using local development authentication:
+It's possible to bypass Keycloak authentication when running the project locally.
 To do so, make sure the LOCAL_DEVELOPMENT_AUTHENTICATION flag is set to True in docker-compose.yml.
 
 # Running commands
