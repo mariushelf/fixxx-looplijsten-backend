@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     "constance",
     "constance.backends.database",  # for dynamic configurations in admin
     "django_celery_beat",
+    "django_celery_results",
     # Health checks. (Expand when more services become available)
     "health_check",
     "health_check.db",
@@ -425,7 +426,10 @@ HEALTHCHECK_CELERY_PING_TIMEOUT = 5
 CELERY_BROKER_URL = f"amqp://{RABBIT_MQ_USERNAME}:{RABBIT_MQ_PASSWORD}@{RABBIT_MQ_URL}"
 
 BROKER_URL = CELERY_BROKER_URL
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_TIMEZONE = "Europe/Amsterdam"
+CELERY_RESULT_BACKEND = "django-db"
 
 SPECTACULAR_DEFAULTS = {
     "POSTPROCESSING_HOOKS": [

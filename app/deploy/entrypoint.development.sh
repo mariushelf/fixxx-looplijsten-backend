@@ -21,5 +21,9 @@ chmod -R 777 /static
 # modify permission so scoring files can be cached
 chmod -R 700 /fraud_prediction_cache
 
+celery -A settings worker -l INFO -D
+celery -A settings beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler --detach
+
 # run uwsgi
 exec uwsgi --ini /app/deploy/config.ini --py-auto-reload=1 --cheaper-initial=1 --cheaper=1 --processes=10
+# /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
