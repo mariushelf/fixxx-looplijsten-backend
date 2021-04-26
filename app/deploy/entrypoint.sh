@@ -17,7 +17,8 @@ chmod -R 700 /fraud_prediction_cache
 # python manage.py shell -c "from apps.users.models import User; User.objects.create_superuser('admin@admin.com', 'admin')"
 
 # Run celery worker and beat
-celery -A settings worker --beat --scheduler django_celery_beat.schedulers:DatabaseScheduler -l INFO -D
+celery -A settings worker -l INFO -D
+celery -A settings beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler --detach
 
 # run uwsgi
 exec uwsgi --ini /app/deploy/config.ini # --py-auto-reload=1
