@@ -60,7 +60,7 @@ class TeamSettingsAdmin(admin.ModelAdmin):
             "Algoritm options",
             {
                 "classes": ("collapse",),
-                "fields": ("default_weights", "is_sia_weights"),
+                "fields": ("default_weights", "is_sia_weights", "top_cases_count"),
             },
         ),
         (
