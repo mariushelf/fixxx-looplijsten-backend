@@ -156,7 +156,7 @@ class Itinerary(models.Model):
 
         # Generate suggestions based on this itineraries' center
         center = self.get_center()
-        generated_list = generator.generate(center)
+        generated_list = generator.generate({"address": center})
         generated_list = generator.sort_cases_by_distance(generated_list)
         return generated_list
 
