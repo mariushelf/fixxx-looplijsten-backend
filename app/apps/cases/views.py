@@ -52,7 +52,7 @@ class CaseViewSet(ViewSet):
 
     def retrieve(self, request, pk):
         case_id = pk
-        case_instance = Case.get(case_id)
+        case_instance = Case.get(case_id, bool(str(case_id).find("_") >= 0))
 
         if case_instance.is_top_bwv_case:
             related_case_ids = q.get_related_case_ids(case_id)
