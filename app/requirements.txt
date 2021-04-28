@@ -4,9 +4,9 @@ psycopg2==2.8.6
 celery==5.0.5
 
 # Rest apis
-djangorestframework==3.12.1
-django-cors-headers==3.5.0
-drf-spectacular==0.10.0
+djangorestframework==3.12.4
+django-cors-headers==3.7.0
+drf-spectacular==0.15.1
 
 # Logging
 sentry-sdk==1.0.0
@@ -19,7 +19,7 @@ model-bakery==1.2.1
 django-constance[database]==2.8.0
 
 # Other
-requests==2.24.0
+requests==2.25.1
 django-filter==2.4.0
 tenacity==7.0.0
 django-health-check
@@ -29,13 +29,13 @@ django-timezone-field
 
 # Authentication
 git+https://github.com/petercuret/keycloak_oidc.git@master
-djangorestframework-simplejwt==4.4.0
+djangorestframework-simplejwt==4.6.0
 
 # Algorithm toolbox
 geopy==2.0.0
 PyJWT<2.0.0
 
-joblib==0.15.1
-scikit-learn==0.22.1
+joblib==1.0.1
+scikit-learn==0.24.1
 numpy==1.18.4
 shap==0.38.1
