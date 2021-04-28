@@ -12,7 +12,7 @@ drf-spectacular==0.10.0
 sentry-sdk==0.19.1
 
 # Testing
-freezegun==1.0.0
+freezegun==1.1.0
 model-bakery==1.2.1
 
 # Settings
