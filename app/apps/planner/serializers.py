@@ -304,6 +304,8 @@ class NewDaySettingsSerializer(DaySettingsSerializer):
             "exclude_stadia",
             "team_settings",
             "sia_presedence",
+            "used_today_count",
+            "max_use_limit",
         )
 
 
