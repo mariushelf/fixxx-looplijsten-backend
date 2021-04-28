@@ -131,16 +131,10 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         """
         Gets the score of the given case
         """
-        distance = case["normalized_inverse_distance"]
+        distance = case.get("normalized_inverse_distance", 0)
 
-        try:
-            fraud_probability = case["fraud_prediction"].get("fraud_probability", 0)
-        except AttributeError:
-            fraud_probability = 0
-        try:
-            priority = case.get("schedules", {}).get("priority", {}).get("weight", 0)
-        except Exception:
-            priority = 0
+        fraud_probability = case.get("fraud_prediction", {}).get("fraud_probability", 0)
+        priority = case.get("schedules", {}).get("priority", {}).get("weight", 0)
 
         reason = (
             case.get("reason", {}).get("id", 0) in self.settings.reasons
@@ -196,7 +190,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
             case["normalized_inverse_distance"] = (
                 (max_distance - case["distance"]) / max_distance if max_distance else 0
             )
-            case["fraud_prediction"] = fraud_predictions.get(case_id, None)
+            case["fraud_prediction"] = fraud_predictions.get(case_id, {})
             case["score"] = self.get_score(case)
 
         # Sort the cases based on score
@@ -277,6 +271,20 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
             logger.warning("No eligible cases, could not generate best list")
             return []
 
+        topped_cases = cases
+        if hasattr(
+            self.settings.day_settings.team_settings, "top_cases_count"
+        ) and getattr(self.settings.day_settings.team_settings, "top_cases_count"):
+            for c in cases:
+                c["fraud_prediction"] = fraud_predictions.get(c.get("id"), {})
+                c["score"] = self.get_score(c)
+            topped_cases = sorted(cases, key=lambda case: case["score"], reverse=True)
+            logger.info("Algorithm: use top_cases_count")
+            logger.info([c.get("score") for c in topped_cases][:50])
+            topped_cases = topped_cases[
+                : self.settings.day_settings.team_settings.top_cases_count
+            ]
+
         # Run in parallel processes to improve speed
         jobs = multiprocessing.cpu_count()
 
@@ -285,7 +293,7 @@ class ItineraryKnapsackList(ItineraryKnapsackSuggestions):
 
         candidates = Parallel(n_jobs=jobs, backend="multiprocessing")(
             delayed(self.parallelized_function)(case, cases, fraud_predictions, index)
-            for index, case in enumerate(cases)
+            for index, case in enumerate(topped_cases)
         )
 
         best_list = self.get_best_list(candidates)

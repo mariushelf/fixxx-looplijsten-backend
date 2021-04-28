@@ -90,6 +90,10 @@ class TeamSettings(models.Model):
         blank=True,
         related_name="team_settings_list",
     )
+    top_cases_count = models.PositiveSmallIntegerField(
+        help_text="Dit getal bepaald hoeveel van best matches zaken, gebruikt moeten worden als start punt. Als hier 0 gebruikt wordt, worden alle gevonden zaken gebruikt als start punt. Dit betekent dat 0 de langzaamste optie is voor het genereren van een looplijst.",
+        default=0,
+    )
 
     def fetch_team_schedules(self, auth_header=None):
         if settings.USE_ZAKEN_MOCK_DATA:
