@@ -129,15 +129,14 @@ class ItinerarySerializer(serializers.ModelSerializer):
         read_only=True, many=True, required=False
     )
 
-    def __get_start_case_from_settings__(self, settings):
-        """ Returns a Case object from the settings """
-        try:
-            case_dict = settings.get("start_case", None)
-            case_id = case_dict.get("id", None)
-            case = Case.get(case_id)
-            return case
-        except Exception:
-            return None
+    def __get_start_case__(self, case_id, team_settings):
+        """ Returns a Case object """
+        if case_id:
+            return Case.get(
+                case_id,
+                team_settings.use_zaken_backend,
+            )
+        return None
 
     def create(self, validated_data):
         itinerary = Itinerary.objects.create()
@@ -151,7 +150,10 @@ class ItinerarySerializer(serializers.ModelSerializer):
         opening_date = day_settings.opening_date
         target_length = validated_data.get("target_length")
 
-        start_case = self.__get_start_case_from_settings__(validated_data)
+        start_case = self.__get_start_case__(
+            validated_data.get("start_case", {}).get("id"),
+            day_settings.team_settings,
+        )
 
         # First create the settings
         itinerary_settings = ItinerarySettings.objects.create(

@@ -134,7 +134,7 @@ class ItineraryKnapsackSuggestions(ItineraryGenerateAlgorithm):
         distance = case.get("normalized_inverse_distance", 0)
 
         fraud_probability = case.get("fraud_prediction", {}).get("fraud_probability", 0)
-        priority = case.get("schedules", {}).get("priority", {}).get("weight", 0)
+        priority = case.get("schedules", [{}])[0].get("priority", {}).get("weight", 0)
 
         reason = (
             case.get("reason", {}).get("id", 0) in self.settings.reasons
