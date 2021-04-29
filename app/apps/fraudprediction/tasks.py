@@ -44,11 +44,11 @@ def fraudpredict_vakantieverhuur_task(self):
     try:
         logger.info("Started fraudpredict vakantieverhuur task")
 
-        fraudpredict_vakantieverhuur()
+        result = fraudpredict_vakantieverhuur()
 
         logger.info("Ended fraudpredict vakantieverhuur task")
 
     except Exception as exception:
         self.retry(exc=exception)
 
-    return True
+    return result

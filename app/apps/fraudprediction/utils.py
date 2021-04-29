@@ -62,7 +62,7 @@ def fraudpredict_vakantieverhuur():
     LOGGER.info("vakantieverhuur task: api_results_to_instances")
     api_results_to_instances(result, model_name)
 
-    return True
+    return result
 
 
 def get_stadia_to_score(model_name):
@@ -111,7 +111,9 @@ def clean_dictionary(dictionary):
     dictionary = dictionary.copy()
 
     for key, value in dictionary.items():
-        if math.isnan(value):
+        if type(value) == int or type(value) == float:
+            pass
+        else:
             dictionary[key] = 0.0
 
     return dictionary
