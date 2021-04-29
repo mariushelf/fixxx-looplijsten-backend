@@ -2,4 +2,5 @@ from django.apps import AppConfig
 
 
 class CasesConfig(AppConfig):
-    name = "cases"
+    default = False
+    name = "apps.cases"
