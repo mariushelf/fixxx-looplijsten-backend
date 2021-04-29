@@ -48,6 +48,7 @@ class ItineraryAdmin(admin.ModelAdmin):
     list_display = (
         "__str__",
         "created_at",
+        "start_case",
     )
 
     inlines = [
@@ -58,6 +59,9 @@ class ItineraryAdmin(admin.ModelAdmin):
     ]
 
     actions = ["export_as_json"]
+
+    def start_case(self, obj):
+        return obj.settings.start_case
 
     def export_as_json(self, request, queryset):
         serializer = ItinerarySerializer(queryset.all(), many=True)
