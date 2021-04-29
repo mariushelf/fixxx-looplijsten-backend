@@ -79,6 +79,9 @@ ADMINS = (("Author", "p.curet@mail.amsterdam.nl"),)
 DEFAULT_DATABASE_NAME = "default"
 BWV_DATABASE_NAME = "bwv"
 
+# Django 3.2 fixes warning
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 DATABASES = {
     DEFAULT_DATABASE_NAME: {
         "ENGINE": "django.contrib.gis.db.backends.postgis",
