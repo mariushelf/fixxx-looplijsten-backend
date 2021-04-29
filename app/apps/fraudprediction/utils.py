@@ -52,7 +52,7 @@ def fraudpredict_vakantieverhuur():
         )
         response.raise_for_status()
         LOGGER.info("vakantieverhuur task: response status")
-        LOGGER.info(response.status)
+        LOGGER.info(response.status_code)
         LOGGER.info("vakantieverhuur task: response text")
         LOGGER.info(response.text)
         LOGGER.info("vakantieverhuur task: response json")
