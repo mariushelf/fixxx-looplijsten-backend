@@ -227,7 +227,7 @@ class ItinerarySettings(models.Model):
     )
 
     start_case = models.ForeignKey(
-        Case, on_delete=models.CASCADE, null=True, blank=True
+        Case, on_delete=models.SET_NULL, null=True, blank=True
     )
 
     # ZKS Fields
