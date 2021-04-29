@@ -16,8 +16,8 @@ def fraud_prediction_results():
                 "oppervlakte": 15,
             },
             "3314": {
-                "begin_month": -0.021,
-                "oppervlakte": 30,
+                "begin_month": -0.022,
+                "oppervlakte": "30",
             },
             "3318": {
                 "begin_month": 0.178,
@@ -30,12 +30,12 @@ def fraud_prediction_results():
                 "oppervlakte": -1.1,
             },
             "3314": {
-                "begin_month": 0.034,
+                "begin_month": "",
                 "oppervlakte": -1.1,
             },
             "3318": {
                 "begin_month": 0.034,
-                "oppervlakte": -1.1,
+                "oppervlakte": "-1.1",
             },
         },
         "feature_values": {
