@@ -15,13 +15,14 @@ class VisitAdmin(admin.ModelAdmin):
 
 @admin.register(VisitMetaData)
 class VisitMetaData(admin.ModelAdmin):
+    search_fields = ("visit__case_id__case_id",)
     list_display = ("visit", "date", "case_id")
 
     def date(self, obj):
         return obj.visit.start_time
 
     def case_id(self, obj):
-        return obj.visit.itinerary_item
+        return obj.visit.case_id
 
     # def has_change_permission(self, request, obj=None):
     #     return False
