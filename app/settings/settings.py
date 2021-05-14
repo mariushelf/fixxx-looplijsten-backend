@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from datetime import timedelta
 from os.path import join
 
@@ -258,8 +259,29 @@ OIDC_OP_LOGOUT_ENDPOINT = os.getenv(
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
     "handlers": {
-        "console": {"class": "logging.StreamHandler", "level": "DEBUG"},
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "DEBUG",
+            "stream": sys.stdout,
+        },
+        "celery": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "celery.log",
+            "formatter": "verbose",
+            "maxBytes": 1024 * 1024 * 100,  # 100 mb
+        },
     },
     "loggers": {
         "woonfraude_model": {
@@ -273,6 +295,11 @@ LOGGING = {
             "propagate": True,
         },
         "mozilla_django_oidc": {"handlers": ["console"], "level": "DEBUG"},
+        "celery": {
+            "handlers": ["celery", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
     },
 }
 
