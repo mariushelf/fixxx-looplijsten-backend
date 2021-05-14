@@ -5,3 +5,4 @@ app/datasets/*.csv
 .vscode/*
 dumps
 .env.local
+celery.log

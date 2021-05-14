@@ -9,7 +9,7 @@ from django.conf import settings
 from .mock import fraud_prediction_results
 from .utils import fraudpredict_vakantieverhuur
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("celery")
 
 DEFAULT_RETRY_DELAY = 10
 

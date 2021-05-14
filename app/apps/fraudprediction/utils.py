@@ -12,7 +12,7 @@ from utils.queries_planner import get_cases_from_bwv
 
 from .mock import fraud_prediction_results
 
-LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger("celery")
 
 
 def fraudpredict_vakantieverhuur():
@@ -31,8 +31,6 @@ def fraudpredict_vakantieverhuur():
     LOGGER.info(len(case_ids))
     LOGGER.info("vakantieverhuur task: case ids")
     LOGGER.info(case_ids)
-    LOGGER.info("vakantieverhuur task: use mock data?")
-    LOGGER.info(settings.USE_HITKANS_MOCK_DATA)
     if settings.USE_HITKANS_MOCK_DATA:
         LOGGER.info("vakantieverhuur task: use mock data")
         result = fraud_prediction_results()
@@ -53,16 +51,16 @@ def fraudpredict_vakantieverhuur():
         response.raise_for_status()
         LOGGER.info("vakantieverhuur task: response status")
         LOGGER.info(response.status_code)
-        LOGGER.info("vakantieverhuur task: response text")
-        LOGGER.info(response.text)
         LOGGER.info("vakantieverhuur task: response json")
         LOGGER.info(response.json())
         result = response.json()
 
     LOGGER.info("vakantieverhuur task: api_results_to_instances")
-    api_results_to_instances(result, model_name)
+    updated_case_ids = api_results_to_instances(result, model_name)
+    LOGGER.info("vakantieverhuur task: updated case id's")
+    LOGGER.info(len(updated_case_ids))
 
-    return result
+    return updated_case_ids
 
 
 def get_stadia_to_score(model_name):
@@ -135,6 +133,8 @@ def api_results_to_instances(results, model_name):
                 ),
             },
         )
+
+    return list(results.get("prediction_woonfraude", {}).keys())
 
 
 def get_fraud_prediction(case_id):
