@@ -45,28 +45,12 @@ tables=(
   view_vakantieverhuur,bwv_vakantieverhuur
   view_woningen,bwv_woningen
 )
-indexes=(
-  "import_adres__adres_id_idx on import_adres (adres_id)"
-  "bwv_personen_hist__ads_id_idx on bwv_personen_hist (ads_id, vestigingsdatum_adres, vertrekdatum_adres)"
-  "bwv_personen_hist__pen_id_idx on bwv_personen_hist (pen_id, vestigingsdatum_adres)"
-  "import_stadia__stadia_id_idx on import_stadia (stadia_id varchar_pattern_ops)"
-  "bwv_hotline_melding__wng_id_idx on bwv_hotline_melding (wng_id)"
-  "bwv_personen__id_idx on bwv_personen (id)"
-  "import_wvs__adres_id__idx on import_wvs (adres_id)"
-)
+
 
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "CREATE TABLE IF NOT EXISTS sync_log (start timestamp with time zone, finished timestamp with time zone);"
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "INSERT INTO sync_log (start) VALUES ('${timestamp_start}');"
-
-# drop indexes
-echo "Dropping indexes..."
-for index in "${indexes[@]}"; do
-  ixname=$(cut -d ' ' -f 1 <<< "$index")
-  PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "DROP INDEX IF EXISTS ${ixname}"
-done
-
 
 export PGPASSWORD="${src_pw}"
 for src_dst in ${tables[@]}; do
@@ -79,12 +63,6 @@ for src_dst in ${tables[@]}; do
     -c "COPY (SELECT * FROM $src_table) TO STDOUT" \
     | if $anonymize; then /usr/local/bin/pg_anonymize -c /etc/pg_anonymize.conf "$dst_table"; else cat -; fi \
     | PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "COPY $dst_table FROM STDIN"
-done
-
-# (re-)create indexes
-echo "Creating indexes..."
-for index in "${indexes[@]}"; do
-   PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "CREATE INDEX IF NOT EXISTS ${index}"
 done
 
 timestamp_finished="$(TZ="Europe/Amsterdam" date "+%Y-%m-%d %H:%M:%S Europe/Amsterdam")"
