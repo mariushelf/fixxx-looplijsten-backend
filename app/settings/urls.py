@@ -42,11 +42,11 @@ v1_urls = (
 
 urlpatterns = [
     # Admin environment
-    path("admin/", admin.site.urls),
     path("admin/planner/dumpdata", planner_dumpdata, name="planner-dumpdata"),
     path("admin/decos-api-search/", DecosAPISearch.as_view(), name="decos_api_search"),
-    # Algorithm sandbox environment
     path("admin/bwv-structure", BWVTablesView.as_view(), name="bwv-structure"),
+    path("admin/", admin.site.urls),
+    # Algorithm sandbox environment
     path("algorithm/", AlgorithmListView.as_view(), name="algorithm-list"),
     path("algorithm/<int:pk>", AlgorithmView.as_view(), name="algorithm-detail"),
     # Health check urls
