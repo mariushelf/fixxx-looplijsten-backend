@@ -99,7 +99,7 @@ class TeamSettings(models.Model):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_schedules()
 
-        url = f"{settings.ZAKEN_API_URL}/teams/{self.zaken_team_name}/schedule-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/schedule-types/"
 
         response = requests.get(
             url,
@@ -114,7 +114,7 @@ class TeamSettings(models.Model):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_reasons()
 
-        url = f"{settings.ZAKEN_API_URL}/teams/{self.zaken_team_name}/reasons/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/reasons/"
 
         response = requests.get(
             url,
@@ -129,7 +129,7 @@ class TeamSettings(models.Model):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_state_types()
 
-        url = f"{settings.ZAKEN_API_URL}/teams/{self.zaken_team_name}/state-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/state-types/"
 
         response = requests.get(
             url,
@@ -270,7 +270,7 @@ class DaySettings(models.Model):
     sia_presedence = models.BooleanField(default=False)
 
     def fetch_team_schedules(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/schedule-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/schedule-types/"
 
         response = requests.get(
             url,
@@ -282,7 +282,7 @@ class DaySettings(models.Model):
         return response.json()
 
     def fetch_team_reasons(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/reasons/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/reasons/"
 
         response = requests.get(
             url,
@@ -294,7 +294,7 @@ class DaySettings(models.Model):
         return response.json().get("results", [])
 
     def fetch_team_state_types(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/teams/{self.team_settings.zaken_team_name}/state-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/state-types/"
 
         response = requests.get(
             url,
