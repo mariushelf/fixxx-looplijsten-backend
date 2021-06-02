@@ -65,15 +65,6 @@ PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
 PGPASSWORD="${dst_pw}" psql -h "$dst_host" -U "$dst_user" -d "$dst_db" -c \
   "INSERT INTO sync_log (start) VALUES ('${timestamp_start}');"
 
-# drop indexes
-echo "Dropping indexes..."
-for index in "${indexes[@]}"; do
-  echo "Dropping index ${index}..."
-  ixname=$(cut -d ' ' -f 1 <<< "$index")
-  PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "DROP INDEX IF EXISTS ${ixname}"
-done
-echo "Dropping indexes done."
-
 
 # Sync tables
 export PGPASSWORD="${src_pw}"
@@ -90,14 +81,6 @@ for src_dst in ${tables[@]}; do
 done
 echo "Syncing tables done."
 
-
-# (re-)create indexes
-echo "Creating indexes..."
-for index in "${indexes[@]}"; do
-   echo "Creating '${index}'..."
-   PGPASSWORD="${dst_pw}" psql -h "${dst_host}" -U "${dst_user}" -d "$dst_db" -c "CREATE INDEX IF NOT EXISTS ${index}"
-done
-echo "Creating indexes done."
 
 echo "Logging success..."
 timestamp_finished="$(TZ="Europe/Amsterdam" date "+%Y-%m-%d %H:%M:%S Europe/Amsterdam")"
