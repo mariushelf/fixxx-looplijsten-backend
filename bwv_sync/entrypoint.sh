@@ -5,8 +5,4 @@
 set -o allexport
 env > /root/env.env
 set +o allexport
-echo "Starting cron..."
-touch /tmp/log
-cron
-echo "Running tail to capture output..."
-tail -f /tmp/log
+exec cron -f
