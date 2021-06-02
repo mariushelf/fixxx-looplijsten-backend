@@ -10,4 +10,3 @@ touch /tmp/log
 cron
 echo "Running tail to capture output..."
 tail -f /tmp/log
-

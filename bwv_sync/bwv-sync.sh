@@ -109,4 +109,3 @@ curl "${url}/api/v1/fraud-prediction/scoring/" \
   -X POST \
   -H "Accept: application/json" \
   -H "Authorization: ${fraud_prediction_secret_key}"
-
