@@ -79,12 +79,12 @@ def get_eligible_cases_v2(generator):
         if r in [reason.get("id", 0) for reason in reasons]
     ]
     logger.info("validate state_types")
-    state_types = [
-        st
-        for st in generator.settings.state_types
-        if st in [state.get("id", 0) for state in state_types]
+    state_types = [state.get("id", 0) for state in state_types]
+    state_types_selected = [
+        st for st in generator.settings.state_types if st in state_types
     ]
-
+    logger.info("selected algorithm states")
+    logger.info(state_types_selected)
     logger.info("initial case count")
     logger.info(len(cases))
     cases = filter_out_incompatible_cases(cases)
@@ -92,6 +92,9 @@ def get_eligible_cases_v2(generator):
     logger.info(len(cases))
     cases = filter_schedules(cases, team_schedules)
     logger.info("after filter_schedules")
+    logger.info(len(cases))
+    cases = filter_state_types(cases, state_types)
+    logger.info("after filter_state_types")
     logger.info(len(cases))
     cases = filter_cases_with_postal_code(cases, generator.postal_code_ranges)
     logger.info("after filter_cases_with_postal_code")

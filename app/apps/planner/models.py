@@ -129,7 +129,7 @@ class TeamSettings(models.Model):
         if settings.USE_ZAKEN_MOCK_DATA:
             return get_team_state_types()
 
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/state-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.zaken_team_name}/state-types/?role=toezichthouder"
 
         response = requests.get(
             url,
@@ -294,7 +294,7 @@ class DaySettings(models.Model):
         return response.json().get("results", [])
 
     def fetch_team_state_types(self, auth_header=None):
-        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/state-types/"
+        url = f"{settings.ZAKEN_API_URL}/themes/{self.team_settings.zaken_team_name}/state-types/?role=toezichthouder"
 
         response = requests.get(
             url,
