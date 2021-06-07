@@ -217,7 +217,7 @@ class DaySettings(models.Model):
     )
     max_use_limit = models.PositiveSmallIntegerField(default=0)
 
-    # ZKS Fields
+    # AZA Fields
     day_segments = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,

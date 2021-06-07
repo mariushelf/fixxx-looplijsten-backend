@@ -266,10 +266,10 @@ def get_case(case_id):
 
     case = return_first_or_empty(executed_query)
 
-    return prepare_bwv_case_for_zks(case)
+    return prepare_bwv_case_for_aza(case)
 
 
-def prepare_bwv_case_for_zks(case):
+def prepare_bwv_case_for_aza(case):
     case["address"] = {
         "postal_code": case.get("postal_code"),
         "street_name": case.get("street_name"),
