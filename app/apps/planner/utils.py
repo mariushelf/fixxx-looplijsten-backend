@@ -29,7 +29,7 @@ def filter_cases(cases, stadia):
     return list(filter(lambda case: has_stadium(case), cases))
 
 
-# ZKS and BWV
+# AZA and BWV
 def remove_cases_from_list(cases, cases_to_remove):
     """
     Returns a new list without the 'cases_to_remove' items
@@ -44,7 +44,7 @@ def remove_cases_from_list(cases, cases_to_remove):
     return new_list
 
 
-# ZKS and BWV
+# AZA and BWV
 def get_case_coordinates(cases):
     """
     Maps the cases to an array of coordinates
@@ -62,7 +62,7 @@ def get_case_coordinates(cases):
     return coordinates
 
 
-# ZKS and BWV
+# AZA and BWV
 def calculate_geo_distances(center, cases):
     """
     Returns a set of distances in KM from the given center
@@ -88,7 +88,7 @@ def filter_cases_with_missing_coordinates(cases):
     return list(filter(lambda case: has_coordinates(case), cases))
 
 
-# ZKS and BWV
+# AZA and BWV
 def filter_cases_with_postal_code(cases, ranges=[]):
     """
     Returns a list of cases for which the postal code falls within the given start and end range
@@ -118,7 +118,7 @@ def filter_cases_with_postal_code(cases, ranges=[]):
     return list(cases)
 
 
-# ZKS
+# AZA
 def filter_out_incompatible_cases(cases):
     return [
         c
@@ -127,7 +127,7 @@ def filter_out_incompatible_cases(cases):
     ]
 
 
-# ZKS
+# AZA
 def filter_schedules(cases, team_schedules):
     schedule_keys = [
         ["day_segment", "day_segments"],
@@ -151,12 +151,12 @@ def filter_schedules(cases, team_schedules):
     return [c for c in cases if case_in_schedule(c)]
 
 
-# ZKS
+# AZA
 def filter_reasons(cases, reasons):
     return [c for c in cases if c.get("reason", {}).get("id", 0) in reasons]
 
 
-# ZKS
+# AZA
 def filter_state_types(cases, state_types):
     return [
         case

@@ -1,5 +1,5 @@
 from settings.const import EXCLUDE_STADIA
-from utils.queries import prepare_bwv_case_for_zks
+from utils.queries import prepare_bwv_case_for_aza
 from utils.query_helpers import do_query
 
 
@@ -74,7 +74,7 @@ def get_eligible_cases(projects):
     args = {"projects": tuple(projects)}
     cases = do_query(query, args)
 
-    return [prepare_bwv_case_for_zks(c) for c in cases]
+    return [prepare_bwv_case_for_aza(c) for c in cases]
 
 
 def match_cases_to_stages(cases, stages):

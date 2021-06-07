@@ -230,7 +230,7 @@ class ItinerarySettings(models.Model):
         Case, on_delete=models.SET_NULL, null=True, blank=True
     )
 
-    # ZKS Fields
+    # AZA Fields
     day_segments = ArrayField(
         base_field=models.PositiveSmallIntegerField(),
         blank=True,
